@@ -1,0 +1,1029 @@
+{
+  "sentences": [
+    {
+      "parts": {
+        "slot1": "Woher",
+        "slot2": "kommst",
+        "slot3": "du",
+        "slot4": "?"
+      },
+      "full": "Woher kommst du?",
+      "translation": "你来自哪里？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "Woher",
+        "slot2": "kommen",
+        "slot3": "Sie",
+        "slot4": "?"
+      },
+      "full": "Woher kommen Sie?",
+      "translation": "您来自哪里？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "Woher",
+        "slot2": "kommt",
+        "slot3": "Herr Bauer",
+        "slot4": "?"
+      },
+      "full": "Woher kommt Herr Bauer?",
+      "translation": "鲍尔先生来自哪里？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "Woher",
+        "slot2": "kommt",
+        "slot3": "Frau Li",
+        "slot4": "?"
+      },
+      "full": "Woher kommt Frau Li?",
+      "translation": "李女士来自哪里？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "bist",
+        "slot3": "du",
+        "slot4": "?"
+      },
+      "full": "Wo bist du?",
+      "translation": "你在哪里？",
+      "weight": 0.5
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "sind",
+        "slot3": "Sie",
+        "slot4": "?"
+      },
+      "full": "Wo sind Sie?",
+      "translation": "您在哪里？",
+      "weight": 0.5
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "ist",
+        "slot3": "Herr Bauer",
+        "slot4": "?"
+      },
+      "full": "Wo ist Herr Bauer?",
+      "translation": "鲍尔先生在哪里？",
+      "weight": 0.5
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "ist",
+        "slot3": "Frau Li",
+        "slot4": "?"
+      },
+      "full": "Wo ist Frau Li?",
+      "translation": "李女士在哪里？",
+      "weight": 0.5
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "wohnst",
+        "slot3": "du",
+        "slot4": "?"
+      },
+      "full": "Wo wohnst du?",
+      "translation": "你住在哪里？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "wohnen",
+        "slot3": "Sie",
+        "slot4": "?"
+      },
+      "full": "Wo wohnen Sie?",
+      "translation": "您住在哪里？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "wohnt",
+        "slot3": "Herr Bauer",
+        "slot4": "?"
+      },
+      "full": "Wo wohnt Herr Bauer?",
+      "translation": "鲍尔先生住在哪里？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "Wo",
+        "slot2": "wohnt",
+        "slot3": "Frau Li",
+        "slot4": "?"
+      },
+      "full": "Wo wohnt Frau Li?",
+      "translation": "李女士住在哪里？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "Wie",
+        "slot2": "heißt",
+        "slot3": "du",
+        "slot4": "?"
+      },
+      "full": "Wie heißt du?",
+      "translation": "你怎么称呼？",
+      "weight": 1.6667
+    },
+    {
+      "parts": {
+        "slot1": "Wie",
+        "slot2": "heißen",
+        "slot3": "Sie",
+        "slot4": "?"
+      },
+      "full": "Wie heißen Sie?",
+      "translation": "您怎么称呼？",
+      "weight": 1.6667
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommst",
+        "slot3": "du aus Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Kommst du aus Shenzhen?",
+      "translation": "你来自深圳吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommst",
+        "slot3": "du aus China",
+        "slot4": "?"
+      },
+      "full": "Kommst du aus China?",
+      "translation": "你来自中国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommst",
+        "slot3": "du aus Deutschland",
+        "slot4": "?"
+      },
+      "full": "Kommst du aus Deutschland?",
+      "translation": "你来自德国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommen",
+        "slot3": "Sie aus Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Kommen Sie aus Shenzhen?",
+      "translation": "您来自深圳吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommen",
+        "slot3": "Sie aus China",
+        "slot4": "?"
+      },
+      "full": "Kommen Sie aus China?",
+      "translation": "您来自中国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommen",
+        "slot3": "Sie aus Deutschland",
+        "slot4": "?"
+      },
+      "full": "Kommen Sie aus Deutschland?",
+      "translation": "您来自德国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommt",
+        "slot3": "Herr Bauer aus Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Kommt Herr Bauer aus Shenzhen?",
+      "translation": "鲍尔先生来自深圳吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommt",
+        "slot3": "Herr Bauer aus China",
+        "slot4": "?"
+      },
+      "full": "Kommt Herr Bauer aus China?",
+      "translation": "鲍尔先生来自中国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommt",
+        "slot3": "Herr Bauer aus Deutschland",
+        "slot4": "?"
+      },
+      "full": "Kommt Herr Bauer aus Deutschland?",
+      "translation": "鲍尔先生来自德国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommt",
+        "slot3": "Frau Li aus Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Kommt Frau Li aus Shenzhen?",
+      "translation": "李女士来自深圳吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommt",
+        "slot3": "Frau Li aus China",
+        "slot4": "?"
+      },
+      "full": "Kommt Frau Li aus China?",
+      "translation": "李女士来自中国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommt",
+        "slot3": "Frau Li aus Deutschland",
+        "slot4": "?"
+      },
+      "full": "Kommt Frau Li aus Deutschland?",
+      "translation": "李女士来自德国吗？",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnst",
+        "slot3": "du in Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Wohnst du in Shenzhen?",
+      "translation": "你住在深圳吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnst",
+        "slot3": "du in Frankfurt",
+        "slot4": "?"
+      },
+      "full": "Wohnst du in Frankfurt?",
+      "translation": "你住在法兰克福吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnen",
+        "slot3": "Sie in Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Wohnen Sie in Shenzhen?",
+      "translation": "您住在深圳吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnen",
+        "slot3": "Sie in Frankfurt",
+        "slot4": "?"
+      },
+      "full": "Wohnen Sie in Frankfurt?",
+      "translation": "您住在法兰克福吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnt",
+        "slot3": "Herr Bauer in Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Wohnt Herr Bauer in Shenzhen?",
+      "translation": "鲍尔先生住在深圳吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnt",
+        "slot3": "Herr Bauer in Frankfurt",
+        "slot4": "?"
+      },
+      "full": "Wohnt Herr Bauer in Frankfurt?",
+      "translation": "鲍尔先生住在法兰克福吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnt",
+        "slot3": "Frau Li in Shenzhen",
+        "slot4": "?"
+      },
+      "full": "Wohnt Frau Li in Shenzhen?",
+      "translation": "李女士住在深圳吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Wohnt",
+        "slot3": "Frau Li in Frankfurt",
+        "slot4": "?"
+      },
+      "full": "Wohnt Frau Li in Frankfurt?",
+      "translation": "李女士住在法兰克福吗？",
+      "weight": 0.4167
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lernst",
+        "slot3": "du Deutsch",
+        "slot4": "?"
+      },
+      "full": "Lernst du Deutsch?",
+      "translation": "你学德语吗？",
+      "weight": 0.8333
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lernen",
+        "slot3": "Sie Deutsch",
+        "slot4": "?"
+      },
+      "full": "Lernen Sie Deutsch?",
+      "translation": "您学德语吗？",
+      "weight": 0.8333
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lernt",
+        "slot3": "Herr Bauer Deutsch",
+        "slot4": "?"
+      },
+      "full": "Lernt Herr Bauer Deutsch?",
+      "translation": "鲍尔先生学德语吗？",
+      "weight": 0.8333
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lernt",
+        "slot3": "Frau Li Deutsch",
+        "slot4": "?"
+      },
+      "full": "Lernt Frau Li Deutsch?",
+      "translation": "李女士学德语吗？",
+      "weight": 0.8333
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Sind",
+        "slot3": "Sie Herr Bauer",
+        "slot4": "?"
+      },
+      "full": "Sind Sie Herr Bauer?",
+      "translation": "您是鲍尔先生吗？",
+      "weight": 0.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Sind",
+        "slot3": "Sie Frau Li",
+        "slot4": "?"
+      },
+      "full": "Sind Sie Frau Li?",
+      "translation": "您是李女士吗？",
+      "weight": 0.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Sprechen",
+        "slot3": "Sie Deutsch",
+        "slot4": "?"
+      },
+      "full": "Sprechen Sie Deutsch?",
+      "translation": "您说德语吗？",
+      "weight": 1.6667
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Heißt",
+        "slot3": "du Xiao Ming",
+        "slot4": "?"
+      },
+      "full": "Heißt du Xiao Ming?",
+      "translation": "你叫小明吗？",
+      "weight": 1.6667
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "komme",
+        "slot3": "aus Shenzhen",
+        "slot4": "."
+      },
+      "full": "Ich komme aus Shenzhen.",
+      "translation": "我来自深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "komme",
+        "slot3": "aus China",
+        "slot4": "."
+      },
+      "full": "Ich komme aus China.",
+      "translation": "我来自中国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "komme",
+        "slot3": "aus Deutschland",
+        "slot4": "."
+      },
+      "full": "Ich komme aus Deutschland.",
+      "translation": "我来自德国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Du",
+        "slot2": "kommst",
+        "slot3": "aus Shenzhen",
+        "slot4": "."
+      },
+      "full": "Du kommst aus Shenzhen.",
+      "translation": "你来自深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Du",
+        "slot2": "kommst",
+        "slot3": "aus China",
+        "slot4": "."
+      },
+      "full": "Du kommst aus China.",
+      "translation": "你来自中国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Du",
+        "slot2": "kommst",
+        "slot3": "aus Deutschland",
+        "slot4": "."
+      },
+      "full": "Du kommst aus Deutschland.",
+      "translation": "你来自德国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Sie",
+        "slot2": "kommen",
+        "slot3": "aus Shenzhen",
+        "slot4": "."
+      },
+      "full": "Sie kommen aus Shenzhen.",
+      "translation": "您来自深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Sie",
+        "slot2": "kommen",
+        "slot3": "aus China",
+        "slot4": "."
+      },
+      "full": "Sie kommen aus China.",
+      "translation": "您来自中国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Sie",
+        "slot2": "kommen",
+        "slot3": "aus Deutschland",
+        "slot4": "."
+      },
+      "full": "Sie kommen aus Deutschland.",
+      "translation": "您来自德国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Herr Bauer",
+        "slot2": "kommt",
+        "slot3": "aus Shenzhen",
+        "slot4": "."
+      },
+      "full": "Herr Bauer kommt aus Shenzhen.",
+      "translation": "鲍尔先生来自深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Herr Bauer",
+        "slot2": "kommt",
+        "slot3": "aus China",
+        "slot4": "."
+      },
+      "full": "Herr Bauer kommt aus China.",
+      "translation": "鲍尔先生来自中国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Herr Bauer",
+        "slot2": "kommt",
+        "slot3": "aus Deutschland",
+        "slot4": "."
+      },
+      "full": "Herr Bauer kommt aus Deutschland.",
+      "translation": "鲍尔先生来自德国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Frau Li",
+        "slot2": "kommt",
+        "slot3": "aus Shenzhen",
+        "slot4": "."
+      },
+      "full": "Frau Li kommt aus Shenzhen.",
+      "translation": "李女士来自深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Frau Li",
+        "slot2": "kommt",
+        "slot3": "aus China",
+        "slot4": "."
+      },
+      "full": "Frau Li kommt aus China.",
+      "translation": "李女士来自中国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Frau Li",
+        "slot2": "kommt",
+        "slot3": "aus Deutschland",
+        "slot4": "."
+      },
+      "full": "Frau Li kommt aus Deutschland.",
+      "translation": "李女士来自德国。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "wohne",
+        "slot3": "in Shenzhen",
+        "slot4": "."
+      },
+      "full": "Ich wohne in Shenzhen.",
+      "translation": "我住在深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "wohne",
+        "slot3": "in Frankfurt",
+        "slot4": "."
+      },
+      "full": "Ich wohne in Frankfurt.",
+      "translation": "我住在法兰克福。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Du",
+        "slot2": "wohnst",
+        "slot3": "in Shenzhen",
+        "slot4": "."
+      },
+      "full": "Du wohnst in Shenzhen.",
+      "translation": "你住在深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Du",
+        "slot2": "wohnst",
+        "slot3": "in Frankfurt",
+        "slot4": "."
+      },
+      "full": "Du wohnst in Frankfurt.",
+      "translation": "你住在法兰克福。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Sie",
+        "slot2": "wohnen",
+        "slot3": "in Shenzhen",
+        "slot4": "."
+      },
+      "full": "Sie wohnen in Shenzhen.",
+      "translation": "您住在深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Sie",
+        "slot2": "wohnen",
+        "slot3": "in Frankfurt",
+        "slot4": "."
+      },
+      "full": "Sie wohnen in Frankfurt.",
+      "translation": "您住在法兰克福。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Herr Bauer",
+        "slot2": "wohnt",
+        "slot3": "in Shenzhen",
+        "slot4": "."
+      },
+      "full": "Herr Bauer wohnt in Shenzhen.",
+      "translation": "鲍尔先生住在深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Herr Bauer",
+        "slot2": "wohnt",
+        "slot3": "in Frankfurt",
+        "slot4": "."
+      },
+      "full": "Herr Bauer wohnt in Frankfurt.",
+      "translation": "鲍尔先生住在法兰克福。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Frau Li",
+        "slot2": "wohnt",
+        "slot3": "in Shenzhen",
+        "slot4": "."
+      },
+      "full": "Frau Li wohnt in Shenzhen.",
+      "translation": "李女士住在深圳。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Frau Li",
+        "slot2": "wohnt",
+        "slot3": "in Frankfurt",
+        "slot4": "."
+      },
+      "full": "Frau Li wohnt in Frankfurt.",
+      "translation": "李女士住在法兰克福。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "lerne",
+        "slot3": "Deutsch",
+        "slot4": "."
+      },
+      "full": "Ich lerne Deutsch.",
+      "translation": "我学德语。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Du",
+        "slot2": "lernst",
+        "slot3": "Deutsch",
+        "slot4": "."
+      },
+      "full": "Du lernst Deutsch.",
+      "translation": "你学德语。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Sie",
+        "slot2": "lernen",
+        "slot3": "Deutsch",
+        "slot4": "."
+      },
+      "full": "Sie lernen Deutsch.",
+      "translation": "您学德语。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Herr Bauer",
+        "slot2": "lernt",
+        "slot3": "Deutsch",
+        "slot4": "."
+      },
+      "full": "Herr Bauer lernt Deutsch.",
+      "translation": "鲍尔先生学德语。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Frau Li",
+        "slot2": "lernt",
+        "slot3": "Deutsch",
+        "slot4": "."
+      },
+      "full": "Frau Li lernt Deutsch.",
+      "translation": "李女士学德语。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "heiße",
+        "slot3": "Xiao Ming",
+        "slot4": "."
+      },
+      "full": "Ich heiße Xiao Ming.",
+      "translation": "我叫小明。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Mein Name",
+        "slot2": "ist",
+        "slot3": "Xiao Ming",
+        "slot4": "."
+      },
+      "full": "Mein Name ist Xiao Ming.",
+      "translation": "我的名字是小明。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "bin",
+        "slot3": "Xiao Ming",
+        "slot4": "."
+      },
+      "full": "Ich bin Xiao Ming.",
+      "translation": "我是小明。",
+      "weight": 1
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Schreiben",
+        "slot3": "Sie bitte Deutsch",
+        "slot4": "."
+      },
+      "full": "Schreiben Sie bitte Deutsch.",
+      "translation": "您请写德语。",
+      "weight": 1.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lesen",
+        "slot3": "Sie bitte Deutsch",
+        "slot4": "."
+      },
+      "full": "Lesen Sie bitte Deutsch.",
+      "translation": "您请读德语。",
+      "weight": 1.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Sprechen",
+        "slot3": "Sie bitte Deutsch",
+        "slot4": "."
+      },
+      "full": "Sprechen Sie bitte Deutsch.",
+      "translation": "您请说德语。",
+      "weight": 1.6667
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Hören",
+        "slot3": "Sie bitte Deutsch",
+        "slot4": "."
+      },
+      "full": "Hören Sie bitte Deutsch.",
+      "translation": "您请听德语。",
+      "weight": 1.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lernen",
+        "slot3": "Sie bitte Deutsch",
+        "slot4": "."
+      },
+      "full": "Lernen Sie bitte Deutsch.",
+      "translation": "您请学德语。",
+      "weight": 0.8333
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Schreiben",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Schreiben Sie bitte.",
+      "translation": "您请写。",
+      "weight": 1.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lesen",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Lesen Sie bitte.",
+      "translation": "您请读。",
+      "weight": 1.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Sprechen",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Sprechen Sie bitte.",
+      "translation": "您请说。",
+      "weight": 1.6667
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Hören",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Hören Sie bitte.",
+      "translation": "您请听。",
+      "weight": 1.5
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Lernen",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Lernen Sie bitte.",
+      "translation": "您请学。",
+      "weight": 0.8333
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Kommen",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Kommen Sie bitte.",
+      "translation": "您请来。",
+      "weight": 0.2941
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Fragen",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Fragen Sie bitte.",
+      "translation": "请您问。",
+      "weight": 2
+    },
+    {
+      "parts": {
+        "slot1": "",
+        "slot2": "Antworten",
+        "slot3": "Sie bitte",
+        "slot4": "."
+      },
+      "full": "Antworten Sie bitte.",
+      "translation": "请您回答。",
+      "weight": 2
+    },
+    {
+      "parts": {
+        "slot1": "Ich",
+        "slot2": "spreche",
+        "slot3": "Deutsch",
+        "slot4": "."
+      },
+      "full": "Ich spreche Deutsch.",
+      "translation": "我说德语。",
+      "weight": 2
+    }
+  ],
+  "vocabulary": {
+    "questionWords": [
+      "woher",
+      "wo",
+      "wie"
+    ],
+    "verbs": [
+      "kommen",
+      "sein",
+      "wohnen",
+      "heißen",
+      "lernen",
+      "schreiben",
+      "lesen",
+      "sprechen",
+      "hören",
+      "fragen",
+      "antworten"
+    ],
+    "subjects": [
+      "ich",
+      "du",
+      "Sie",
+      "Herr Bauer",
+      "Frau Li",
+      "mein Name"
+    ],
+    "others": [
+      "aus",
+      "in",
+      "Shenzhen",
+      "China",
+      "Deutschland",
+      "Frankfurt",
+      "Deutsch",
+      "Xiao Ming",
+      "bitte"
+    ],
+    "punctuation": [
+      ".",
+      "?"
+    ],
+    "gap": [
+      ""
+    ]
+  }
+}
