@@ -93,14 +93,47 @@
             border: 2px dashed #dee2e6;
             border-radius: 10px;
             padding: 14px;
-            min-height: 140px;
+            min-height: 161px; /* +15% */
             margin: 12px 0 10px 0;
             display: flex;
-            justify-content: flex-start;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .sentence-topbar {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            width: 100%;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .sentence-topbar .left {
+            text-align: left;
+        }
+        
+        .sentence-topbar .right {
+            text-align: right;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .sentence-translation {
+            color: #2c3e50;
+            font-size: 1rem;
+            text-align: left;
+        }
+        
+        .dropzone {
+            display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            position: relative;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 120px; /* inner area */
         }
         
         .puzzle-container {
@@ -109,7 +142,7 @@
             gap: 10px;
             justify-content: center;
             margin: 10px 0 8px 0;
-            min-height: 120px;
+            min-height: 138px; /* +15% */
             align-items: center;
         }
         
@@ -129,12 +162,13 @@
             background: #3498db;
             padding: 12px 16px;
             border-radius: 10px;
+            height: 64px; /* base height */
         }
         
         .verb-stem-piece {
             background: #2c3e50;
-            padding: 12px 16px;
-            height: 52px;
+            padding: 8px 12px;
+            height: 48px; /* 75% of 64px */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -142,6 +176,7 @@
             border-radius: 8px;
         }
         
+        /* Original yoke styles kept for other sentences (if any use it) */
         .yoke-piece {
             position: relative;
             height: 74px;
@@ -149,7 +184,6 @@
             align-items: center;
             z-index: 2;
         }
-        
         .yoke-left, .yoke-right {
             padding: 8px 12px;
             background: #e74c3c;
@@ -163,7 +197,6 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.1);
             z-index: 3;
         }
-        
         .yoke-connector {
             width: 70px;
             height: 22px;
@@ -175,7 +208,6 @@
             align-items: center;
             justify-content: center;
         }
-        
         .yoke-connector::before {
             content: "";
             position: absolute;
@@ -186,7 +218,6 @@
             background: #e74c3c;
             border-radius: 50% / 100% 100% 0 0;
         }
-        
         .connector-slot {
             width: 70px;
             height: 56px;
@@ -202,7 +233,6 @@
             position: relative;
             top: -12px;
         }
-        
         .swap-btn {
             position: absolute;
             top: -12px;
@@ -217,6 +247,63 @@
             cursor: pointer;
             box-shadow: 0 3px 5px rgba(0,0,0,0.2);
             z-index: 10;
+        }
+        
+        /* New saddle yoke (块4整体) */
+        .yoke-saddle.puzzle-piece {
+            background: transparent;
+            padding: 0;
+            border-radius: 10px;
+            height: 64px;
+            display: inline-flex;
+            align-items: flex-start;
+            gap: 0;
+        }
+        .yoke-saddle .yoke-side {
+            background: #3498db; /* same as normal block */
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .yoke-saddle .yoke-center {
+            position: relative;
+            height: 64px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            overflow: visible;
+        }
+        .yoke-saddle .yoke-bridge {
+            height: 16px; /* 25% of 64 */
+            width: 100%;
+            background: #3498db; /* same as side blocks */
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .yoke-saddle .yoke-hole {
+            flex: 1;
+            width: 100%;
+            background: transparent; /* will be set dynamically to parent bg */
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            position: relative;
+        }
+        .yoke-saddle.docked .yoke-hole {
+            background: transparent;
+        }
+        .yoke-saddle.docked .yoke-center .verb-stem-piece {
+            width: 100% !important;
+            height: 48px !important;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            margin: 0;
         }
         
         .puzzle-piece:hover {
@@ -405,7 +492,7 @@
         </div>
         
         <div class="sentence-display" id="sentence-display">
-            <p>请将下方的单词拼成完整的句子: 我们今天说德语。</p>
+            <!-- 动态填充：请造句/进度 + 中文翻译 + 放置区 -->
         </div>
         
         <div class="puzzle-container" id="puzzle-container">
@@ -466,9 +553,7 @@
                 "陈老师是我。"
             ];
             
-            // 当前句子索引
             let currentSentenceIndex = 0;
-            // 当前模式
             let currentMode = 'normal';
             
             // DOM元素
@@ -483,18 +568,16 @@
             const swapYokeBtn = document.getElementById('swap-yoke-btn');
             const connectBtn = document.getElementById('connect-btn');
             
-            // 存储拼图块引用
+            // 引用
             let verbStemPiece = null;
-            let yokePiece = null;
+            let yokePiece = null; // 兼容：电话式或鞍式
+            let dropzone = null;
             
-            // 实用集合
             const pronouns = new Set(['ich','du','er','sie','es','wir','ihr','sie','sie']);
             const endings = new Set(['e','st','t','en']);
             
-            // 初始化
             loadSentence(currentSentenceIndex);
             
-            // 模式切换
             normalModeBtn.addEventListener('click', function() {
                 currentMode = 'normal';
                 normalModeBtn.classList.add('active');
@@ -511,137 +594,72 @@
                 loadSentence(currentSentenceIndex);
             });
             
-            // 重置按钮
             resetBtn.addEventListener('click', function() {
                 loadSentence(currentSentenceIndex);
             });
             
-            // 提交按钮
             submitBtn.addEventListener('click', function() {
                 checkAnswer();
             });
             
-            // 下一题按钮
             nextBtn.addEventListener('click', function() {
                 currentSentenceIndex = (currentSentenceIndex + 1) % sentences.length;
                 loadSentence(currentSentenceIndex);
             });
             
-            // 交换牛轭按钮（全局）
             swapYokeBtn.addEventListener('click', function() {
-                if (yokePiece) {
-                    const left = yokePiece.querySelector('.yoke-left');
-                    const right = yokePiece.querySelector('.yoke-right');
-                    const temp = left.textContent;
+                if (!yokePiece) return;
+                const left = yokePiece.querySelector('.yoke-side.left');
+                const right = yokePiece.querySelector('.yoke-side.right');
+                if (left && right) {
+                    const tmp = left.textContent;
                     left.textContent = right.textContent;
-                    right.textContent = temp;
+                    right.textContent = tmp;
                 }
             });
             
-            // 连接按钮
             connectBtn.addEventListener('click', function() {
+                // 保留旧功能：若两块均在放置区则生成文本合成
                 connectPieces();
             });
             
-            // 连接拼图块
-            function connectPieces() {
-                if (verbStemPiece && yokePiece && 
-                    verbStemPiece.parentNode === sentenceDisplay && 
-                    yokePiece.parentNode === sentenceDisplay) {
-                    
-                    const connectedPiece = document.createElement('div');
-                    connectedPiece.className = 'connected-piece';
-                    
-                    const leftText = (yokePiece.querySelector('.yoke-left').textContent || '').trim();
-                    const rightText = (yokePiece.querySelector('.yoke-right').textContent || '').trim();
-                    const verbText = (verbStemPiece.textContent || '').trim();
-
-                    const normalize = (t) => (t || '').toLowerCase().replace(/[^\p{L}]+/gu, '');
-                    const leftNorm = normalize(leftText);
-                    const rightNorm = normalize(rightText);
-
-                    let subjectRaw = '';
-                    let endingRaw = '';
-                    let swapped = false;
-
-                    if (endings.has(leftNorm) && pronouns.has(rightNorm)) {
-                        // 交换：左是词尾，右是主语
-                        endingRaw = leftText;
-                        subjectRaw = rightText;
-                        swapped = true;
-                    } else if (pronouns.has(leftNorm) && endings.has(rightNorm)) {
-                        // 正常：左是主语，右是词尾
-                        subjectRaw = leftText;
-                        endingRaw = rightText;
-                    } else {
-                        // 回退策略：按当前显示左右赋值
-                        subjectRaw = leftText;
-                        endingRaw = rightText;
-                    }
-
-                    // 构造展示顺序（若交换，则按 左(词尾) - 词干 - 右(主语)）
-                    const piecesRowHtml = swapped
-                        ? `\n                            <span class="ending">${endingRaw}</span>\n                            <span class="stem">${verbText}</span>\n                            <span class="subject">${subjectRaw}</span>\n                          `
-                        : `\n                            <span class="subject">${subjectRaw}</span>\n                            <span class="stem">${verbText}</span>\n                            <span class="ending">${endingRaw}</span>\n                          `;
-
-                    const initialComplete = swapped
-                        ? `${endingRaw}-${verbText} ${subjectRaw}`
-                        : `${subjectRaw} ${verbText}${endingRaw}`;
-
-                    const finalComplete = swapped
-                        ? `${verbText}${endingRaw} ${subjectRaw}`
-                        : `${subjectRaw} ${verbText}${endingRaw}`;
-
-                    connectedPiece.innerHTML = `\n                        <div class="combined-verb">\n                            ${piecesRowHtml}\n                            <span>=</span>\n                            <span class="complete-verb">${initialComplete}</span>\n                        </div>\n                    `;
-                    
-                    sentenceDisplay.appendChild(connectedPiece);
-                    
-                    // 移除原来的拼图块
-                    verbStemPiece.remove();
-                    yokePiece.remove();
-                    
-                    // 更新引用
-                    verbStemPiece = null;
-                    yokePiece = null;
-
-                    // 若发生交换，1秒后缓慢动画变为最终形式
-                    if (swapped) {
-                        const completeEl = connectedPiece.querySelector('.complete-verb');
-                        setTimeout(() => {
-                            completeEl.classList.add('fading');
-                            setTimeout(() => {
-                                completeEl.textContent = finalComplete;
-                                completeEl.classList.remove('fading');
-                            }, 600); // 与CSS过渡时间保持一致
-                        }, 1000);
-                    }
-                } else {
-                    alert('请先将动词词干和牛轭块拖放到句子区域！');
-                }
+            function updateSentenceHeader(index) {
+                const topbar = document.createElement('div');
+                topbar.className = 'sentence-topbar';
+                topbar.innerHTML = `<div class="left">请造句</div><div class="right" id="progress-indicator">第 ${index+1}/${sentences.length} 题</div>`;
+                return topbar;
             }
             
-            // 加载句子
-            function loadSentence(index) {
-                const sentence = sentences[index];
+            function buildSentenceBox(index) {
                 const translation = translations[index];
-                sentenceDisplay.innerHTML = `<p>请将下方的单词拼成完整的句子: ${translation}</p>`;
-                
-                // 清空拼图容器
+                sentenceDisplay.innerHTML = '';
+                sentenceDisplay.appendChild(updateSentenceHeader(index));
+                const trans = document.createElement('div');
+                trans.className = 'sentence-translation';
+                trans.id = 'sentence-translation';
+                trans.textContent = translation; // 仅中文翻译
+                sentenceDisplay.appendChild(trans);
+                dropzone = document.createElement('div');
+                dropzone.className = 'dropzone';
+                dropzone.id = 'dropzone';
+                sentenceDisplay.appendChild(dropzone);
+                enableDropZone(dropzone);
+            }
+            
+            function loadSentence(index) {
+                buildSentenceBox(index);
                 puzzleContainer.innerHTML = '';
                 verbStemPiece = null;
                 yokePiece = null;
                 
+                const sentence = sentences[index];
                 if (currentMode === 'normal') {
                     loadNormalMode(sentence);
                 } else {
                     loadEvilMode(sentence, index);
                 }
-                
-                // 启用放置区域
-                enableDropZone(sentenceDisplay);
             }
             
-            // 科班老师模式
             function loadNormalMode(sentence) {
                 const words = sentence.split(' ');
                 const shuffledWords = shuffleArray([...words]);
@@ -651,19 +669,21 @@
                 });
             }
             
-            // 陈老师邪修模式
             function loadEvilMode(sentence, index) {
                 let pieces = [];
                 switch(index) {
                     case 0: // "Wir sprechen heute Deutsch."
+                        // 顺序打乱：sprech, heute, Deutsch., Wir- -en（整体）
+                        const stem = createVerbStemPiece('sprech');
+                        const yoke = createYokeSaddlePiece('Wir-', '-en');
                         pieces = [
                             createWordPiece('heute'),
                             createWordPiece('Deutsch.'),
-                            createVerbStemPiece('sprech'),
-                            createYokePiece('wir', 'en')
+                            stem,
+                            yoke
                         ];
                         break;
-                    case 1: // "Woher kommst du?"
+                    case 1: // 保持旧式以简化
                         pieces = [
                             createWordPiece('Woher'),
                             createWordPiece('du?'),
@@ -671,7 +691,7 @@
                             createYokePiece('', 'st')
                         ];
                         break;
-                    case 2: // "Heute sprechen wir Deutsch."
+                    case 2:
                         pieces = [
                             createWordPiece('Heute'),
                             createWordPiece('Deutsch.'),
@@ -679,7 +699,7 @@
                             createYokePiece('wir', 'en')
                         ];
                         break;
-                    case 3: // "Ich bin Herr Chen."
+                    case 3:
                         pieces = [
                             createWordPiece('Ich'),
                             createWordPiece('Herr'),
@@ -687,7 +707,7 @@
                             createYokePiece('', 'bin')
                         ];
                         break;
-                    case 4: // "Herr Chen bin ich."
+                    case 4:
                         pieces = [
                             createWordPiece('Herr'),
                             createWordPiece('Chen'),
@@ -700,9 +720,13 @@
                 shuffledPieces.forEach(piece => {
                     puzzleContainer.appendChild(piece);
                 });
+                // 设置鞍式中孔背景（初始在拼图画布上）
+                if (yokePiece && yokePiece.classList.contains('yoke-saddle')) {
+                    updateYokeHoleBackground(yokePiece, puzzleContainer);
+                    sizeYokeCenterToStem();
+                }
             }
             
-            // 创建单词拼图块
             function createWordPiece(text) {
                 const piece = document.createElement('div');
                 piece.className = 'puzzle-piece word-piece';
@@ -713,7 +737,6 @@
                 return piece;
             }
             
-            // 创建动词词干拼图块
             function createVerbStemPiece(text) {
                 const piece = document.createElement('div');
                 piece.className = 'puzzle-piece verb-stem-piece';
@@ -725,7 +748,41 @@
                 return piece;
             }
             
-            // 创建轭拼图块（电话听筒形状）
+            // 新：鞍式块4（整体，可拖动）
+            function createYokeSaddlePiece(leftText, rightText) {
+                const container = document.createElement('div');
+                container.className = 'yoke-saddle puzzle-piece';
+                container.draggable = true;
+                
+                const left = document.createElement('div');
+                left.className = 'yoke-side left';
+                left.textContent = leftText;
+                const center = document.createElement('div');
+                center.className = 'yoke-center';
+                const bridge = document.createElement('div');
+                bridge.className = 'yoke-bridge';
+                const hole = document.createElement('div');
+                hole.className = 'yoke-hole';
+                center.appendChild(bridge);
+                center.appendChild(hole);
+                const right = document.createElement('div');
+                right.className = 'yoke-side right';
+                right.textContent = rightText;
+                
+                container.appendChild(left);
+                container.appendChild(center);
+                container.appendChild(right);
+                
+                // 保存引用
+                yokePiece = container;
+                
+                container.addEventListener('dragstart', dragStart);
+                container.addEventListener('dragend', dragEnd);
+                
+                return container;
+            }
+            
+            // 旧：电话听筒式（其他句子仍可用）
             function createYokePiece(leftText, rightText) {
                 const yokePieceContainer = document.createElement('div');
                 yokePieceContainer.className = 'yoke-piece';
@@ -743,28 +800,28 @@
                 yokePieceContainer.addEventListener('dragend', dragEnd);
                 
                 const swapBtn = yokePieceContainer.querySelector('.swap-btn');
-                swapBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const left = yokePieceContainer.querySelector('.yoke-left');
-                    const right = yokePieceContainer.querySelector('.yoke-right');
-                    const temp = left.textContent;
-                    left.textContent = right.textContent;
-                    right.textContent = temp;
-                });
+                if (swapBtn) {
+                    swapBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const left = yokePieceContainer.querySelector('.yoke-left');
+                        const right = yokePieceContainer.querySelector('.yoke-right');
+                        const temp = left.textContent;
+                        left.textContent = right.textContent;
+                        right.textContent = temp;
+                    });
+                }
                 
                 return yokePieceContainer;
             }
             
-            // 启用放置区域
             function enableDropZone(zone) {
                 zone.addEventListener('dragover', dragOver);
                 zone.addEventListener('drop', drop);
             }
             
-            // 拖拽功能
             let draggedPiece = null;
             
-            function dragStart(e) {
+            function dragStart() {
                 draggedPiece = this;
                 setTimeout(() => {
                     this.style.opacity = '0.5';
@@ -782,36 +839,114 @@
             
             function drop(e) {
                 e.preventDefault();
-                if (draggedPiece) {
-                    this.appendChild(draggedPiece);
-                    
-                    // 邪修模式下，若两个关键块都在句子区域，自动尝试连接
-                    if (currentMode === 'evil' && verbStemPiece && yokePiece && 
-                        verbStemPiece.parentNode === sentenceDisplay && 
-                        yokePiece.parentNode === sentenceDisplay) {
-                        setTimeout(connectPieces, 300);
+                if (!draggedPiece) return;
+                this.appendChild(draggedPiece);
+                
+                // 根据所在容器更新鞍式中孔背景
+                if (draggedPiece.classList.contains('yoke-saddle')) {
+                    updateYokeHoleBackground(draggedPiece, this);
+                    sizeYokeCenterToStem();
+                }
+                
+                // 若两块都在放置区，执行套接
+                attemptDock();
+            }
+            
+            function updateYokeHoleBackground(yoke, parentEl) {
+                const hole = yoke.querySelector('.yoke-hole');
+                if (!hole) return;
+                const bg = window.getComputedStyle(parentEl).backgroundColor || 'transparent';
+                hole.style.background = bg;
+            }
+            
+            function sizeYokeCenterToStem() {
+                if (!yokePiece || !yokePiece.classList.contains('yoke-saddle')) return;
+                const center = yokePiece.querySelector('.yoke-center');
+                if (!center) return;
+                // 以当前已存在的动词块宽度设定
+                if (verbStemPiece) {
+                    const width = verbStemPiece.offsetWidth || 80;
+                    center.style.width = width + 'px';
+                }
+            }
+            
+            function attemptDock() {
+                if (!dropzone || !yokePiece || !verbStemPiece) return;
+                if (yokePiece.parentNode !== dropzone || verbStemPiece.parentNode !== dropzone) return;
+                
+                // 设置中心宽度匹配词干
+                sizeYokeCenterToStem();
+                
+                const leftText = (yokePiece.querySelector('.yoke-side.left')?.textContent || '').trim();
+                const rightText = (yokePiece.querySelector('.yoke-side.right')?.textContent || '').trim();
+                const subject = leftText.replace(/-+$/,'');
+                const ending = rightText.replace(/^-+/,'');
+                const stem = (verbStemPiece.textContent || '').trim();
+                
+                // 将词干嵌入中孔
+                const center = yokePiece.querySelector('.yoke-center');
+                const hole = yokePiece.querySelector('.yoke-hole');
+                if (!center || !hole) return;
+                hole.replaceWith(verbStemPiece);
+                yokePiece.classList.add('docked');
+                
+                // 标记完整动词，供答案拼接
+                const complete = `${subject} ${stem}${ending}`;
+                yokePiece.dataset.completeVerb = complete;
+            }
+            
+            // 兼容旧的按钮连接（如果两块都在放置区，构造文本视图）
+            function connectPieces() {
+                if (!dropzone) return;
+                if (verbStemPiece && yokePiece && 
+                    verbStemPiece.parentNode && yokePiece.parentNode) {
+                    // 若已套接，则直接完成
+                    if (yokePiece.classList.contains('yoke-saddle') && yokePiece.dataset.completeVerb) {
+                        return; // 已有用于答案的标记
+                    }
+                    // 旧逻辑：电话式
+                    if (yokePiece.classList.contains('yoke-piece') &&
+                        verbStemPiece.parentNode === dropzone && yokePiece.parentNode === dropzone) {
+                        const connectedPiece = document.createElement('div');
+                        connectedPiece.className = 'connected-piece';
+                        const leftText = (yokePiece.querySelector('.yoke-left').textContent || '').trim();
+                        const rightText = (yokePiece.querySelector('.yoke-right').textContent || '').trim();
+                        const verbText = (verbStemPiece.textContent || '').trim();
+                        connectedPiece.innerHTML = `
+                            <div class="combined-verb">
+                                <span class="subject">${leftText}</span>
+                                <span class="stem">${verbText}</span>
+                                <span class="ending">${rightText}</span>
+                                <span>=</span>
+                                <span class="complete-verb">${leftText} ${verbText}${rightText}</span>
+                            </div>
+                        `;
+                        dropzone.appendChild(connectedPiece);
+                        verbStemPiece.remove();
+                        yokePiece.remove();
+                        verbStemPiece = null;
+                        yokePiece = null;
                     }
                 }
             }
             
-            // 检查答案（根据显示顺序组合）
             function checkAnswer() {
+                if (!dropzone) return;
                 let parts = [];
-                const children = Array.from(sentenceDisplay.children);
+                const children = Array.from(dropzone.children);
                 for (const node of children) {
-                    if (node.classList && node.classList.contains('word-piece')) {
-                        parts.push(node.textContent.trim());
+                    if (node.dataset && node.dataset.completeVerb) {
+                        parts.push(node.dataset.completeVerb.trim());
                     } else if (node.classList && node.classList.contains('connected-piece')) {
                         const cv = node.querySelector('.complete-verb');
                         if (cv) parts.push(cv.textContent.trim());
+                    } else if (node.classList && node.classList.contains('word-piece')) {
+                        parts.push(node.textContent.trim());
                     }
                 }
                 let userAnswer = parts.join(' ');
-                // 修正标点前的空格
                 userAnswer = userAnswer.replace(/\s+([.,!?])/g, '$1');
-                
                 const correctAnswer = sentences[currentSentenceIndex];
-                
                 if (userAnswer === correctAnswer) {
                     alert('正确！👍 句子拼写正确！');
                 } else {
@@ -819,7 +954,6 @@
                 }
             }
             
-            // 辅助函数：打乱数组
             function shuffleArray(array) {
                 for (let i = array.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
