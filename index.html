@@ -30,10 +30,16 @@
   .progress{font-weight:700;color:#1a2a6c}
   .bank,.sentence{display:flex;flex-wrap:wrap;gap:8px;min-height:60px}
   .piece{background:#e3f2fd;color:#0b4167;border:1px solid #c7e5ff;padding:8px 12px;border-radius:8px;font-weight:700;cursor:move;user-select:none;position:relative}
-  .piece.girdle{background:#fff0d6;border-color:#ffd27a;color:#7a4f00;display:flex;align-items:center;gap:6px;padding:6px 10px}
-  .g-left,.g-right{background:#ffe6b3;border:1px solid #ffc76a;color:#7a4f00;border-radius:6px;padding:6px 8px;font-weight:700}
-  .g-connector{height:25%;background:#ffe6b3;border:1px solid #ffc76a;border-radius:6px;align-self:flex-start;min-width:60px}
   .piece.stem{background:#e9e7ff;border-color:#c9c6ff;color:#2d1f8b;transform:scaleY(0.75)}
+  /* Girdle (saddle) */
+  .piece.girdle{background:#fff0d6;border-color:#ffd27a;color:#7a4f00;display:flex;align-items:stretch;gap:6px;padding:6px 10px}
+  .g-left,.g-right{background:#ffe6b3;border:1px solid #ffc76a;color:#7a4f00;border-radius:6px;padding:6px 8px;font-weight:700;display:flex;align-items:center}
+  .g-center{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;border-radius:6px;min-width:60px}
+  .g-connector{background:#ffe6b3;border:1px solid #ffc76a;border-radius:6px 6px 0 0}
+  .g-hole{flex:1;border-radius:0 0 6px 6px}
+  .bank .g-hole{background:#f7f7fb}
+  .sentence .g-hole{background:#fff}
+  .g-stem{flex:1;display:flex;align-items:center;justify-content:center;border-radius:0 0 6px 6px;background:#e9e7ff;border:1px solid #c9c6ff;color:#2d1f8b;font-weight:700}
   .piece.ghost{opacity:.6}
   .sentence{background:#fff;border:2px dashed #b9c3d1;border-radius:10px;padding:10px}
   .sentence .piece.stem.attach-highlight{box-shadow:0 0 0 3px rgba(255,204,0,0.6) inset}
@@ -185,6 +191,17 @@
   function clearZone(zone){
     while(zone.firstChild) zone.removeChild(zone.firstChild);
   }
+  function updateGirdleDimensions(girdle){
+    const center = girdle.querySelector('.g-center');
+    const connector = girdle.querySelector('.g-connector');
+    if(!center || !connector) return;
+    const baseH = girdle.getBoundingClientRect().height || 40;
+    connector.style.height = Math.max(8, Math.round(baseH*0.25)) + 'px';
+  }
+  function setGirdleCenterWidth(girdle, w){
+    const center = girdle.querySelector('.g-center');
+    if(center){ center.style.width = Math.max(40, Math.round(w)) + 'px'; }
+  }
   function makeGirdleInner(data){
     const wrap = document.createElement('div');
     wrap.className = 'piece girdle';
@@ -194,12 +211,17 @@
     const left = document.createElement('div');
     left.className = 'g-left';
     left.textContent = data.leftLabel || (data.subject + '-');
-    const conn = document.createElement('div');
-    conn.className = 'g-connector';
+    const center = document.createElement('div');
+    center.className = 'g-center';
+    const connector = document.createElement('div');
+    connector.className = 'g-connector';
+    const hole = document.createElement('div');
+    hole.className = 'g-hole';
+    center.appendChild(connector);center.appendChild(hole);
     const right = document.createElement('div');
     right.className = 'g-right';
     right.textContent = data.rightLabel || ('-' + data.suffix);
-    wrap.appendChild(left);wrap.appendChild(conn);wrap.appendChild(right);
+    wrap.appendChild(left);wrap.appendChild(center);wrap.appendChild(right);
     return wrap;
   }
   function makePiece(data){
@@ -209,8 +231,13 @@
         kind:'girdle',
         subject:data.subject||'',
         suffix:data.suffix||'',
-        text:(data.leftLabel||'')+' '+(data.rightLabel||'')
+        text:''
       });
+      // initial size from any stem in bank
+      const refStem = elBank.querySelector('.piece.stem');
+      if(refStem) setGirdleCenterWidth(girdle, refStem.getBoundingClientRect().width);
+      // defer dimension calc after insertion
+      setTimeout(()=>updateGirdleDimensions(girdle));
       return girdle;
     }
 
@@ -264,7 +291,11 @@
       : ex.xiexiu;
 
     const shuffled = pieces.slice().sort(()=>Math.random()-0.5);
-    shuffled.forEach(p=>elBank.appendChild(makePiece(p)));
+    shuffled.forEach(p=>{
+      const el = makePiece(p);
+      elBank.appendChild(el);
+      if(el.classList.contains('girdle')) updateGirdleDimensions(el);
+    });
   }
 
   function refreshAll(){
@@ -295,6 +326,7 @@
         suffix: piece.dataset.suffix||'',
         text: ''
       });
+      updateGirdleDimensions(piece);
     }else{
       bindDnD(piece, {
         kind: piece.dataset.kind,
@@ -323,16 +355,27 @@
     sentenceInsertBefore = target && target.parentElement===elSentence ? target : null;
 
     if(dragData && dragData.payload && dragData.payload.kind==='girdle'){
+      const girdle = dragData.sourceEl && dragData.sourceEl.classList.contains('girdle') ? dragData.sourceEl : null;
       const stem = target && target.dataset && target.dataset.kind==='stem' ? target : null;
       if(hoverStemEl && hoverStemEl!==stem){ hoverStemEl.classList.remove('attach-highlight'); hoverStemEl=null; }
-      if(stem){ stem.classList.add('attach-highlight'); hoverStemEl=stem; }
+      if(stem){
+        stem.classList.add('attach-highlight'); hoverStemEl=stem;
+        if(girdle){ setGirdleCenterWidth(girdle, stem.getBoundingClientRect().width); updateGirdleDimensions(girdle); }
+      }
     }
   });
 
+  // General drop (bubble)
   elSentence.addEventListener("drop", e=>{
     e.preventDefault();
     if(!dragData) return;
     const from = dragData.from;
+
+    // If special merge will handle, skip generic insert
+    const dropTargetPiece = e.target.closest('.piece');
+    if(dragData.payload.kind==='girdle' && dropTargetPiece && dropTargetPiece.dataset.kind==='stem'){
+      return; // let capture handler do merge
+    }
 
     if(from==="bank" || from==="sentence"){
       if(dragData.sourceEl && dragData.sourceEl.parentElement){
@@ -355,8 +398,10 @@
     const piece = temp.firstElementChild;
     elBank.appendChild(piece);
     rebindPiece(piece);
+    if(piece.classList.contains('girdle')) updateGirdleDimensions(piece);
   });
 
+  // Special merge (capture) for girdle -> stem
   elSentence.addEventListener("drop", e=>{
     const dropTargetPiece = e.target.closest(".piece");
     if(!dropTargetPiece || !dragData) return;
@@ -365,36 +410,53 @@
     const targetKind = dropTargetPiece.dataset.kind;
 
     if(dragged.kind==="girdle" && targetKind==="stem"){
-      // Visual snap effect
-      dropTargetPiece.classList.add('attach-highlight');
-      setTimeout(()=>{
-        const subject = (dragged.subject||'').replace(/^(\w)/, (m)=>m.toUpperCase());
-        const suffix  = dragged.suffix;
-        const stem    = dropTargetPiece.dataset.stem || "";
-        const verb = stem + suffix;
+      e.preventDefault();
+      // Remove original dragged element (from bank or sentence)
+      if(dragData.sourceEl && dragData.sourceEl.parentElement){
+        dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+      }
+      // Build composite girdle with stem filled into the center
+      const subjectCap = (dragged.subject||'').replace(/^(\w)/, (m)=>m.toUpperCase());
+      const suffix  = dragged.suffix;
+      const stem    = dropTargetPiece.dataset.stem || "";
+      const verb = stem + suffix;
 
-        const subjectPiece = makePiece({type:"word", text:subject});
-        const verbPiece    = makePiece({type:"word", text:verb});
-
-        const parent = dropTargetPiece.parentElement;
-        const marker = dropTargetPiece.nextSibling;
-
-        if(dropTargetPiece.parentElement) dropTargetPiece.parentElement.removeChild(dropTargetPiece);
-        if(dragData.sourceEl && dragData.sourceEl.parentElement){
-          dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
-        }
-
-        parent.insertBefore(subjectPiece, marker);
-        parent.insertBefore(verbPiece, marker);
-        rebindPiece(subjectPiece);
-        rebindPiece(verbPiece);
-        if(hoverStemEl){ hoverStemEl.classList.remove('attach-highlight'); hoverStemEl=null; }
-      }, 120);
+      const composite = makeGirdleInner({
+        subject: dragged.subject,
+        leftLabel: (dragged.subject||'')+'-',
+        rightLabel: '-' + suffix,
+        suffix: suffix
+      });
+      const center = composite.querySelector('.g-center');
+      const hole = composite.querySelector('.g-hole');
+      const connector = composite.querySelector('.g-connector');
+      const stemSlot = document.createElement('div');
+      stemSlot.className = 'g-stem';
+      stemSlot.textContent = verb;
+      center.replaceChild(stemSlot, hole);
+      // reading output
+      composite.dataset.output = subjectCap + ' ' + verb;
+      // size to match target stem
+      const w = dropTargetPiece.getBoundingClientRect().width;
+      setGirdleCenterWidth(composite, w);
+      updateGirdleDimensions(composite);
+      // insert at stem position
+      const parent = dropTargetPiece.parentElement;
+      const marker = dropTargetPiece.nextSibling;
+      if(dropTargetPiece.parentElement) dropTargetPiece.parentElement.removeChild(dropTargetPiece);
+      parent.insertBefore(composite, marker);
+      bindDnD(composite, { kind:'compound', text: composite.dataset.output });
+      if(hoverStemEl){ hoverStemEl.classList.remove('attach-highlight'); hoverStemEl=null; }
+      // consume
+      dragData = null;
     }
   }, true);
 
   function readSentenceText(){
-    const tokens = [...elSentence.querySelectorAll(".piece")].map(p=>p.textContent.trim());
+    const tokens = [...elSentence.querySelectorAll(".piece")].map(p=>{
+      const out = p.dataset && p.dataset.output ? p.dataset.output : p.textContent.trim();
+      return out.trim();
+    });
     let s = tokens.join(" ");
     s = s.replace(/\s+\?/g,"?").replace(/\s+\./g,".");
     s = s.replace(/\s+([?!.,;:])/g,"$1");
