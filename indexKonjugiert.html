@@ -133,7 +133,7 @@
       }
       .girdle-bottom {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: auto 1fr auto; /* left | center hole | right */
         gap: 0;
       }
       .girdle-cell {
@@ -149,6 +149,11 @@
       .girdle-cell.left {
         border-right: 0;
         border-bottom-left-radius: 10px;
+      }
+      .girdle-cell.center {
+        background: transparent;
+        border: 0; /* true hole */
+        min-width: 80px; /* placeholder width until stem docks */
       }
       .girdle-cell.right {
         border-bottom-right-radius: 10px;
@@ -190,6 +195,8 @@
         padding: 8px;
         border-radius: 8px;
       }
+      /* Increase canvas height by 15%: 52px -> ~60px */
+      .sentence { min-height: 60px; }
       .illustration {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -401,11 +408,15 @@
           left.className = "girdle-cell left";
           left.textContent = subject + "-";
 
+          const center = document.createElement("div");
+          center.className = "girdle-cell center";
+
           const right = document.createElement("div");
           right.className = "girdle-cell right";
           right.textContent = "-" + suffix;
 
           bottom.appendChild(left);
+          bottom.appendChild(center);
           bottom.appendChild(right);
 
           inner.appendChild(top);
@@ -620,37 +631,83 @@
             const dragged = dragData.payload;
             const targetKind = dropTargetPiece.dataset.kind;
 
+            // Case 1: dragging girdle onto stem -> embed stem into girdle center
             if (dragged.kind === "girdle" && targetKind === "stem") {
               const subject = dragged.subject;
               const suffix = dragged.suffix;
-              const stem = dropTargetPiece.dataset.stem || "";
-              const verb = stem + suffix;
+              const stemText = dropTargetPiece.dataset.stem || "";
 
-              const subjectPiece = makePiece({ type: "word", text: subject });
-              const verbPiece = makePiece({ type: "word", text: verb });
-
+              // Use the actual dragged DOM node as girdle element
+              const girdleEl = dragData.sourceEl;
               const parent = dropTargetPiece.parentElement;
-              const marker = dropTargetPiece.nextSibling;
+              const insertBeforeNode = dropTargetPiece; // place girdle where stem is
 
-              if (dropTargetPiece.parentElement)
-                dropTargetPiece.parentElement.removeChild(dropTargetPiece);
-              if (dragData.sourceEl && dragData.sourceEl.parentElement) {
-                dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+              // Remove source from its zone
+              if (girdleEl && girdleEl.parentElement) {
+                girdleEl.parentElement.removeChild(girdleEl);
               }
 
-              parent.insertBefore(subjectPiece, marker);
-              parent.insertBefore(verbPiece, marker);
-              rebindPiece(subjectPiece);
-              rebindPiece(verbPiece);
+              // Insert girdle into sentence at stem position
+              parent.insertBefore(girdleEl, insertBeforeNode);
+
+              // Find center hole and embed stem
+              const center = girdleEl.querySelector('.girdle-cell.center');
+              if (center) {
+                // Set hole width to stem width for visual fit
+                const stemWidth = dropTargetPiece.offsetWidth || 80;
+                center.style.minWidth = stemWidth + 'px';
+                // Move stem inside and disable its dragging
+                dropTargetPiece.setAttribute('draggable','false');
+                dropTargetPiece.classList.add('embedded-stem');
+                center.appendChild(dropTargetPiece);
+              }
+
+              // Mark combined verb for answer building
+              girdleEl.dataset.completeVerb = `${subject} ${stemText}${suffix}`;
+
+              // Stop default drop handling to avoid duplicate insertion
+              e.stopPropagation();
+              return;
+            }
+
+            // Case 2: dragging stem onto an existing girdle -> embed
+            if (dragged.kind === "stem" && dropTargetPiece.classList.contains('girdle')) {
+              const girdleEl = dropTargetPiece;
+              const subject = girdleEl.dataset.subject || '';
+              const suffix = girdleEl.dataset.suffix || '';
+
+              // Remove stem from its original zone
+              const stemEl = dragData.sourceEl;
+              const stemText = stemEl?.dataset?.stem || '';
+              if (stemEl && stemEl.parentElement) {
+                stemEl.parentElement.removeChild(stemEl);
+              }
+              const center = girdleEl.querySelector('.girdle-cell.center');
+              if (center && stemEl) {
+                const stemWidth = stemEl.offsetWidth || 80;
+                center.style.minWidth = stemWidth + 'px';
+                stemEl.setAttribute('draggable','false');
+                stemEl.classList.add('embedded-stem');
+                center.appendChild(stemEl);
+                girdleEl.dataset.completeVerb = `${subject} ${stemText}${suffix}`;
+              }
+              e.stopPropagation();
+              return;
             }
           },
           true
         );
 
         function readSentenceText() {
-          const tokens = [...elSentence.querySelectorAll(".piece")].map((p) =>
-            p.textContent.trim()
-          );
+          const tokens = [];
+          const direct = Array.from(elSentence.children);
+          for (const node of direct) {
+            if (node.classList && node.classList.contains('girdle') && node.dataset.completeVerb) {
+              tokens.push(node.dataset.completeVerb.trim());
+            } else if (node.classList && node.classList.contains('piece')) {
+              tokens.push(node.textContent.trim());
+            }
+          }
           let s = tokens.join(" ");
           s = s.replace(/\s+\?/g, "?").replace(/\s+\./g, ".");
           s = s.replace(/\s+([?!.,;:])/g, "$1");
