@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深圳德语⭐陈老师讲德语 - 动词变位</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 860px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            padding: 18px;
+            margin-top: 14px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .star {
+            color: #ffc107;
+            margin: 0 8px;
+            font-size: 1.6rem;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.06rem;
+        }
+        
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            margin: 12px 0 10px 0;
+            gap: 10px;
+        }
+        
+        .mode-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .normal-mode {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .evil-mode {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .mode-btn.active {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sentence-display {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 14px;
+            min-height: 140px;
+            margin: 12px 0 10px 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: relative;
+        }
+        
+        .puzzle-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0 8px 0;
+            min-height: 120px;
+            align-items: center;
+        }
+        
+        .puzzle-piece {
+            color: white;
+            font-size: 1.12rem;
+            font-weight: 500;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .word-piece {
+            background: #3498db;
+            padding: 12px 16px;
+            border-radius: 10px;
+        }
+        
+        .verb-stem-piece {
+            background: #2c3e50;
+            padding: 12px 16px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            border-radius: 8px;
+        }
+        
+        .yoke-piece {
+            position: relative;
+            height: 74px;
+            display: flex;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .yoke-left, .yoke-right {
+            padding: 8px 12px;
+            background: #e74c3c;
+            border-radius: 50%;
+            height: 64px;
+            width: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            z-index: 3;
+        }
+        
+        .yoke-connector {
+            width: 70px;
+            height: 22px;
+            background: #e74c3c;
+            position: relative;
+            margin: 0 -5px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .yoke-connector::before {
+            content: "";
+            position: absolute;
+            top: -9px;
+            left: 0;
+            width: 100%;
+            height: 18px;
+            background: #e74c3c;
+            border-radius: 50% / 100% 100% 0 0;
+        }
+        
+        .connector-slot {
+            width: 70px;
+            height: 56px;
+            background: #2c3e50;
+            border-radius: 8px;
+            margin: 0 -5px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            position: relative;
+            top: -12px;
+        }
+        
+        .swap-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f39c12;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .puzzle-piece:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
+        }
+        
+        .puzzle-piece:active {
+            cursor: grabbing;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
+        }
+        
+        #reset-btn {
+            background: #e74c3c;
+        }
+        
+        #next-btn {
+            background: #3498db;
+        }
+        
+        .explanation {
+            margin-top: 18px;
+            padding: 14px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .explanation h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .explanation p {
+            line-height: 1.6;
+            color: #34495e;
+        }
+        
+        .yoke-explanation {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            padding: 8px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .yoke-symbol {
+            font-size: 1.4rem;
+            margin: 0 8px;
+            color: #e74c3c;
+        }
+        
+        .special-controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .special-btn {
+            padding: 8px 12px;
+            background: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .connected-piece {
+            display: flex;
+            align-items: center;
+            margin: 6px;
+            background: #f8f9fa;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .combined-verb {
+            display: flex;
+            align-items: center;
+            background: #e8f4fc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 4px 0;
+            gap: 6px;
+        }
+        
+        .combined-verb span {
+            font-weight: 600;
+        }
+        
+        .combined-verb .complete-verb {
+            display: inline-block;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .combined-verb .complete-verb.fading {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+        
+        .subject {
+            color: #e74c3c;
+        }
+        
+        .stem {
+            color: #2c3e50;
+        }
+        
+        .ending {
+            color: #3498db;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .mode-btn, .control-btn {
+                padding: 9px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .word-piece, .verb-stem-piece {
+                padding: 10px 14px;
+                font-size: 1rem;
+            }
+            
+            .yoke-piece {
+                transform: scale(0.9);
+            }
+            
+            .yoke-left, .yoke-right {
+                height: 58px;
+                width: 58px;
+                font-size: 0.92rem;
+            }
+            
+            .yoke-connector {
+                width: 60px;
+            }
+            
+            .connector-slot {
+                width: 58px;
+                font-size: 0.98rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>深圳德语<span class="star">⭐</span>陈老师讲德语</h1>
+        <p class="subtitle">动词变位交互式学习工具</p>
+    </header>
+    
+    <div class="container">
+        <div class="mode-selector">
+            <button class="mode-btn normal-mode active" id="normal-mode">科班老师模式</button>
+            <button class="mode-btn evil-mode" id="evil-mode">陈老师邪修模式</button>
+        </div>
+        
+        <div class="sentence-display" id="sentence-display">
+            <p>请将下方的单词拼成完整的句子: 我们今天说德语。</p>
+        </div>
+        
+        <div class="puzzle-container" id="puzzle-container">
+            <!-- 拼图块将通过JavaScript动态生成 -->
+        </div>
+        
+        <div class="special-controls" id="special-controls" style="display: none;">
+            <button class="special-btn" id="swap-yoke-btn">交换牛轭两端</button>
+            <button class="special-btn" id="connect-btn">连接拼图</button>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="reset-btn">重置拼图</button>
+            <button class="control-btn" id="submit-btn">提交答案</button>
+            <button class="control-btn" id="next-btn">下一题</button>
+        </div>
+        
+        <div class="explanation">
+            <h3>什么是"动词变位"？</h3>
+            <p>动词变位(konjugierte Verben)是指动词根据人称、数、时态等的变化形式。</p>
+            
+            <div class="yoke-explanation">
+                <span>传统解释: 变位动词</span>
+                <span class="yoke-symbol">→</span>
+                <span>陈老师解释: 发生了连接的动词，和做动作的人(东西)有连接的那个词</span>
+            </div>
+            
+            <p style="margin-top: 10px;"><strong>Konjugiert</strong> 意思是"连接"，就像传统电话听筒，连接着两端。在语法中，它连接着句子的主语和动词。</p>
+            <p>将"轭"块拖放到动词词干上完成连接，体验动词变位的本质！</p>
+            
+            <div class="combined-verb" id="combined-example">
+                <span class="subject">wir</span> 
+                <span class="stem">sprech</span> 
+                <span class="ending">en</span> 
+                <span>=</span>
+                <span class="complete-verb">wir sprechen</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 句子数据
+            const sentences = [
+                "Wir sprechen heute Deutsch.",
+                "Woher kommst du?",
+                "Heute sprechen wir Deutsch.",
+                "Ich bin Herr Chen.",
+                "Herr Chen bin ich."
+            ];
+            
+            // 句子中文翻译
+            const translations = [
+                "我们今天说德语。",
+                "你来自哪里？",
+                "今天我们说德语。",
+                "我是陈老师。",
+                "陈老师是我。"
+            ];
+            
+            // 当前句子索引
+            let currentSentenceIndex = 0;
+            // 当前模式
+            let currentMode = 'normal';
+            
+            // DOM元素
+            const normalModeBtn = document.getElementById('normal-mode');
+            const evilModeBtn = document.getElementById('evil-mode');
+            const sentenceDisplay = document.getElementById('sentence-display');
+            const puzzleContainer = document.getElementById('puzzle-container');
+            const resetBtn = document.getElementById('reset-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const specialControls = document.getElementById('special-controls');
+            const swapYokeBtn = document.getElementById('swap-yoke-btn');
+            const connectBtn = document.getElementById('connect-btn');
+            
+            // 存储拼图块引用
+            let verbStemPiece = null;
+            let yokePiece = null;
+            
+            // 实用集合
+            const pronouns = new Set(['ich','du','er','sie','es','wir','ihr','sie','sie']);
+            const endings = new Set(['e','st','t','en']);
+            
+            // 初始化
+            loadSentence(currentSentenceIndex);
+            
+            // 模式切换
+            normalModeBtn.addEventListener('click', function() {
+                currentMode = 'normal';
+                normalModeBtn.classList.add('active');
+                evilModeBtn.classList.remove('active');
+                specialControls.style.display = 'none';
+                loadSentence(currentSentenceIndex);
+            });
+            
+            evilModeBtn.addEventListener('click', function() {
+                currentMode = 'evil';
+                evilModeBtn.classList.add('active');
+                normalModeBtn.classList.remove('active');
+                specialControls.style.display = 'flex';
+                loadSentence(currentSentenceIndex);
+            });
+            
+            // 重置按钮
+            resetBtn.addEventListener('click', function() {
+                loadSentence(currentSentenceIndex);
+            });
+            
+            // 提交按钮
+            submitBtn.addEventListener('click', function() {
+                checkAnswer();
+            });
+            
+            // 下一题按钮
+            nextBtn.addEventListener('click', function() {
+                currentSentenceIndex = (currentSentenceIndex + 1) % sentences.length;
+                loadSentence(currentSentenceIndex);
+            });
+            
+            // 交换牛轭按钮（全局）
+            swapYokeBtn.addEventListener('click', function() {
+                if (yokePiece) {
+                    const left = yokePiece.querySelector('.yoke-left');
+                    const right = yokePiece.querySelector('.yoke-right');
+                    const temp = left.textContent;
+                    left.textContent = right.textContent;
+                    right.textContent = temp;
+                }
+            });
+            
+            // 连接按钮
+            connectBtn.addEventListener('click', function() {
+                connectPieces();
+            });
+            
+            // 连接拼图块
+            function connectPieces() {
+                if (verbStemPiece && yokePiece && 
+                    verbStemPiece.parentNode === sentenceDisplay && 
+                    yokePiece.parentNode === sentenceDisplay) {
+                    
+                    const connectedPiece = document.createElement('div');
+                    connectedPiece.className = 'connected-piece';
+                    
+                    const leftText = (yokePiece.querySelector('.yoke-left').textContent || '').trim();
+                    const rightText = (yokePiece.querySelector('.yoke-right').textContent || '').trim();
+                    const verbText = (verbStemPiece.textContent || '').trim();
+
+                    const normalize = (t) => (t || '').toLowerCase().replace(/[^\p{L}]+/gu, '');
+                    const leftNorm = normalize(leftText);
+                    const rightNorm = normalize(rightText);
+
+                    let subjectRaw = '';
+                    let endingRaw = '';
+                    let swapped = false;
+
+                    if (endings.has(leftNorm) && pronouns.has(rightNorm)) {
+                        // 交换：左是词尾，右是主语
+                        endingRaw = leftText;
+                        subjectRaw = rightText;
+                        swapped = true;
+                    } else if (pronouns.has(leftNorm) && endings.has(rightNorm)) {
+                        // 正常：左是主语，右是词尾
+                        subjectRaw = leftText;
+                        endingRaw = rightText;
+                    } else {
+                        // 回退策略：按当前显示左右赋值
+                        subjectRaw = leftText;
+                        endingRaw = rightText;
+                    }
+
+                    // 构造展示顺序（若交换，则按 左(词尾) - 词干 - 右(主语)）
+                    const piecesRowHtml = swapped
+                        ? `\n                            <span class="ending">${endingRaw}</span>\n                            <span class="stem">${verbText}</span>\n                            <span class="subject">${subjectRaw}</span>\n                          `
+                        : `\n                            <span class="subject">${subjectRaw}</span>\n                            <span class="stem">${verbText}</span>\n                            <span class="ending">${endingRaw}</span>\n                          `;
+
+                    const initialComplete = swapped
+                        ? `${endingRaw}-${verbText} ${subjectRaw}`
+                        : `${subjectRaw} ${verbText}${endingRaw}`;
+
+                    const finalComplete = swapped
+                        ? `${verbText}${endingRaw} ${subjectRaw}`
+                        : `${subjectRaw} ${verbText}${endingRaw}`;
+
+                    connectedPiece.innerHTML = `\n                        <div class="combined-verb">\n                            ${piecesRowHtml}\n                            <span>=</span>\n                            <span class="complete-verb">${initialComplete}</span>\n                        </div>\n                    `;
+                    
+                    sentenceDisplay.appendChild(connectedPiece);
+                    
+                    // 移除原来的拼图块
+                    verbStemPiece.remove();
+                    yokePiece.remove();
+                    
+                    // 更新引用
+                    verbStemPiece = null;
+                    yokePiece = null;
+
+                    // 若发生交换，1秒后缓慢动画变为最终形式
+                    if (swapped) {
+                        const completeEl = connectedPiece.querySelector('.complete-verb');
+                        setTimeout(() => {
+                            completeEl.classList.add('fading');
+                            setTimeout(() => {
+                                completeEl.textContent = finalComplete;
+                                completeEl.classList.remove('fading');
+                            }, 600); // 与CSS过渡时间保持一致
+                        }, 1000);
+                    }
+                } else {
+                    alert('请先将动词词干和牛轭块拖放到句子区域！');
+                }
+            }
+            
+            // 加载句子
+            function loadSentence(index) {
+                const sentence = sentences[index];
+                const translation = translations[index];
+                sentenceDisplay.innerHTML = `<p>请将下方的单词拼成完整的句子: ${translation}</p>`;
+                
+                // 清空拼图容器
+                puzzleContainer.innerHTML = '';
+                verbStemPiece = null;
+                yokePiece = null;
+                
+                if (currentMode === 'normal') {
+                    loadNormalMode(sentence);
+                } else {
+                    loadEvilMode(sentence, index);
+                }
+                
+                // 启用放置区域
+                enableDropZone(sentenceDisplay);
+            }
+            
+            // 科班老师模式
+            function loadNormalMode(sentence) {
+                const words = sentence.split(' ');
+                const shuffledWords = shuffleArray([...words]);
+                shuffledWords.forEach(word => {
+                    const piece = createWordPiece(word);
+                    puzzleContainer.appendChild(piece);
+                });
+            }
+            
+            // 陈老师邪修模式
+            function loadEvilMode(sentence, index) {
+                let pieces = [];
+                switch(index) {
+                    case 0: // "Wir sprechen heute Deutsch."
+                        pieces = [
+                            createWordPiece('heute'),
+                            createWordPiece('Deutsch.'),
+                            createVerbStemPiece('sprech'),
+                            createYokePiece('wir', 'en')
+                        ];
+                        break;
+                    case 1: // "Woher kommst du?"
+                        pieces = [
+                            createWordPiece('Woher'),
+                            createWordPiece('du?'),
+                            createVerbStemPiece('komm'),
+                            createYokePiece('', 'st')
+                        ];
+                        break;
+                    case 2: // "Heute sprechen wir Deutsch."
+                        pieces = [
+                            createWordPiece('Heute'),
+                            createWordPiece('Deutsch.'),
+                            createVerbStemPiece('sprech'),
+                            createYokePiece('wir', 'en')
+                        ];
+                        break;
+                    case 3: // "Ich bin Herr Chen."
+                        pieces = [
+                            createWordPiece('Ich'),
+                            createWordPiece('Herr'),
+                            createWordPiece('Chen.'),
+                            createYokePiece('', 'bin')
+                        ];
+                        break;
+                    case 4: // "Herr Chen bin ich."
+                        pieces = [
+                            createWordPiece('Herr'),
+                            createWordPiece('Chen'),
+                            createYokePiece('ich', 'bin'),
+                            createWordPiece('.')
+                        ];
+                        break;
+                }
+                const shuffledPieces = shuffleArray([...pieces]);
+                shuffledPieces.forEach(piece => {
+                    puzzleContainer.appendChild(piece);
+                });
+            }
+            
+            // 创建单词拼图块
+            function createWordPiece(text) {
+                const piece = document.createElement('div');
+                piece.className = 'puzzle-piece word-piece';
+                piece.textContent = text;
+                piece.draggable = true;
+                piece.addEventListener('dragstart', dragStart);
+                piece.addEventListener('dragend', dragEnd);
+                return piece;
+            }
+            
+            // 创建动词词干拼图块
+            function createVerbStemPiece(text) {
+                const piece = document.createElement('div');
+                piece.className = 'puzzle-piece verb-stem-piece';
+                piece.textContent = text;
+                piece.draggable = true;
+                verbStemPiece = piece;
+                piece.addEventListener('dragstart', dragStart);
+                piece.addEventListener('dragend', dragEnd);
+                return piece;
+            }
+            
+            // 创建轭拼图块（电话听筒形状）
+            function createYokePiece(leftText, rightText) {
+                const yokePieceContainer = document.createElement('div');
+                yokePieceContainer.className = 'yoke-piece';
+                yokePieceContainer.draggable = true;
+                
+                yokePieceContainer.innerHTML = `
+                    <div class="yoke-left">${leftText}</div>
+                    <div class="yoke-connector"></div>
+                    <div class="yoke-right">${rightText}</div>
+                    <button class="swap-btn">↔</button>
+                `;
+                
+                yokePiece = yokePieceContainer;
+                yokePieceContainer.addEventListener('dragstart', dragStart);
+                yokePieceContainer.addEventListener('dragend', dragEnd);
+                
+                const swapBtn = yokePieceContainer.querySelector('.swap-btn');
+                swapBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const left = yokePieceContainer.querySelector('.yoke-left');
+                    const right = yokePieceContainer.querySelector('.yoke-right');
+                    const temp = left.textContent;
+                    left.textContent = right.textContent;
+                    right.textContent = temp;
+                });
+                
+                return yokePieceContainer;
+            }
+            
+            // 启用放置区域
+            function enableDropZone(zone) {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('drop', drop);
+            }
+            
+            // 拖拽功能
+            let draggedPiece = null;
+            
+            function dragStart(e) {
+                draggedPiece = this;
+                setTimeout(() => {
+                    this.style.opacity = '0.5';
+                }, 0);
+            }
+            
+            function dragEnd() {
+                this.style.opacity = '1';
+                draggedPiece = null;
+            }
+            
+            function dragOver(e) {
+                e.preventDefault();
+            }
+            
+            function drop(e) {
+                e.preventDefault();
+                if (draggedPiece) {
+                    this.appendChild(draggedPiece);
+                    
+                    // 邪修模式下，若两个关键块都在句子区域，自动尝试连接
+                    if (currentMode === 'evil' && verbStemPiece && yokePiece && 
+                        verbStemPiece.parentNode === sentenceDisplay && 
+                        yokePiece.parentNode === sentenceDisplay) {
+                        setTimeout(connectPieces, 300);
+                    }
+                }
+            }
+            
+            // 检查答案（根据显示顺序组合）
+            function checkAnswer() {
+                let parts = [];
+                const children = Array.from(sentenceDisplay.children);
+                for (const node of children) {
+                    if (node.classList && node.classList.contains('word-piece')) {
+                        parts.push(node.textContent.trim());
+                    } else if (node.classList && node.classList.contains('connected-piece')) {
+                        const cv = node.querySelector('.complete-verb');
+                        if (cv) parts.push(cv.textContent.trim());
+                    }
+                }
+                let userAnswer = parts.join(' ');
+                // 修正标点前的空格
+                userAnswer = userAnswer.replace(/\s+([.,!?])/g, '$1');
+                
+                const correctAnswer = sentences[currentSentenceIndex];
+                
+                if (userAnswer === correctAnswer) {
+                    alert('正确！👍 句子拼写正确！');
+                } else {
+                    alert(`不完全正确。您的答案: ${userAnswer}\n正确答案: ${correctAnswer}`);
+                }
+            }
+            
+            // 辅助函数：打乱数组
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+        });
+    </script>
+</body>
+</html>
