@@ -197,11 +197,11 @@
           <div class="illustration">
             <div class="card">
               <div style="margin-bottom: 6px; font-weight: 700; color:#1a2a6c;">牛轭</div>
-              <img src="ox_yoke.png" alt="示意图：牛套上牛轭（放置 ox_yoke.png 到同目录即可显示）" />
+              <img src="ox_yoke.png" alt="示意图：牛套上牛轭（放置 ox_yoke.png 到同目录即可显示）" onerror="imageFallback(this,'牛轭示意图')" />
             </div>
             <div class="card">
               <div style="margin-bottom: 6px; font-weight: 700; color:#1a2a6c;">马鞍</div>
-              <img src="horse_saddle.png" alt="示意图：马带上马鞍（放置 horse_saddle.png 到同目录即可显示）" />
+              <img src="horse_saddle.png" alt="示意图：马带上马鞍（放置 horse_saddle.png 到同目录即可显示）" onerror="imageFallback(this,'马鞍示意图')" />
             </div>
           </div>
         </div>
@@ -211,6 +211,23 @@
     <footer>专利声明：本练习器界面与交互方案已申请相关专利与著作权，侵权必究。</footer>
 
     <script>
+      // Fallback for missing images in illustration cards
+      function imageFallback(imgEl, label) {
+        try {
+          imgEl.onerror = null;
+          imgEl.style.display = 'none';
+          const holder = document.createElement('div');
+          holder.style.padding = '12px';
+          holder.style.background = '#fafafa';
+          holder.style.border = '1px dashed #ddd';
+          holder.style.borderRadius = '6px';
+          holder.style.color = '#666';
+          holder.style.fontSize = '0.9rem';
+          holder.textContent = `未找到图片：${label}（将文件放到本页面同目录即可显示）`;
+          imgEl.parentNode && imgEl.parentNode.appendChild(holder);
+        } catch (_) {}
+      }
+      
       (function () {
         const exercises = [
           {
