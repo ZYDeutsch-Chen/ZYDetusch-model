@@ -1,967 +1,700 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>深圳德语⭐陈老师讲德语 - 动词变位</title>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>深圳德语(⭐)陈老师讲德语 - 什么变位动词</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+          "Helvetica Neue", Arial;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 42, 108, 0.9),
+          rgba(178, 31, 31, 0.9),
+          rgba(26, 42, 108, 0.9)
+        );
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
+      header {
+        padding: 14px 16px;
+        background: #1a2a6c;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 14px;
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin: 10px 0;
+      }
+      .mode {
+        display: flex;
+        gap: 8px;
+      }
+      .btn {
+        cursor: pointer;
+        border: 0;
+        background: #eee;
+        color: #333;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .btn.primary {
+        background: #ffcc00;
+        color: #1a2a6c;
+      }
+      .btn.success {
+        background: #28a745;
+        color: #fff;
+      }
+      .btn.secondary {
+        background: #6c757d;
+        color: #fff;
+      }
+      .btn.active {
+        outline: 2px solid #ffcc00;
+      }
+      .row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .panel {
+        background: #f7f7fb;
+        border: 1px solid #e3e6ef;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+      .title {
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #1a2a6c;
+      }
+      .bank,
+      .sentence {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-height: 52px;
+      }
+      .piece {
+        background: #e3f2fd;
+        color: #0b4167;
+        border: 1px solid #c7e5ff;
+        padding: 0; /* we will control inner paddings per sub-elements */
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: move;
+        user-select: none;
+        display: inline-flex;
+        align-items: stretch;
+      }
+      .piece.word {
+        padding: 8px 12px;
+      }
+      .piece.girdle {
+        background: transparent;
+        border-color: transparent;
+        color: #7a4f00;
+      }
+      .girdle-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        min-width: 140px;
+      }
+      .girdle-top {
+        height: 16px; /* top 1/4 of typical ~64px block */
+        background: #fff0d6;
+        border: 1px solid #ffd27a;
+        border-bottom: 0;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+      .girdle-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+      }
+      .girdle-cell {
+        background: #fff0d6;
+        border: 1px solid #ffd27a;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px; /* ~3/4 of 64 */
+        white-space: nowrap;
+      }
+      .girdle-cell.left {
+        border-right: 0;
+        border-bottom-left-radius: 10px;
+      }
+      .girdle-cell.right {
+        border-bottom-right-radius: 10px;
+      }
+      .piece.stem {
+        background: #e9e7ff;
+        border: 1px solid #c9c6ff;
+        color: #2d1f8b;
+        padding: 6px 10px;
+        border-radius: 8px;
+        align-items: center;
+      }
+      .piece.ghost {
+        opacity: 0.6;
+      }
+      .sentence {
+        background: #fff;
+        border: 2px dashed #b9c3d1;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .drop-hint {
+        opacity: 0.7;
+        font-style: italic;
+        color: #666;
+      }
+      .status {
+        font-weight: 700;
+      }
+      .ok {
+        color: #28a745;
+      }
+      .bad {
+        color: #c0392b;
+      }
+      .ref {
+        background: #fff;
+        border-left: 4px solid #1a2a6c;
+        padding: 8px;
+        border-radius: 8px;
+      }
+      .illustration {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        align-items: start;
+      }
+      .illustration .card {
+        background: #fff;
+        border: 1px solid #e3e6ef;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+      }
+      .illustration img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+        border: 1px solid #eee;
+      }
+      @media (max-width: 680px) {
+        .bank,
+        .sentence {
+          gap: 6px;
         }
-        
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .piece.word {
+          padding: 6px 9px;
         }
-        
-        .container {
-            max-width: 860px;
-            width: 100%;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            padding: 18px;
-            margin-top: 14px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 18px;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            font-size: 2rem;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .star {
-            color: #ffc107;
-            margin: 0 8px;
-            font-size: 1.6rem;
-        }
-        
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 1.06rem;
-        }
-        
-        .mode-selector {
-            display: flex;
-            justify-content: center;
-            margin: 12px 0 10px 0;
-            gap: 10px;
-        }
-        
-        .mode-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 40px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-        
-        .normal-mode {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        .evil-mode {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .mode-btn.active {
-            transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .sentence-display {
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 10px;
-            padding: 14px;
-            min-height: 161px; /* +15% */
-            margin: 12px 0 10px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 8px;
-            position: relative;
-        }
-        
-        .sentence-topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-        
-        .sentence-topbar .left {
-            text-align: left;
-        }
-        
-        .sentence-topbar .right {
-            text-align: right;
-            color: #7f8c8d;
-            font-weight: 500;
-        }
-        
-        .sentence-translation {
-            color: #2c3e50;
-            font-size: 1rem;
-            text-align: left;
-        }
-        
-        .dropzone {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: flex-start;
-            align-items: center;
-            min-height: 120px; /* inner area */
-        }
-        
-        .puzzle-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 10px 0 8px 0;
-            min-height: 138px; /* +15% */
-            align-items: center;
-        }
-        
-        .puzzle-piece {
-            color: white;
-            font-size: 1.12rem;
-            font-weight: 500;
-            cursor: grab;
-            user-select: none;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .word-piece {
-            background: #3498db;
-            padding: 12px 16px;
-            border-radius: 10px;
-            height: 64px; /* base height */
-        }
-        
-        .verb-stem-piece {
-            background: #2c3e50;
-            padding: 8px 12px;
-            height: 48px; /* 75% of 64px */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-            border-radius: 8px;
-        }
-        
-        /* Original yoke styles kept for other sentences (if any use it) */
-        .yoke-piece {
-            position: relative;
-            height: 74px;
-            display: flex;
-            align-items: center;
-            z-index: 2;
-        }
-        .yoke-left, .yoke-right {
-            padding: 8px 12px;
-            background: #e74c3c;
-            border-radius: 50%;
-            height: 64px;
-            width: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            z-index: 3;
-        }
-        .yoke-connector {
-            width: 70px;
-            height: 22px;
-            background: #e74c3c;
-            position: relative;
-            margin: 0 -5px;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .yoke-connector::before {
-            content: "";
-            position: absolute;
-            top: -9px;
-            left: 0;
-            width: 100%;
-            height: 18px;
-            background: #e74c3c;
-            border-radius: 50% / 100% 100% 0 0;
-        }
-        .connector-slot {
-            width: 70px;
-            height: 56px;
-            background: #2c3e50;
-            border-radius: 8px;
-            margin: 0 -5px;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.1rem;
-            position: relative;
-            top: -12px;
-        }
-        .swap-btn {
-            position: absolute;
-            top: -12px;
-            right: -12px;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #f39c12;
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-        
-        /* New saddle yoke (块4整体) */
-        .yoke-saddle.puzzle-piece {
-            background: transparent;
-            padding: 0;
-            border-radius: 10px;
-            height: 64px;
-            display: inline-flex;
-            align-items: flex-start;
-            gap: 0;
-        }
-        .yoke-saddle .yoke-side {
-            background: #3498db; /* same as normal block */
-            color: #fff;
-            border-radius: 10px;
-            padding: 12px 16px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .yoke-saddle .yoke-center {
-            position: relative;
-            height: 64px;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: flex-start;
-            overflow: visible;
-        }
-        .yoke-saddle .yoke-bridge {
-            height: 16px; /* 25% of 64 */
-            width: 100%;
-            background: #3498db; /* same as side blocks */
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        .yoke-saddle .yoke-hole {
-            flex: 1;
-            width: 100%;
-            background: transparent; /* will be set dynamically to parent bg */
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            position: relative;
-        }
-        .yoke-saddle.docked .yoke-hole {
-            background: transparent;
-        }
-        .yoke-saddle.docked .yoke-center .verb-stem-piece {
-            width: 100% !important;
-            height: 48px !important;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            margin: 0;
-        }
-        
-        .puzzle-piece:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
-        }
-        
-        .puzzle-piece:active {
-            cursor: grabbing;
-        }
-        
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 16px;
-        }
-        
-        .control-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 40px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            background: #2ecc71;
-            color: white;
-        }
-        
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
-        }
-        
-        #reset-btn {
-            background: #e74c3c;
-        }
-        
-        #next-btn {
-            background: #3498db;
-        }
-        
-        .explanation {
-            margin-top: 18px;
-            padding: 14px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 5px solid #3498db;
-        }
-        
-        .explanation h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .explanation p {
-            line-height: 1.6;
-            color: #34495e;
-        }
-        
-        .yoke-explanation {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-            padding: 8px;
-            background: #fff3cd;
-            border-radius: 8px;
-            border: 1px solid #ffeaa7;
-        }
-        
-        .yoke-symbol {
-            font-size: 1.4rem;
-            margin: 0 8px;
-            color: #e74c3c;
-        }
-        
-        .special-controls {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 10px 0;
-        }
-        
-        .special-btn {
-            padding: 8px 12px;
-            background: #9b59b6;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        
-        .connected-piece {
-            display: flex;
-            align-items: center;
-            margin: 6px;
-            background: #f8f9fa;
-            padding: 8px 10px;
-            border-radius: 10px;
-            border: 1px solid #dee2e6;
-        }
-        
-        .combined-verb {
-            display: flex;
-            align-items: center;
-            background: #e8f4fc;
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin: 4px 0;
-            gap: 6px;
-        }
-        
-        .combined-verb span {
-            font-weight: 600;
-        }
-        
-        .combined-verb .complete-verb {
-            display: inline-block;
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        
-        .combined-verb .complete-verb.fading {
-            opacity: 0;
-            transform: translateY(-6px);
-        }
-        
-        .subject {
-            color: #e74c3c;
-        }
-        
-        .stem {
-            color: #2c3e50;
-        }
-        
-        .ending {
-            color: #3498db;
-        }
-        
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.7rem;
-            }
-            
-            .mode-btn, .control-btn {
-                padding: 9px 16px;
-                font-size: 0.9rem;
-            }
-            
-            .word-piece, .verb-stem-piece {
-                padding: 10px 14px;
-                font-size: 1rem;
-            }
-            
-            .yoke-piece {
-                transform: scale(0.9);
-            }
-            
-            .yoke-left, .yoke-right {
-                height: 58px;
-                width: 58px;
-                font-size: 0.92rem;
-            }
-            
-            .yoke-connector {
-                width: 60px;
-            }
-            
-            .connector-slot {
-                width: 58px;
-                font-size: 0.98rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>深圳德语<span class="star">⭐</span>陈老师讲德语</h1>
-        <p class="subtitle">动词变位交互式学习工具</p>
+      <h1>深圳德语⭐陈老师 讲语法： 变位动词都是牛马而已！</h1>
     </header>
-    
+
     <div class="container">
-        <div class="mode-selector">
-            <button class="mode-btn normal-mode active" id="normal-mode">科班老师模式</button>
-            <button class="mode-btn evil-mode" id="evil-mode">陈老师邪修模式</button>
+      <div class="toolbar">
+        <div class="mode">
+          <button id="modeClassical" class="btn active">科班老师模式</button>
+          <button id="modeXiexiu" class="btn">陈老师模式</button>
         </div>
-        
-        <div class="sentence-display" id="sentence-display">
-            <!-- 动态填充：请造句/进度 + 中文翻译 + 放置区 -->
+        <div style="flex: 1"></div>
+        <button id="btnReset" class="btn secondary">重新拼图</button>
+        <button id="btnSubmit" class="btn primary">提交答案</button>
+        <button id="btnNext" class="btn success">下一题</button>
+      </div>
+
+      <div class="row">
+        <div class="panel">
+          <div class="title">请造句（第 <span id="idx">1</span>/5 题）</div>
+          <div id="target" style="font-weight: 700"></div>
         </div>
-        
-        <div class="puzzle-container" id="puzzle-container">
-            <!-- 拼图块将通过JavaScript动态生成 -->
+
+        <div class="panel">
+          <div class="title">拼图画布</div>
+          <div id="sentence" class="sentence" data-zone="sentence">
+            <span class="drop-hint" id="hintSentence">将下方拼图拖到此处</span>
+          </div>
         </div>
-        
-        <div class="special-controls" id="special-controls" style="display: none;">
-            <button class="special-btn" id="swap-yoke-btn">交换牛轭两端</button>
-            <button class="special-btn" id="connect-btn">连接拼图</button>
+
+        <div class="panel">
+          <div class="title">拼图块</div>
+          <div id="bank" class="bank" data-zone="bank"></div>
         </div>
-        
-        <div class="controls">
-            <button class="control-btn" id="reset-btn">重置拼图</button>
-            <button class="control-btn" id="submit-btn">提交答案</button>
-            <button class="control-btn" id="next-btn">下一题</button>
+
+        <div class="panel">
+          <div class="title">结果</div>
+          <div id="status" class="status"></div>
+          <div
+            id="ref"
+            class="ref"
+            style="margin-top: 8px; display: none"
+          ></div>
         </div>
-        
-        <div class="explanation">
-            <h3>什么是"动词变位"？</h3>
-            <p>动词变位(konjugierte Verben)是指动词根据人称、数、时态等的变化形式。</p>
-            
-            <div class="yoke-explanation">
-                <span>传统解释: 变位动词</span>
-                <span class="yoke-symbol">→</span>
-                <span>陈老师解释: 发生了连接的动词，和做动作的人(东西)有连接的那个词</span>
+
+        <div class="panel">
+          <div class="title">配图（牛套牛轭 / 马带马鞍）</div>
+          <div class="illustration">
+            <div class="card">
+              <div style="margin-bottom: 6px; font-weight: 700; color:#1a2a6c;">牛轭</div>
+              <img src="ox_yoke.png" alt="示意图：牛套上牛轭（放置 ox_yoke.png 到同目录即可显示）" />
             </div>
-            
-            <p style="margin-top: 10px;"><strong>Konjugiert</strong> 意思是"连接"，就像传统电话听筒，连接着两端。在语法中，它连接着句子的主语和动词。</p>
-            <p>将"轭"块拖放到动词词干上完成连接，体验动词变位的本质！</p>
-            
-            <div class="combined-verb" id="combined-example">
-                <span class="subject">wir</span> 
-                <span class="stem">sprech</span> 
-                <span class="ending">en</span> 
-                <span>=</span>
-                <span class="complete-verb">wir sprechen</span>
+            <div class="card">
+              <div style="margin-bottom: 6px; font-weight: 700; color:#1a2a6c;">马鞍</div>
+              <img src="horse_saddle.png" alt="示意图：马带上马鞍（放置 horse_saddle.png 到同目录即可显示）" />
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 句子数据
-            const sentences = [
-                "Wir sprechen heute Deutsch.",
-                "Woher kommst du?",
-                "Heute sprechen wir Deutsch.",
-                "Ich bin Herr Chen.",
-                "Herr Chen bin ich."
-            ];
-            
-            // 句子中文翻译
-            const translations = [
-                "我们今天说德语。",
-                "你来自哪里？",
-                "今天我们说德语。",
-                "我是陈老师。",
-                "陈老师是我。"
-            ];
-            
-            let currentSentenceIndex = 0;
-            let currentMode = 'normal';
-            
-            // DOM元素
-            const normalModeBtn = document.getElementById('normal-mode');
-            const evilModeBtn = document.getElementById('evil-mode');
-            const sentenceDisplay = document.getElementById('sentence-display');
-            const puzzleContainer = document.getElementById('puzzle-container');
-            const resetBtn = document.getElementById('reset-btn');
-            const submitBtn = document.getElementById('submit-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const specialControls = document.getElementById('special-controls');
-            const swapYokeBtn = document.getElementById('swap-yoke-btn');
-            const connectBtn = document.getElementById('connect-btn');
-            
-            // 引用
-            let verbStemPiece = null;
-            let yokePiece = null; // 兼容：电话式或鞍式
-            let dropzone = null;
-            
-            const pronouns = new Set(['ich','du','er','sie','es','wir','ihr','sie','sie']);
-            const endings = new Set(['e','st','t','en']);
-            
-            loadSentence(currentSentenceIndex);
-            
-            normalModeBtn.addEventListener('click', function() {
-                currentMode = 'normal';
-                normalModeBtn.classList.add('active');
-                evilModeBtn.classList.remove('active');
-                specialControls.style.display = 'none';
-                loadSentence(currentSentenceIndex);
-            });
-            
-            evilModeBtn.addEventListener('click', function() {
-                currentMode = 'evil';
-                evilModeBtn.classList.add('active');
-                normalModeBtn.classList.remove('active');
-                specialControls.style.display = 'flex';
-                loadSentence(currentSentenceIndex);
-            });
-            
-            resetBtn.addEventListener('click', function() {
-                loadSentence(currentSentenceIndex);
-            });
-            
-            submitBtn.addEventListener('click', function() {
-                checkAnswer();
-            });
-            
-            nextBtn.addEventListener('click', function() {
-                currentSentenceIndex = (currentSentenceIndex + 1) % sentences.length;
-                loadSentence(currentSentenceIndex);
-            });
-            
-            swapYokeBtn.addEventListener('click', function() {
-                if (!yokePiece) return;
-                const left = yokePiece.querySelector('.yoke-side.left');
-                const right = yokePiece.querySelector('.yoke-side.right');
-                if (left && right) {
-                    const tmp = left.textContent;
-                    left.textContent = right.textContent;
-                    right.textContent = tmp;
-                }
-            });
-            
-            connectBtn.addEventListener('click', function() {
-                // 保留旧功能：若两块均在放置区则生成文本合成
-                connectPieces();
-            });
-            
-            function updateSentenceHeader(index) {
-                const topbar = document.createElement('div');
-                topbar.className = 'sentence-topbar';
-                topbar.innerHTML = `<div class="left">请造句</div><div class="right" id="progress-indicator">第 ${index+1}/${sentences.length} 题</div>`;
-                return topbar;
-            }
-            
-            function buildSentenceBox(index) {
-                const translation = translations[index];
-                sentenceDisplay.innerHTML = '';
-                sentenceDisplay.appendChild(updateSentenceHeader(index));
-                const trans = document.createElement('div');
-                trans.className = 'sentence-translation';
-                trans.id = 'sentence-translation';
-                trans.textContent = translation; // 仅中文翻译
-                sentenceDisplay.appendChild(trans);
-                dropzone = document.createElement('div');
-                dropzone.className = 'dropzone';
-                dropzone.id = 'dropzone';
-                sentenceDisplay.appendChild(dropzone);
-                enableDropZone(dropzone);
-            }
-            
-            function loadSentence(index) {
-                buildSentenceBox(index);
-                puzzleContainer.innerHTML = '';
-                verbStemPiece = null;
-                yokePiece = null;
-                
-                const sentence = sentences[index];
-                if (currentMode === 'normal') {
-                    loadNormalMode(sentence);
-                } else {
-                    loadEvilMode(sentence, index);
-                }
-            }
-            
-            function loadNormalMode(sentence) {
-                const words = sentence.split(' ');
-                const shuffledWords = shuffleArray([...words]);
-                shuffledWords.forEach(word => {
-                    const piece = createWordPiece(word);
-                    puzzleContainer.appendChild(piece);
-                });
-            }
-            
-            function loadEvilMode(sentence, index) {
-                let pieces = [];
-                switch(index) {
-                    case 0: // "Wir sprechen heute Deutsch."
-                        // 顺序打乱：sprech, heute, Deutsch., Wir- -en（整体）
-                        const stem = createVerbStemPiece('sprech');
-                        const yoke = createYokeSaddlePiece('Wir-', '-en');
-                        pieces = [
-                            createWordPiece('heute'),
-                            createWordPiece('Deutsch.'),
-                            stem,
-                            yoke
-                        ];
-                        break;
-                    case 1: // 保持旧式以简化
-                        pieces = [
-                            createWordPiece('Woher'),
-                            createWordPiece('du?'),
-                            createVerbStemPiece('komm'),
-                            createYokePiece('', 'st')
-                        ];
-                        break;
-                    case 2:
-                        pieces = [
-                            createWordPiece('Heute'),
-                            createWordPiece('Deutsch.'),
-                            createVerbStemPiece('sprech'),
-                            createYokePiece('wir', 'en')
-                        ];
-                        break;
-                    case 3:
-                        pieces = [
-                            createWordPiece('Ich'),
-                            createWordPiece('Herr'),
-                            createWordPiece('Chen.'),
-                            createYokePiece('', 'bin')
-                        ];
-                        break;
-                    case 4:
-                        pieces = [
-                            createWordPiece('Herr'),
-                            createWordPiece('Chen'),
-                            createYokePiece('ich', 'bin'),
-                            createWordPiece('.')
-                        ];
-                        break;
-                }
-                const shuffledPieces = shuffleArray([...pieces]);
-                shuffledPieces.forEach(piece => {
-                    puzzleContainer.appendChild(piece);
-                });
-                // 设置鞍式中孔背景（初始在拼图画布上）
-                if (yokePiece && yokePiece.classList.contains('yoke-saddle')) {
-                    updateYokeHoleBackground(yokePiece, puzzleContainer);
-                    sizeYokeCenterToStem();
-                }
-            }
-            
-            function createWordPiece(text) {
-                const piece = document.createElement('div');
-                piece.className = 'puzzle-piece word-piece';
-                piece.textContent = text;
-                piece.draggable = true;
-                piece.addEventListener('dragstart', dragStart);
-                piece.addEventListener('dragend', dragEnd);
-                return piece;
-            }
-            
-            function createVerbStemPiece(text) {
-                const piece = document.createElement('div');
-                piece.className = 'puzzle-piece verb-stem-piece';
-                piece.textContent = text;
-                piece.draggable = true;
-                verbStemPiece = piece;
-                piece.addEventListener('dragstart', dragStart);
-                piece.addEventListener('dragend', dragEnd);
-                return piece;
-            }
-            
-            // 新：鞍式块4（整体，可拖动）
-            function createYokeSaddlePiece(leftText, rightText) {
-                const container = document.createElement('div');
-                container.className = 'yoke-saddle puzzle-piece';
-                container.draggable = true;
-                
-                const left = document.createElement('div');
-                left.className = 'yoke-side left';
-                left.textContent = leftText;
-                const center = document.createElement('div');
-                center.className = 'yoke-center';
-                const bridge = document.createElement('div');
-                bridge.className = 'yoke-bridge';
-                const hole = document.createElement('div');
-                hole.className = 'yoke-hole';
-                center.appendChild(bridge);
-                center.appendChild(hole);
-                const right = document.createElement('div');
-                right.className = 'yoke-side right';
-                right.textContent = rightText;
-                
-                container.appendChild(left);
-                container.appendChild(center);
-                container.appendChild(right);
-                
-                // 保存引用
-                yokePiece = container;
-                
-                container.addEventListener('dragstart', dragStart);
-                container.addEventListener('dragend', dragEnd);
-                
-                return container;
-            }
-            
-            // 旧：电话听筒式（其他句子仍可用）
-            function createYokePiece(leftText, rightText) {
-                const yokePieceContainer = document.createElement('div');
-                yokePieceContainer.className = 'yoke-piece';
-                yokePieceContainer.draggable = true;
-                
-                yokePieceContainer.innerHTML = `
-                    <div class="yoke-left">${leftText}</div>
-                    <div class="yoke-connector"></div>
-                    <div class="yoke-right">${rightText}</div>
-                    <button class="swap-btn">↔</button>
-                `;
-                
-                yokePiece = yokePieceContainer;
-                yokePieceContainer.addEventListener('dragstart', dragStart);
-                yokePieceContainer.addEventListener('dragend', dragEnd);
-                
-                const swapBtn = yokePieceContainer.querySelector('.swap-btn');
-                if (swapBtn) {
-                    swapBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const left = yokePieceContainer.querySelector('.yoke-left');
-                        const right = yokePieceContainer.querySelector('.yoke-right');
-                        const temp = left.textContent;
-                        left.textContent = right.textContent;
-                        right.textContent = temp;
-                    });
-                }
-                
-                return yokePieceContainer;
-            }
-            
-            function enableDropZone(zone) {
-                zone.addEventListener('dragover', dragOver);
-                zone.addEventListener('drop', drop);
-            }
-            
-            let draggedPiece = null;
-            
-            function dragStart() {
-                draggedPiece = this;
-                setTimeout(() => {
-                    this.style.opacity = '0.5';
-                }, 0);
-            }
-            
-            function dragEnd() {
-                this.style.opacity = '1';
-                draggedPiece = null;
-            }
-            
-            function dragOver(e) {
-                e.preventDefault();
-            }
-            
-            function drop(e) {
-                e.preventDefault();
-                if (!draggedPiece) return;
-                this.appendChild(draggedPiece);
-                
-                // 根据所在容器更新鞍式中孔背景
-                if (draggedPiece.classList.contains('yoke-saddle')) {
-                    updateYokeHoleBackground(draggedPiece, this);
-                    sizeYokeCenterToStem();
-                }
-                
-                // 若两块都在放置区，执行套接
-                attemptDock();
-            }
-            
-            function updateYokeHoleBackground(yoke, parentEl) {
-                const hole = yoke.querySelector('.yoke-hole');
-                if (!hole) return;
-                const bg = window.getComputedStyle(parentEl).backgroundColor || 'transparent';
-                hole.style.background = bg;
-            }
-            
-            function sizeYokeCenterToStem() {
-                if (!yokePiece || !yokePiece.classList.contains('yoke-saddle')) return;
-                const center = yokePiece.querySelector('.yoke-center');
-                if (!center) return;
-                // 以当前已存在的动词块宽度设定
-                if (verbStemPiece) {
-                    const width = verbStemPiece.offsetWidth || 80;
-                    center.style.width = width + 'px';
-                }
-            }
-            
-            function attemptDock() {
-                if (!dropzone || !yokePiece || !verbStemPiece) return;
-                if (yokePiece.parentNode !== dropzone || verbStemPiece.parentNode !== dropzone) return;
-                
-                // 设置中心宽度匹配词干
-                sizeYokeCenterToStem();
-                
-                const leftText = (yokePiece.querySelector('.yoke-side.left')?.textContent || '').trim();
-                const rightText = (yokePiece.querySelector('.yoke-side.right')?.textContent || '').trim();
-                const subject = leftText.replace(/-+$/,'');
-                const ending = rightText.replace(/^-+/,'');
-                const stem = (verbStemPiece.textContent || '').trim();
-                
-                // 将词干嵌入中孔
-                const center = yokePiece.querySelector('.yoke-center');
-                const hole = yokePiece.querySelector('.yoke-hole');
-                if (!center || !hole) return;
-                hole.replaceWith(verbStemPiece);
-                yokePiece.classList.add('docked');
-                
-                // 标记完整动词，供答案拼接
-                const complete = `${subject} ${stem}${ending}`;
-                yokePiece.dataset.completeVerb = complete;
-            }
-            
-            // 兼容旧的按钮连接（如果两块都在放置区，构造文本视图）
-            function connectPieces() {
-                if (!dropzone) return;
-                if (verbStemPiece && yokePiece && 
-                    verbStemPiece.parentNode && yokePiece.parentNode) {
-                    // 若已套接，则直接完成
-                    if (yokePiece.classList.contains('yoke-saddle') && yokePiece.dataset.completeVerb) {
-                        return; // 已有用于答案的标记
-                    }
-                    // 旧逻辑：电话式
-                    if (yokePiece.classList.contains('yoke-piece') &&
-                        verbStemPiece.parentNode === dropzone && yokePiece.parentNode === dropzone) {
-                        const connectedPiece = document.createElement('div');
-                        connectedPiece.className = 'connected-piece';
-                        const leftText = (yokePiece.querySelector('.yoke-left').textContent || '').trim();
-                        const rightText = (yokePiece.querySelector('.yoke-right').textContent || '').trim();
-                        const verbText = (verbStemPiece.textContent || '').trim();
-                        connectedPiece.innerHTML = `
-                            <div class="combined-verb">
-                                <span class="subject">${leftText}</span>
-                                <span class="stem">${verbText}</span>
-                                <span class="ending">${rightText}</span>
-                                <span>=</span>
-                                <span class="complete-verb">${leftText} ${verbText}${rightText}</span>
-                            </div>
-                        `;
-                        dropzone.appendChild(connectedPiece);
-                        verbStemPiece.remove();
-                        yokePiece.remove();
-                        verbStemPiece = null;
-                        yokePiece = null;
-                    }
-                }
-            }
-            
-            function checkAnswer() {
-                if (!dropzone) return;
-                let parts = [];
-                const children = Array.from(dropzone.children);
-                for (const node of children) {
-                    if (node.dataset && node.dataset.completeVerb) {
-                        parts.push(node.dataset.completeVerb.trim());
-                    } else if (node.classList && node.classList.contains('connected-piece')) {
-                        const cv = node.querySelector('.complete-verb');
-                        if (cv) parts.push(cv.textContent.trim());
-                    } else if (node.classList && node.classList.contains('word-piece')) {
-                        parts.push(node.textContent.trim());
-                    }
-                }
-                let userAnswer = parts.join(' ');
-                userAnswer = userAnswer.replace(/\s+([.,!?])/g, '$1');
-                const correctAnswer = sentences[currentSentenceIndex];
-                if (userAnswer === correctAnswer) {
-                    alert('正确！👍 句子拼写正确！');
-                } else {
-                    alert(`不完全正确。您的答案: ${userAnswer}\n正确答案: ${correctAnswer}`);
-                }
-            }
-            
-            function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
-            }
+      (function () {
+        const exercises = [
+          {
+            text: "Wir sprechen heute Deutsch.",
+            classical: ["Wir", "sprechen", "heute", "Deutsch."],
+            xiexiu: [
+              { type: "stem", text: "sprech", stem: "sprech" },
+              { type: "word", text: "heute" },
+              { type: "word", text: "Deutsch." },
+              {
+                type: "girdle",
+                label: "wir-左轭-(第一块)-右轭 en",
+                subject: "Wir",
+                suffix: "en",
+              },
+            ],
+          },
+          {
+            text: "Woher kommst du?",
+            classical: ["Woher", "kommst", "du?"],
+            xiexiu: [
+              { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "Woher" },
+              {
+                type: "girdle",
+                label: "du-左轭-(第一块)-右轭 st",
+                subject: "du",
+                suffix: "st",
+              },
+              { type: "word", text: "?" },
+            ],
+          },
+          {
+            text: "Heute sprechen wir Deutsch.",
+            classical: ["Heute", "sprechen", "wir", "Deutsch."],
+            xiexiu: [
+              { type: "stem", text: "sprech", stem: "sprech" },
+              { type: "word", text: "Heute" },
+              { type: "word", text: "Deutsch." },
+              {
+                type: "girdle",
+                label: "wir-左轭-(第一块)-右轭 en",
+                subject: "wir",
+                suffix: "en",
+              },
+            ],
+          },
+          {
+            text: "Ich bin Herr Chen.",
+            classical: ["Ich", "bin", "Herr", "Chen."],
+            xiexiu: [
+              { type: "word", text: "Ich" },
+              { type: "word", text: "bin" },
+              { type: "word", text: "Herr" },
+              { type: "word", text: "Chen." },
+            ],
+          },
+          {
+            text: "Herr Chen bin ich.",
+            classical: ["Herr", "Chen", "bin", "ich."],
+            xiexiu: [
+              { type: "word", text: "Herr" },
+              { type: "word", text: "Chen" },
+              { type: "word", text: "bin" },
+              { type: "word", text: "ich." },
+            ],
+          },
+        ];
+
+        let mode = "classical";
+        let index = 0;
+        let dragData = null;
+
+        const elIdx = document.getElementById("idx");
+        const elTarget = document.getElementById("target");
+        const elBank = document.getElementById("bank");
+        const elSentence = document.getElementById("sentence");
+        const elHintSentence = document.getElementById("hintSentence");
+        const elStatus = document.getElementById("status");
+        const elRef = document.getElementById("ref");
+        const btnReset = document.getElementById("btnReset");
+        const btnSubmit = document.getElementById("btnSubmit");
+        const btnNext = document.getElementById("btnNext");
+        const btnModeClassical = document.getElementById("modeClassical");
+        const btnModeXiexiu = document.getElementById("modeXiexiu");
+
+        function normalize(text) {
+          return text
+            .replace(/\s+/g, " ")
+            .replace(/\s+([?.!,:;])/g, "$1")
+            .trim();
+        }
+        function renderTarget() {
+          elIdx.textContent = String(index + 1);
+          elTarget.textContent = exercises[index].text;
+        }
+        function clearZone(zone) {
+          while (zone.firstChild) zone.removeChild(zone.firstChild);
+        }
+        function makeGirdleDom(subject, suffix, labelText) {
+          const root = document.createElement("div");
+          root.className = "piece girdle";
+          root.dataset.kind = "girdle";
+          root.dataset.subject = subject;
+          root.dataset.suffix = suffix;
+
+          const inner = document.createElement("div");
+          inner.className = "girdle-inner";
+
+          const top = document.createElement("div");
+          top.className = "girdle-top";
+
+          const bottom = document.createElement("div");
+          bottom.className = "girdle-bottom";
+
+          const left = document.createElement("div");
+          left.className = "girdle-cell left";
+          left.textContent = subject + "-";
+
+          const right = document.createElement("div");
+          right.className = "girdle-cell right";
+          right.textContent = "-" + suffix;
+
+          bottom.appendChild(left);
+          bottom.appendChild(right);
+
+          inner.appendChild(top);
+          inner.appendChild(bottom);
+
+          root.appendChild(inner);
+
+          // Accessibility title
+          root.title = labelText || `${subject}- [stem] -${suffix}`;
+
+          // drag events
+          root.draggable = true;
+          root.addEventListener("dragstart", (e) => {
+            dragData = {
+              from: root.parentElement.getAttribute("data-zone"),
+              html: root.outerHTML,
+              payload: {
+                kind: "girdle",
+                subject,
+                suffix,
+                stem: "",
+                text: labelText || `${subject}-${suffix}`,
+              },
+              sourceEl: root,
+            };
+            setTimeout(() => root.classList.add("ghost"), 0);
+            e.dataTransfer.effectAllowed = "move";
+          });
+          root.addEventListener("dragend", () => {
+            root.classList.remove("ghost");
+            dragData = null;
+          });
+
+          return root;
+        }
+        function makePiece(data) {
+          if (data.type === "girdle") {
+            return makeGirdleDom(data.subject, data.suffix, data.label);
+          }
+          const div = document.createElement("div");
+          div.className = "piece";
+          div.draggable = true;
+
+          if (data.type === "stem") {
+            div.classList.add("stem");
+            div.dataset.kind = "stem";
+            div.dataset.stem = data.stem;
+            div.textContent = data.text;
+          } else {
+            div.classList.add("word");
+            div.dataset.kind = "word";
+            div.textContent = data.text;
+          }
+
+          div.addEventListener("dragstart", (e) => {
+            dragData = {
+              from: div.parentElement.getAttribute("data-zone"),
+              html: div.outerHTML,
+              payload: {
+                kind: div.dataset.kind,
+                subject: div.dataset.subject || "",
+                suffix: div.dataset.suffix || "",
+                stem: div.dataset.stem || "",
+                text: div.textContent,
+              },
+              sourceEl: div,
+            };
+            setTimeout(() => div.classList.add("ghost"), 0);
+            e.dataTransfer.effectAllowed = "move";
+          });
+          div.addEventListener("dragend", () => {
+            div.classList.remove("ghost");
+            dragData = null;
+          });
+
+          if (data.type === "girdle") {
+            div.title =
+              "将本块拖到“词干”上（句子区内）可合成【主语 + 变位动词】两块";
+          }
+          return div;
+        }
+
+        function populateBank() {
+          clearZone(elBank);
+          const ex = exercises[index];
+          const pieces =
+            mode === "classical"
+              ? ex.classical.map((t) => ({ type: "word", text: t }))
+              : ex.xiexiu;
+
+          const shuffled = pieces.slice().sort(() => Math.random() - 0.5);
+          shuffled.forEach((p) => {
+            const node = makePiece(p);
+            elBank.appendChild(node);
+          });
+        }
+
+        function refreshAll() {
+          elStatus.textContent = "";
+          elStatus.className = "status";
+          elRef.style.display = "none";
+          elRef.textContent = "";
+          clearZone(elSentence);
+          elHintSentence.style.display = "inline";
+          populateBank();
+          renderTarget();
+        }
+
+        function insertPieceIntoSentence(html, beforeEl = null) {
+          const temp = document.createElement("div");
+          temp.innerHTML = html;
+          let piece = temp.firstElementChild;
+
+          // If the dropped HTML was a girdle, rebuild as DOM to keep event handlers
+          if (
+            piece && piece.classList.contains("girdle") &&
+            piece.dataset && piece.dataset.subject !== undefined
+          ) {
+            const rebuilt = makeGirdleDom(
+              piece.dataset.subject,
+              piece.dataset.suffix,
+              piece.title
+            );
+            piece = rebuilt;
+          }
+
+          if (beforeEl) {
+            elSentence.insertBefore(piece, beforeEl);
+          } else {
+            elSentence.appendChild(piece);
+          }
+          rebindPiece(piece);
+        }
+
+        function rebindPiece(div) {
+          // Only rebind simple pieces. Girdle DOM already has its drag handlers.
+          if (div.classList.contains("girdle")) return;
+          div.addEventListener("dragstart", (e) => {
+            dragData = {
+              from: div.parentElement.getAttribute("data-zone"),
+              html: div.outerHTML,
+              payload: {
+                kind: div.dataset.kind,
+                subject: div.dataset.subject || "",
+                suffix: div.dataset.suffix || "",
+                stem: div.dataset.stem || "",
+                text: div.textContent,
+              },
+              sourceEl: div,
+            };
+            setTimeout(() => div.classList.add("ghost"), 0);
+            e.dataTransfer.effectAllowed = "move";
+          });
+          div.addEventListener("dragend", () => {
+            div.classList.remove("ghost");
+            dragData = null;
+          });
+        }
+
+        let sentenceInsertBefore = null;
+        elSentence.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          const target = e.target.closest(".piece");
+          sentenceInsertBefore =
+            target && target.parentElement === elSentence ? target : null;
         });
+        elSentence.addEventListener("drop", (e) => {
+          e.preventDefault();
+          if (!dragData) return;
+          const from = dragData.from;
+
+          if (from === "bank" || from === "sentence") {
+            if (dragData.sourceEl && dragData.sourceEl.parentElement) {
+              dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+            }
+            insertPieceIntoSentence(dragData.html, sentenceInsertBefore);
+            elHintSentence.style.display = elSentence.children.length
+              ? "none"
+              : "inline";
+          }
+        });
+
+        elBank.addEventListener("dragover", (e) => {
+          e.preventDefault();
+        });
+        elBank.addEventListener("drop", (e) => {
+          e.preventDefault();
+          if (!dragData) return;
+          if (dragData.sourceEl && dragData.sourceEl.parentElement) {
+            dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+          }
+          const temp = document.createElement("div");
+          temp.innerHTML = dragData.html;
+          let piece = temp.firstElementChild;
+          if (
+            piece && piece.classList && piece.classList.contains("girdle") &&
+            piece.dataset && piece.dataset.subject !== undefined
+          ) {
+            piece = makeGirdleDom(piece.dataset.subject, piece.dataset.suffix, piece.title);
+          }
+          elBank.appendChild(piece);
+          rebindPiece(piece);
+        });
+
+        // Handle girdle docking on stem inside the sentence zone
+        elSentence.addEventListener(
+          "drop",
+          (e) => {
+            const dropTargetPiece = e.target.closest(".piece");
+            if (!dropTargetPiece || !dragData) return;
+
+            const dragged = dragData.payload;
+            const targetKind = dropTargetPiece.dataset.kind;
+
+            if (dragged.kind === "girdle" && targetKind === "stem") {
+              const subject = dragged.subject;
+              const suffix = dragged.suffix;
+              const stem = dropTargetPiece.dataset.stem || "";
+              const verb = stem + suffix;
+
+              const subjectPiece = makePiece({ type: "word", text: subject });
+              const verbPiece = makePiece({ type: "word", text: verb });
+
+              const parent = dropTargetPiece.parentElement;
+              const marker = dropTargetPiece.nextSibling;
+
+              if (dropTargetPiece.parentElement)
+                dropTargetPiece.parentElement.removeChild(dropTargetPiece);
+              if (dragData.sourceEl && dragData.sourceEl.parentElement) {
+                dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+              }
+
+              parent.insertBefore(subjectPiece, marker);
+              parent.insertBefore(verbPiece, marker);
+              rebindPiece(subjectPiece);
+              rebindPiece(verbPiece);
+            }
+          },
+          true
+        );
+
+        function readSentenceText() {
+          const tokens = [...elSentence.querySelectorAll(".piece")].map((p) =>
+            p.textContent.trim()
+          );
+          let s = tokens.join(" ");
+          s = s.replace(/\s+\?/g, "?").replace(/\s+\./g, ".");
+          s = s.replace(/\s+([?!.,;:])/g, "$1");
+          return normalize(s);
+        }
+
+        function submit() {
+          const user = readSentenceText();
+          const ans = normalize(exercises[index].text);
+          if (user === ans) {
+            elStatus.textContent = "✅ 正确！";
+            elStatus.className = "status ok";
+            elRef.style.display = "none";
+          } else {
+            elStatus.textContent = "❌ 还差一点，再试试！";
+            elStatus.className = "status bad";
+            elRef.style.display = "block";
+            elRef.textContent = "参考答案： " + exercises[index].text;
+          }
+        }
+
+        btnReset.addEventListener("click", () => refreshAll());
+        btnSubmit.addEventListener("click", submit);
+        btnNext.addEventListener("click", () => {
+          index = (index + 1) % exercises.length;
+          refreshAll();
+        });
+
+        btnModeClassical.addEventListener("click", () => {
+          mode = "classical";
+          btnModeClassical.classList.add("active");
+          btnModeXiexiu.classList.remove("active");
+          refreshAll();
+        });
+        btnModeXiexiu.addEventListener("click", () => {
+          mode = "xiexiu";
+          btnModeXiexiu.classList.add("active");
+          btnModeClassical.classList.remove("active");
+          refreshAll();
+        });
+
+        // 自动初始化
+        refreshAll();
+      })();
     </script>
-</body>
+  </body>
 </html>
