@@ -3,132 +3,54 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>至元德语造句练习器</title>
+    <title>至元德语 - 造句练习器</title>
     <style>
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
       body {
         margin: 0;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
-          "Helvetica Neue", Arial;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
         min-height: 100vh;
-        background: linear-gradient(
-          135deg,
-          rgba(26, 42, 108, 0.9),
-          rgba(178, 31, 31, 0.9),
-          rgba(26, 42, 108, 0.9)
-        );
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
+        background: linear-gradient(135deg, rgba(26, 42, 108, 0.9), rgba(178, 31, 31, 0.9), rgba(26, 42, 108, 0.9));
+        background-repeat: no-repeat; background-size: cover; background-position: center;
       }
-      header {
-        padding: 14px 16px;
-        background: #1a2a6c;
-        color: #fff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      }
-      h1 {
-        margin: 0;
-        font-size: 1.2rem;
-        letter-spacing: 0.5px;
-      }
-      .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 14px;
-      }
-      .toolbar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
-        margin: 10px 0;
-      }
-      .mode {
-        display: flex;
-        gap: 8px;
-      }
-      .btn {
-        cursor: pointer;
-        border: 0;
-        background: #eee;
-        color: #333;
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-weight: 600;
-      }
-      .btn.primary {
-        background: #ffcc00;
-        color: #1a2a6c;
-      }
-      .btn.success {
-        background: #28a745;
-        color: #fff;
-      }
-      .btn.secondary {
-        background: #6c757d;
-        color: #fff;
-      }
-      .btn.active {
-        outline: 2px solid #ffcc00;
-      }
-      .row {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .panel {
-        background: #f7f7fb;
-        border: 1px solid #e3e6ef;
-        border-radius: 10px;
-        padding: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-      }
-      .title {
-        font-weight: 700;
-        margin-bottom: 6px;
-        color: #1a2a6c;
-      }
-      .bank,
-      .sentence {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        min-height: 52px;
-      }
-      /* Fixed stable heights to prevent layout jump */
-      .sentence { height: 92px; border: 2px dashed #b9c3d1; border-radius: 10px; padding: 10px; background: #fff; }
-      .bank { height: 120px; overflow-y: auto; background: #fff; border: 1px dashed #d7deea; border-radius: 8px; padding: 8px; }
+      header { padding: 14px 16px; background: #1a2a6c; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+      h1 { margin: 0; font-size: 1.2rem; letter-spacing: 0.5px; }
+      .subtitle { margin-top: 4px; font-size: 0.95rem; opacity: 0.9; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 14px; }
+      .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
+      .mode { display: flex; gap: 8px; }
+      .btn { cursor: pointer; border: 0; background: #eee; color: #333; padding: 8px 12px; border-radius: 8px; font-weight: 600; }
+      .btn.primary { background: #ffcc00; color: #1a2a6c; }
+      .btn.success { background: #28a745; color: #fff; }
+      .btn.secondary { background: #6c757d; color: #fff; }
+      .btn.active { outline: 2px solid #ffcc00; }
+      .row { display: flex; flex-direction: column; gap: 10px; }
+      .panel { background: #f7f7fb; border: 1px solid #e3e6ef; border-radius: 10px; padding: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+      .title { font-weight: 700; margin-bottom: 6px; color: #1a2a6c; }
 
-      /* Slot-based sentence canvas */
-      .slots { display: flex; align-items: stretch; width: 100%; height: 100%; }
-      .slot { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: flex-start; padding: 6px; }
-      .sep { width: 0; border-right: 2px dashed #b9c3d1; margin: 0 6px; }
-      .slot .placeholder { opacity: 0.6; color: #7b8898; font-style: italic; }
+      /* Heights: keep total ~212px; canvas +15% (from 92 -> ~106), bank reduced to keep total constant */
+      .sentence { height: 106px; border: 2px dashed #b9c3d1; border-radius: 10px; padding: 10px; background: #fff; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+      .bank { height: 106px; overflow-y: auto; background: #fff; border: 1px dashed #d7deea; border-radius: 8px; padding: 8px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
-      /* Pieces color scheme */
+      /* ISO-like palette */
       .piece { border-radius: 10px; font-weight: 700; cursor: move; user-select: none; display: inline-flex; align-items: center; }
-      .piece.word { background: #e3f2fd; color: #0b4167; border: 1px solid #c7e5ff; padding: 8px 12px; }
-      .piece.stem { background: #ebe8ff; color: #392c8d; border: 1px solid #d4d0ff; padding: 6px 10px; border-radius: 8px; }
-      .piece.girdle { background: transparent; border: 0; color: #3a2d8b; }
+      .piece.word { background: #E6F0FA; color: #0B3C78; border: 1px solid #7DADE8; padding: 8px 12px; }
+      .piece.stem { background: #EEE8F7; color: #3E2A78; border: 1px solid #BFA7E6; padding: 6px 10px; border-radius: 8px; }
+      .piece.girdle { background: transparent; border: 0; color: #7A4F00; }
       .girdle-inner { display: flex; flex-direction: column; align-items: stretch; min-width: 140px; }
-      .girdle-top { height: 16px; background: #f4f1ff; border: 1px solid #d8d2ff; border-bottom: 0; border-top-left-radius: 10px; border-top-right-radius: 10px; }
+      .girdle-top { height: 16px; background: #FFF4CC; border: 1px solid #FFD666; border-bottom: 0; border-top-left-radius: 10px; border-top-right-radius: 10px; }
       .girdle-bottom { display: grid; grid-template-columns: auto 1fr auto; gap: 0; }
-      .girdle-cell { background: #f4f1ff; border: 1px solid #d8d2ff; padding: 8px 12px; display: flex; align-items: center; justify-content: center; min-height: 40px; white-space: nowrap; }
+      .girdle-cell { background: #FFF4CC; border: 1px solid #FFD666; padding: 8px 12px; display: flex; align-items: center; justify-content: center; min-height: 40px; white-space: nowrap; }
       .girdle-cell.left { border-right: 0; border-bottom-left-radius: 10px; }
       .girdle-cell.center { background: transparent; border: 0; min-width: 80px; }
       .girdle-cell.right { border-bottom-right-radius: 10px; }
       .piece.ghost { opacity: 0.6; }
-
-      .drop-hint { opacity: 0.7; font-style: italic; color: #666; }
       .status { font-weight: 700; }
       .ok { color: #28a745; }
       .bad { color: #c0392b; }
       .ref { background: #fff; border-left: 4px solid #1a2a6c; padding: 8px; border-radius: 8px; }
 
-      /* TTS three dots */
+      /* TTS dots */
       .tts { display: flex; align-items: center; gap: 8px; color: #1a2a6c; font-weight: 700; }
       .dots { display: inline-flex; gap: 5px; }
       .dots i { width: 8px; height: 8px; background: #1a2a6c; border-radius: 50%; opacity: 0.3; }
@@ -137,19 +59,18 @@
       .speaking .dots i:nth-child(3) { animation-delay: 0.3s; }
       @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
 
-      /* Footer patent */
+      .illustration { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: start; }
+      .illustration .card { background: #fff; border: 1px solid #e3e6ef; border-radius: 8px; padding: 10px; text-align: center; }
+      .illustration img { max-width: 100%; height: auto; border-radius: 6px; border: 1px solid #eee; }
       footer { margin-top: 16px; padding: 10px 14px; text-align: center; color: #e9ecf5; background: rgba(0,0,0,0.15); font-size: 0.9rem; }
 
-      @media (max-width: 680px) {
-        .bank,
-        .sentence { gap: 6px; }
-        .piece.word { padding: 6px 9px; }
-      }
+      @media (max-width: 680px) { .piece.word { padding: 6px 9px; } }
     </style>
   </head>
   <body>
     <header>
-      <h1>至元德语造句练习器</h1>
+      <h1>至元德语 - 造句练习器</h1>
+      <div class="subtitle">深圳德语⭐陈老师 讲语法： 变位动词都是牛马而已！</div>
     </header>
 
     <div class="container">
@@ -170,15 +91,13 @@
 
       <div class="row">
         <div class="panel">
-          <div class="title">请造句（第 <span id="idx">1</span>/5 题）</div>
+          <div class="title">中文句意</div>
           <div id="target" style="font-weight: 700"></div>
         </div>
 
         <div class="panel">
           <div class="title">拼图画布</div>
-          <div id="sentence" class="sentence">
-            <div class="slots" id="slots"></div>
-          </div>
+          <div id="sentence" class="sentence" data-zone="sentence"></div>
         </div>
 
         <div class="panel">
@@ -227,7 +146,7 @@
           imgEl.parentNode && imgEl.parentNode.appendChild(holder);
         } catch (_) {}
       }
-      
+
       (function () {
         const exercises = [
           {
@@ -238,9 +157,8 @@
               { type: "stem", text: "sprech", stem: "sprech" },
               { type: "word", text: "heute" },
               { type: "word", text: "Deutsch." },
-              { type: "girdle", label: "wir- [动词] -en", subject: "Wir", suffix: "en" },
+              { type: "girdle", label: "wir- [动词] -en", subject: "Wir", suffix: "en", packRight: false },
             ],
-            slots: 3, // Wir sprechen | heute | Deutsch.
           },
           {
             text: "Woher kommst du?",
@@ -249,10 +167,9 @@
             xiexiu: [
               { type: "stem", text: "komm", stem: "komm" },
               { type: "word", text: "Woher" },
-              { type: "girdle", label: "du- [动词] -st", subject: "du", suffix: "st" },
+              { type: "girdle", label: "du- [动词] -st", subject: "du", suffix: "st", packRight: true },
               { type: "word", text: "?" },
             ],
-            slots: 3, // Woher | kommst du | ?
           },
           {
             text: "Heute sprechen wir Deutsch.",
@@ -262,9 +179,8 @@
               { type: "stem", text: "sprech", stem: "sprech" },
               { type: "word", text: "Heute" },
               { type: "word", text: "Deutsch." },
-              { type: "girdle", label: "wir- [动词] -en", subject: "wir", suffix: "en" },
+              { type: "girdle", label: "wir- [动词] -en", subject: "wir", suffix: "en", packRight: true },
             ],
-            slots: 3, // Heute | sprechen wir | Deutsch.
           },
           {
             text: "Ich komme aus China.",
@@ -274,9 +190,8 @@
               { type: "stem", text: "komm", stem: "komm" },
               { type: "word", text: "aus" },
               { type: "word", text: "China." },
-              { type: "girdle", label: "Ich- [动词] -e", subject: "Ich", suffix: "e" },
+              { type: "girdle", label: "Ich- [动词] -e", subject: "Ich", suffix: "e", packRight: false },
             ],
-            slots: 2, // Ich komme | aus China.
           },
           {
             text: "Aus China komme ich.",
@@ -286,10 +201,9 @@
               { type: "stem", text: "komm", stem: "komm" },
               { type: "word", text: "Aus" },
               { type: "word", text: "China" },
-              { type: "girdle", label: "ich- [动词] -e", subject: "ich", suffix: "e" },
+              { type: "girdle", label: "ich- [动词] -e", subject: "ich", suffix: "e", packRight: true },
               { type: "word", text: "." },
             ],
-            slots: 2, // Aus China | komme ich.
           },
         ];
 
@@ -297,11 +211,9 @@
         let index = 0;
         let dragData = null;
 
-        const elIdx = document.getElementById("idx");
         const elTarget = document.getElementById("target");
         const elBank = document.getElementById("bank");
         const elSentence = document.getElementById("sentence");
-        const elSlots = document.getElementById("slots");
         const elStatus = document.getElementById("status");
         const elRef = document.getElementById("ref");
         const btnReset = document.getElementById("btnReset");
@@ -310,97 +222,59 @@
         const btnModeClassical = document.getElementById("modeClassical");
         const btnModeXiexiu = document.getElementById("modeXiexiu");
         const ttsUI = document.getElementById("ttsUI");
-        const ttsDots = document.getElementById("ttsDots");
 
         function normalize(text) {
-          return text
-            .replace(/\s+/g, " ")
-            .replace(/\s+([?.!,:;])/g, "$1")
-            .trim();
+          return text.replace(/\s+/g, " ").replace(/\s+([?.!,:;])/g, "$1").trim();
         }
-        function renderTarget() {
-          elIdx.textContent = String(index + 1);
-          elTarget.textContent = exercises[index].cn;
-        }
-        function clearZone(zone) {
-          while (zone.firstChild) zone.removeChild(zone.firstChild);
-        }
+        function renderTarget() { elTarget.textContent = exercises[index].cn; }
+        function clearZone(zone) { while (zone.firstChild) zone.removeChild(zone.firstChild); }
 
-        function makeGirdleDom(subject, suffix, labelText) {
+        function makeGirdleDom(subject, suffix, labelText, packRight) {
           const root = document.createElement("div");
           root.className = "piece girdle";
           root.dataset.kind = "girdle";
           root.dataset.subject = subject;
           root.dataset.suffix = suffix;
+          root.dataset.pack = packRight ? 'right' : 'left';
 
-          const inner = document.createElement("div");
-          inner.className = "girdle-inner";
+          const inner = document.createElement("div"); inner.className = "girdle-inner";
+          const top = document.createElement("div"); top.className = "girdle-top";
+          const bottom = document.createElement("div"); bottom.className = "girdle-bottom";
 
-          const top = document.createElement("div");
-          top.className = "girdle-top";
+          const left = document.createElement("div"); left.className = "girdle-cell left";
+          const center = document.createElement("div"); center.className = "girdle-cell center";
+          const right = document.createElement("div"); right.className = "girdle-cell right";
 
-          const bottom = document.createElement("div");
-          bottom.className = "girdle-bottom";
+          if (packRight) {
+            left.textContent = '';
+            right.textContent = `-${suffix} ${subject}`;
+          } else {
+            left.textContent = `${subject}-`;
+            right.textContent = `-${suffix}`;
+          }
 
-          const left = document.createElement("div");
-          left.className = "girdle-cell left";
-          left.textContent = subject + "-";
-
-          const center = document.createElement("div");
-          center.className = "girdle-cell center";
-
-          const right = document.createElement("div");
-          right.className = "girdle-cell right";
-          right.textContent = "-" + suffix;
-
-          bottom.appendChild(left);
-          bottom.appendChild(center);
-          bottom.appendChild(right);
-
-          inner.appendChild(top);
-          inner.appendChild(bottom);
-
-          root.appendChild(inner);
+          bottom.appendChild(left); bottom.appendChild(center); bottom.appendChild(right);
+          inner.appendChild(top); inner.appendChild(bottom); root.appendChild(inner);
           root.title = labelText || `${subject}- [stem] -${suffix}`;
 
           root.draggable = true;
           root.addEventListener("dragstart", (e) => {
-            dragData = {
-              from: root.parentElement?.getAttribute("data-zone") || "",
-              html: root.outerHTML,
-              payload: { kind: "girdle", subject, suffix, stem: "", text: labelText || `${subject}-${suffix}` },
-              sourceEl: root,
-            };
-            setTimeout(() => root.classList.add("ghost"), 0);
-            e.dataTransfer.effectAllowed = "move";
+            dragData = { from: root.parentElement?.getAttribute("data-zone") || "", html: root.outerHTML,
+              payload: { kind: "girdle", subject, suffix, stem: "", text: labelText || `${subject}-${suffix}`, packRight: !!packRight }, sourceEl: root };
+            setTimeout(() => root.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
           });
           root.addEventListener("dragend", () => { root.classList.remove("ghost"); dragData = null; });
           return root;
         }
         function makePiece(data) {
-          if (data.type === "girdle") return makeGirdleDom(data.subject, data.suffix, data.label);
-          const div = document.createElement("div");
-          div.className = "piece";
-          div.draggable = true;
-          if (data.type === "stem") {
-            div.classList.add("stem");
-            div.dataset.kind = "stem";
-            div.dataset.stem = data.stem;
-            div.textContent = data.text;
-          } else {
-            div.classList.add("word");
-            div.dataset.kind = "word";
-            div.textContent = data.text;
-          }
+          if (data.type === "girdle") return makeGirdleDom(data.subject, data.suffix, data.label, !!data.packRight);
+          const div = document.createElement("div"); div.className = "piece"; div.draggable = true;
+          if (data.type === "stem") { div.classList.add("stem"); div.dataset.kind = "stem"; div.dataset.stem = data.stem; div.textContent = data.text; }
+          else { div.classList.add("word"); div.dataset.kind = "word"; div.textContent = data.text; }
           div.addEventListener("dragstart", (e) => {
-            dragData = {
-              from: div.parentElement?.getAttribute("data-zone") || "",
-              html: div.outerHTML,
-              payload: { kind: div.dataset.kind, subject: div.dataset.subject || "", suffix: div.dataset.suffix || "", stem: div.dataset.stem || "", text: div.textContent },
-              sourceEl: div,
-            };
-            setTimeout(() => div.classList.add("ghost"), 0);
-            e.dataTransfer.effectAllowed = "move";
+            dragData = { from: div.parentElement?.getAttribute("data-zone") || "", html: div.outerHTML,
+              payload: { kind: div.dataset.kind, subject: div.dataset.subject || "", suffix: div.dataset.suffix || "", stem: div.dataset.stem || "", text: div.textContent }, sourceEl: div };
+            setTimeout(() => div.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
           });
           div.addEventListener("dragend", () => { div.classList.remove("ghost"); dragData = null; });
           return div;
@@ -410,189 +284,100 @@
           clearZone(elBank);
           const ex = exercises[index];
           const pieces = mode === "classical" ? ex.classical.map((t) => ({ type: "word", text: t })) : ex.xiexiu;
-          const shuffled = pieces.slice().sort(() => Math.random() - 0.5);
-          shuffled.forEach((p) => elBank.appendChild(makePiece(p)));
-        }
-
-        function buildSlots(count) {
-          clearZone(elSlots);
-          for (let i = 0; i < count; i++) {
-            const slot = document.createElement('div');
-            slot.className = 'slot';
-            slot.setAttribute('data-zone','slot');
-            const hint = document.createElement('span');
-            hint.className = 'placeholder';
-            hint.textContent = '拖拽到此';
-            slot.appendChild(hint);
-            bindSlotDnD(slot);
-            elSlots.appendChild(slot);
-            if (i < count - 1) {
-              const sep = document.createElement('div');
-              sep.className = 'sep';
-              elSlots.appendChild(sep);
-            }
-          }
+          pieces.slice().sort(() => Math.random() - 0.5).forEach((p) => elBank.appendChild(makePiece(p)));
         }
 
         function refreshAll() {
-          elStatus.textContent = "";
-          elStatus.className = "status";
-          elRef.style.display = "none";
-          elRef.textContent = "";
-          buildSlots(exercises[index].slots || 3);
-          populateBank();
-          renderTarget();
-          speak(exercises[index].cn, 'zh-CN');
+          elStatus.textContent = ""; elStatus.className = "status"; elRef.style.display = "none"; elRef.textContent = "";
+          clearZone(elSentence);
+          populateBank(); renderTarget(); speak(exercises[index].cn, 'zh-CN');
         }
 
-        function insertIntoSlot(slotEl, html, beforeEl = null) {
-          const temp = document.createElement("div");
-          temp.innerHTML = html;
-          let piece = temp.firstElementChild;
+        function insertInto(container, html, beforeEl = null) {
+          const temp = document.createElement("div"); temp.innerHTML = html; let piece = temp.firstElementChild;
           if (piece && piece.classList.contains("girdle") && piece.dataset && piece.dataset.subject !== undefined) {
-            piece = makeGirdleDom(piece.dataset.subject, piece.dataset.suffix, piece.title);
+            piece = makeGirdleDom(piece.dataset.subject, piece.dataset.suffix, piece.title, piece.dataset.pack === 'right');
           }
-          // remove placeholder
-          const ph = slotEl.querySelector('.placeholder'); if (ph) ph.remove();
-          if (beforeEl) slotEl.insertBefore(piece, beforeEl); else slotEl.appendChild(piece);
+          if (beforeEl) container.insertBefore(piece, beforeEl); else container.appendChild(piece);
           rebindPiece(piece);
         }
 
         function rebindPiece(div) {
-          if (div.classList.contains("girdle")) return; // girdle already bound
+          if (div.classList.contains("girdle")) return;
           div.addEventListener("dragstart", (e) => {
             dragData = { from: div.parentElement?.getAttribute("data-zone") || "", html: div.outerHTML,
               payload: { kind: div.dataset.kind, subject: div.dataset.subject || "", suffix: div.dataset.suffix || "", stem: div.dataset.stem || "", text: div.textContent }, sourceEl: div };
-            setTimeout(() => div.classList.add("ghost"), 0);
-            e.dataTransfer.effectAllowed = "move";
+            setTimeout(() => div.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
           });
           div.addEventListener("dragend", () => { div.classList.remove("ghost"); dragData = null; });
         }
 
-        function bindSlotDnD(slot) {
-          let insertBefore = null;
-          slot.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            const target = e.target.closest('.piece');
-            insertBefore = (target && target.parentElement === slot) ? target : null;
-          });
-          slot.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (!dragData) return;
-            if (dragData.sourceEl && dragData.sourceEl.parentElement) {
-              dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
-            }
-            insertIntoSlot(slot, dragData.html, insertBefore);
-          });
-        }
+        // Bank DnD
+        elBank.addEventListener("dragover", (e) => e.preventDefault());
+        elBank.addEventListener("drop", (e) => {
+          e.preventDefault(); if (!dragData) return;
+          if (dragData.sourceEl && dragData.sourceEl.parentElement) dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+          const temp = document.createElement("div"); temp.innerHTML = dragData.html; let piece = temp.firstElementChild;
+          if (piece && piece.classList && piece.classList.contains("girdle") && piece.dataset && piece.dataset.subject !== undefined) {
+            piece = makeGirdleDom(piece.dataset.subject, piece.dataset.suffix, piece.title, piece.dataset.pack === 'right');
+          }
+          elBank.appendChild(piece); rebindPiece(piece);
+        });
 
-        // Girdle docking on stem (embed) - capture phase so it works inside slots
-        elSentence.addEventListener("drop", (e) => {
+        // Sentence DnD
+        let insertBefore = null;
+        elSentence.addEventListener('dragover', (e) => { e.preventDefault(); const target = e.target.closest('.piece'); insertBefore = (target && target.parentElement === elSentence) ? target : null; });
+        elSentence.addEventListener('drop', (e) => { e.preventDefault(); if (!dragData) return;
+          // Handle girdle docking if dropping onto a stem or onto a girdle
           const dropTargetPiece = e.target.closest(".piece");
-          if (!dropTargetPiece || !dragData) return;
-          const dragged = dragData.payload;
-          const targetKind = dropTargetPiece.dataset.kind;
-
-          if (dragged.kind === "girdle" && targetKind === "stem") {
-            const subject = dragData.payload.subject;
-            const suffix = dragData.payload.suffix;
-            const stemText = dropTargetPiece.dataset.stem || "";
-            const girdleEl = dragData.sourceEl;
-            const parent = dropTargetPiece.parentElement;
-            const insertBeforeNode = dropTargetPiece; // place girdle where stem is
-
-            if (girdleEl && girdleEl.parentElement) girdleEl.parentElement.removeChild(girdleEl);
-            parent.insertBefore(girdleEl, insertBeforeNode);
-
-            const center = girdleEl.querySelector('.girdle-cell.center');
-            if (center) {
-              const stemWidth = dropTargetPiece.offsetWidth || 80;
-              center.style.minWidth = stemWidth + 'px';
-              dropTargetPiece.setAttribute('draggable','false');
-              dropTargetPiece.classList.add('embedded-stem');
-              center.appendChild(dropTargetPiece);
+          if (dropTargetPiece) {
+            const dragged = dragData.payload; const targetKind = dropTargetPiece.dataset.kind;
+            // girdle -> stem
+            if (dragged.kind === "girdle" && targetKind === "stem") {
+              const subject = dragData.payload.subject; const suffix = dragData.payload.suffix; const stemText = dropTargetPiece.dataset.stem || "";
+              const packRight = !!dragData.payload.packRight;
+              const girdleEl = dragData.sourceEl; const parent = dropTargetPiece.parentElement; const insertBeforeNode = dropTargetPiece;
+              if (girdleEl && girdleEl.parentElement) girdleEl.parentElement.removeChild(girdleEl);
+              parent.insertBefore(girdleEl, insertBeforeNode);
+              const center = girdleEl.querySelector('.girdle-cell.center');
+              if (center) { const stemWidth = dropTargetPiece.offsetWidth || 80; center.style.minWidth = stemWidth + 'px'; dropTargetPiece.setAttribute('draggable','false'); dropTargetPiece.classList.add('embedded-stem'); center.appendChild(dropTargetPiece); }
+              girdleEl.dataset.completeVerb = packRight ? `${stemText}${suffix} ${subject}` : `${subject} ${stemText}${suffix}`;
+              e.stopPropagation(); return;
             }
-            girdleEl.dataset.completeVerb = `${subject} ${stemText}${suffix}`;
-            e.stopPropagation();
-            return;
-          }
-
-          if (dragged.kind === "stem" && dropTargetPiece.classList.contains('girdle')) {
-            const girdleEl = dropTargetPiece;
-            const subject = girdleEl.dataset.subject || '';
-            const suffix = girdleEl.dataset.suffix || '';
-            const stemEl = dragData.sourceEl;
-            const stemText = stemEl?.dataset?.stem || '';
-            if (stemEl && stemEl.parentElement) stemEl.parentElement.removeChild(stemEl);
-            const center = girdleEl.querySelector('.girdle-cell.center');
-            if (center && stemEl) {
-              const stemWidth = stemEl.offsetWidth || 80;
-              center.style.minWidth = stemWidth + 'px';
-              stemEl.setAttribute('draggable','false');
-              stemEl.classList.add('embedded-stem');
-              center.appendChild(stemEl);
-              girdleEl.dataset.completeVerb = `${subject} ${stemText}${suffix}`;
+            // stem -> girdle
+            if (dragged.kind === "stem" && dropTargetPiece.classList.contains('girdle')) {
+              const girdleEl = dropTargetPiece; const subject = girdleEl.dataset.subject || ''; const suffix = girdleEl.dataset.suffix || ''; const packRight = (girdleEl.dataset.pack === 'right');
+              const stemEl = dragData.sourceEl; const stemText = stemEl?.dataset?.stem || '';
+              if (stemEl && stemEl.parentElement) stemEl.parentElement.removeChild(stemEl);
+              const center = girdleEl.querySelector('.girdle-cell.center');
+              if (center && stemEl) { const stemWidth = stemEl.offsetWidth || 80; center.style.minWidth = stemWidth + 'px'; stemEl.setAttribute('draggable','false'); stemEl.classList.add('embedded-stem'); center.appendChild(stemEl); girdleEl.dataset.completeVerb = packRight ? `${stemText}${suffix} ${subject}` : `${subject} ${stemText}${suffix}`; }
+              e.stopPropagation(); return;
             }
-            e.stopPropagation();
-            return;
           }
-        }, true);
+          if (dragData.sourceEl && dragData.sourceEl.parentElement) dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+          insertInto(elSentence, dragData.html, insertBefore);
+        });
 
         function readSentenceText() {
           const tokens = [];
-          const children = Array.from(elSlots.children);
+          const children = Array.from(elSentence.children);
           for (const node of children) {
-            if (node.classList.contains('sep')) continue;
-            const slotPieces = Array.from(node.querySelectorAll(':scope > .piece'));
-            if (slotPieces.length === 0) continue;
-            const words = [];
-            for (const p of slotPieces) {
-              if (p.classList.contains('girdle') && p.dataset.completeVerb) {
-                words.push(p.dataset.completeVerb.trim());
-              } else {
-                words.push(p.textContent.trim());
-              }
-            }
-            tokens.push(words.join(' '));
+            if (node.classList && node.classList.contains('girdle') && node.dataset.completeVerb) tokens.push(node.dataset.completeVerb.trim());
+            else if (node.classList && node.classList.contains('piece')) tokens.push(node.textContent.trim());
           }
-          let s = tokens.join(' ');
-          s = s.replace(/\s+\?/g, "?").replace(/\s+\./g, ".").replace(/\s+([?!.,;:])/g, "$1");
+          let s = tokens.join(' '); s = s.replace(/\s+\?/g, "?").replace(/\s+\./g, ".").replace(/\s+([?!.,;:])/g, "$1");
           return normalize(s);
         }
 
         function submit() {
-          const user = readSentenceText();
-          const ans = normalize(exercises[index].text);
-          if (user === ans) {
-            elStatus.textContent = "✅ 正确！";
-            elStatus.className = "status ok";
-            elRef.style.display = "none";
-            speak(exercises[index].text, 'de-DE');
-          } else {
-            elStatus.textContent = "❌ 还差一点，再试试！";
-            elStatus.className = "status bad";
-            elRef.style.display = "block";
-            elRef.textContent = "参考答案： " + exercises[index].text;
-          }
+          const user = readSentenceText(); const ans = normalize(exercises[index].text);
+          if (user === ans) { elStatus.textContent = "✅ 正确！"; elStatus.className = "status ok"; elRef.style.display = "none"; speak(exercises[index].text, 'de-DE'); }
+          else { elStatus.textContent = "❌ 还差一点，再试试！"; elStatus.className = "status bad"; elRef.style.display = "block"; elRef.textContent = "参考答案： " + exercises[index].text; }
         }
 
-        // TTS helpers
-        function setSpeaking(on) { if (!ttsUI) return; ttsUI.classList.toggle('speaking', !!on); }
+        function setSpeaking(on) { const t = document.getElementById('ttsUI'); if (!t) return; t.classList.toggle('speaking', !!on); }
         function speak(text, lang) {
-          try {
-            if (!window.speechSynthesis) return;
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = lang;
-            const voices = window.speechSynthesis.getVoices();
-            const v = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase())) || voices[0];
-            if (v) utter.voice = v;
-            utter.rate = 0.95;
-            utter.onstart = () => setSpeaking(true);
-            utter.onend = () => setSpeaking(false);
-            utter.onerror = () => setSpeaking(false);
-            window.speechSynthesis.speak(utter);
-          } catch (e) { /* ignore */ }
+          try { if (!window.speechSynthesis) return; window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = lang; const voices = window.speechSynthesis.getVoices(); const v = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase())) || voices[0]; if (v) u.voice = v; u.rate = 0.95; u.onstart = () => setSpeaking(true); u.onend = () => setSpeaking(false); u.onerror = () => setSpeaking(false); window.speechSynthesis.speak(u); } catch(e) {}
         }
 
         btnReset.addEventListener("click", () => refreshAll());
