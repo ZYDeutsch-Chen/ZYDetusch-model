@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>深圳德语(⭐)陈老师讲德语 - 什么变位动词</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial}
+  header{padding:14px 16px;background:#1a2a6c;color:#fff}
+  h1{margin:0;font-size:1.1rem}
+  .container{max-width:1000px;margin:0 auto;padding:14px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+  .mode{display:flex;gap:8px}
+  .btn{cursor:pointer;border:0;background:#eee;color:#333;padding:8px 12px;border-radius:8px;font-weight:600}
+  .btn.primary{background:#ffcc00;color:#1a2a6c}
+  .btn.success{background:#28a745;color:#fff}
+  .btn.secondary{background:#6c757d;color:#fff}
+  .btn.active{outline:2px solid #ffcc00}
+  .row{display:flex;flex-direction:column;gap:10px}
+  .panel{background:#f7f7fb;border:1px solid #e3e6ef;border-radius:10px;padding:12px}
+  .title{font-weight:700;margin-bottom:6px;color:#1a2a6c}
+  .bank,.sentence{display:flex;flex-wrap:wrap;gap:8px;min-height:52px}
+  .piece{background:#e3f2fd;color:#0b4167;border:1px solid #c7e5ff;padding:8px 12px;border-radius:8px;font-weight:700;cursor:move;user-select:none}
+  .piece.girdle{background:#fff0d6;border-color:#ffd27a;color:#7a4f00}
+  .piece.stem{background:#e9e7ff;border-color:#c9c6ff;color:#2d1f8b}
+  .piece.ghost{opacity:.6}
+  .sentence{background:#fff;border:2px dashed #b9c3d1;border-radius:10px;padding:10px}
+  .drop-hint{opacity:.7;font-style:italic;color:#666}
+  .status{font-weight:700}
+  .ok{color:#28a745}.bad{color:#c0392b}
+  .ref{background:#fff;border-left:4px solid #1a2a6c;padding:8px;border-radius:8px}
+  @media (max-width:680px){
+    .bank,.sentence{gap:6px}
+    .piece{padding:6px 9px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>深圳德语(⭐)陈老师讲德语 - 什么变位动词</h1>
+</header>
+
+<div class="container">
+  <div class="toolbar">
+    <div class="mode">
+      <button id="modeClassical" class="btn active">科班老师模式</button>
+      <button id="modeXiexiu" class="btn">陈老师邪修模式</button>
+    </div>
+    <div style="flex:1"></div>
+    <button id="btnReset" class="btn secondary">重置拼图</button>
+    <button id="btnSubmit" class="btn primary">提交答案</button>
+    <button id="btnNext" class="btn success">下一题</button>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <div class="title">目标翻译（第 <span id="idx">1</span>/5 题）</div>
+      <div id="target" style="font-weight:700"></div>
+    </div>
+
+    <div class="panel">
+      <div class="title">拼图区（拖拽到此处，并可在此区域内拖动改变顺序）</div>
+      <div id="sentence" class="sentence" data-zone="sentence">
+        <span class="drop-hint" id="hintSentence">将下方拼图拖到此处</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="title">拼图块</div>
+      <div id="bank" class="bank" data-zone="bank"></div>
+    </div>
+
+    <div class="panel">
+      <div class="title">结果</div>
+      <div id="status" class="status"></div>
+      <div id="ref" class="ref" style="margin-top:8px;display:none"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // 数据：五个句子及两种模式的拆分
+  const exercises = [
+    {
+      text: "Wir sprechen heute Deutsch.",
+      classical: ["Wir","sprechen","heute","Deutsch."],
+      xiexiu: [
+        {type:"stem", text:"sprech", stem:"sprech"},
+        {type:"word", text:"heute"},
+        {type:"word", text:"Deutsch."},
+        {type:"girdle", label:"wir-左轭-(第一块)-右轭 en", subject:"Wir", suffix:"en"}
+      ]
+    },
+    {
+      text: "Woher kommst du?",
+      classical: ["Woher","kommst","du?"],
+      xiexiu: [
+        {type:"stem", text:"komm", stem:"komm"},
+        {type:"word", text:"Woher"},
+        {type:"girdle", label:"du-左轭-(第一块)-右轭 st", subject:"du", suffix:"st"},
+        {type:"word", text:"?"}
+      ]
+    },
+    {
+      text: "Heute sprechen wir Deutsch.",
+      classical: ["Heute","sprechen","wir","Deutsch."],
+      xiexiu: [
+        {type:"stem", text:"sprech", stem:"sprech"},
+        {type:"word", text:"Heute"},
+        {type:"word", text:"Deutsch."},
+        {type:"girdle", label:"wir-左轭-(第一块)-右轭 en", subject:"wir", suffix:"en"}
+      ]
+    },
+    {
+      text: "Ich bin Herr Chen.",
+      classical: ["Ich","bin","Herr","Chen."],
+      xiexiu: [
+        {type:"word", text:"Ich"},
+        {type:"word", text:"bin"},
+        {type:"word", text:"Herr"},
+        {type:"word", text:"Chen."}
+      ]
+    },
+    {
+      text: "Herr Chen bin ich.",
+      classical: ["Herr","Chen","bin","ich."],
+      xiexiu: [
+        {type:"word", text:"Herr"},
+        {type:"word", text:"Chen"},
+        {type:"word", text:"bin"},
+        {type:"word", text:"ich."}
+      ]
+    }
+  ];
+
+  // 状态
+  let mode = "classical"; // classical | xiexiu
+  let index = 0;
+  let dragData = null;
+
+  // DOM
+  const elIdx = document.getElementById("idx");
+  const elTarget = document.getElementById("target");
+  const elBank = document.getElementById("bank");
+  const elSentence = document.getElementById("sentence");
+  const elHintSentence = document.getElementById("hintSentence");
+  const elStatus = document.getElementById("status");
+  const elRef = document.getElementById("ref");
+  const btnReset = document.getElementById("btnReset");
+  const btnSubmit = document.getElementById("btnSubmit");
+  const btnNext = document.getElementById("btnNext");
+  const btnModeClassical = document.getElementById("modeClassical");
+  const btnModeXiexiu = document.getElementById("modeXiexiu");
+
+  // 工具
+  function normalize(text){
+    return text
+      .replace(/\s+/g," ")
+      .replace(/\s+([?.!,:;])/g,"$1")
+      .trim();
+  }
+  function renderTarget(){
+    elIdx.textContent = String(index+1);
+    elTarget.textContent = exercises[index].text;
+  }
+  function clearZone(zone){
+    while(zone.firstChild) zone.removeChild(zone.firstChild);
+  }
+  function makePiece(data){
+    const div = document.createElement("div");
+    div.className = "piece";
+    div.draggable = true;
+
+    if(data.type==="girdle"){
+      div.classList.add("girdle");
+      div.dataset.kind = "girdle";
+      div.dataset.subject = data.subject;
+      div.dataset.suffix = data.suffix;
+      div.textContent = data.label;
+    }else if(data.type==="stem"){
+      div.classList.add("stem");
+      div.dataset.kind = "stem";
+      div.dataset.stem = data.stem;
+      div.textContent = data.text;
+    }else{
+      div.dataset.kind = "word";
+      div.textContent = data.text;
+    }
+
+    div.addEventListener("dragstart", e=>{
+      dragData = {
+        from: div.parentElement.getAttribute("data-zone"),
+        html: div.outerHTML,
+        payload: {
+          kind: div.dataset.kind,
+          subject: div.dataset.subject||"",
+          suffix: div.dataset.suffix||"",
+          stem: div.dataset.stem||"",
+          text: div.textContent
+        },
+        sourceEl: div
+      };
+      setTimeout(()=>div.classList.add("ghost"),0);
+      e.dataTransfer.effectAllowed = "move";
+    });
+    div.addEventListener("dragend", ()=>{
+      div.classList.remove("ghost");
+      dragData = null;
+    });
+
+    if(data.type==="girdle"){
+      div.title = "将本块拖到“词干”上（句子区内）可合成【主语 + 变位动词】两块";
+    }
+    return div;
+  }
+
+  function populateBank(){
+    clearZone(elBank);
+    const ex = exercises[index];
+    const pieces = mode==="classical"
+      ? ex.classical.map(t=>({type:"word",text:t}))
+      : ex.xiexiu;
+
+    const shuffled = pieces.slice().sort(()=>Math.random()-0.5);
+    shuffled.forEach(p=>elBank.appendChild(makePiece(p)));
+  }
+
+  function refreshAll(){
+    elStatus.textContent = "";
+    elStatus.className = "status";
+    elRef.style.display = "none";
+    elRef.textContent = "";
+    clearZone(elSentence);
+    elHintSentence.style.display = "inline";
+    populateBank();
+    renderTarget();
+  }
+
+  function insertPieceIntoSentence(html, beforeEl=null){
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+    const piece = temp.firstElementChild;
+    if(beforeEl){
+      elSentence.insertBefore(piece, beforeEl);
+    }else{
+      elSentence.appendChild(piece);
+    }
+    rebindPiece(piece);
+  }
+
+  function rebindPiece(div){
+    div.addEventListener("dragstart", e=>{
+      dragData = {
+        from: div.parentElement.getAttribute("data-zone"),
+        html: div.outerHTML,
+        payload: {
+          kind: div.dataset.kind,
+          subject: div.dataset.subject||"",
+          suffix: div.dataset.suffix||"",
+          stem: div.dataset.stem||"",
+          text: div.textContent
+        },
+        sourceEl: div
+      };
+      setTimeout(()=>div.classList.add("ghost"),0);
+      e.dataTransfer.effectAllowed = "move";
+    });
+    div.addEventListener("dragend", ()=>{
+      div.classList.remove("ghost");
+      dragData = null;
+    });
+  }
+
+  let sentenceInsertBefore = null;
+  elSentence.addEventListener("dragover", e=>{
+    e.preventDefault();
+    const target = e.target.closest(".piece");
+    sentenceInsertBefore = target && target.parentElement===elSentence ? target : null;
+  });
+  elSentence.addEventListener("drop", e=>{
+    e.preventDefault();
+    if(!dragData) return;
+    const from = dragData.from;
+
+    if(from==="bank" || from==="sentence"){
+      if(dragData.sourceEl && dragData.sourceEl.parentElement){
+        dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+      }
+      insertPieceIntoSentence(dragData.html, sentenceInsertBefore);
+      elHintSentence.style.display = elSentence.children.length ? "none" : "inline";
+    }
+  });
+
+  elBank.addEventListener("dragover", e=>{ e.preventDefault(); });
+  elBank.addEventListener("drop", e=>{
+    e.preventDefault();
+    if(!dragData) return;
+    if(dragData.sourceEl && dragData.sourceEl.parentElement){
+      dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+    }
+    const temp = document.createElement("div");
+    temp.innerHTML = dragData.html;
+    const piece = temp.firstElementChild;
+    elBank.appendChild(piece);
+    rebindPiece(piece);
+  });
+
+  elSentence.addEventListener("drop", e=>{
+    const dropTargetPiece = e.target.closest(".piece");
+    if(!dropTargetPiece || !dragData) return;
+
+    const dragged = dragData.payload;
+    const targetKind = dropTargetPiece.dataset.kind;
+
+    if(dragged.kind==="girdle" && targetKind==="stem"){
+      const subject = dragged.subject;
+      const suffix  = dragged.suffix;
+      const stem    = dropTargetPiece.dataset.stem || "";
+      const verb = stem + suffix;
+
+      const subjectPiece = makePiece({type:"word", text:subject});
+      const verbPiece    = makePiece({type:"word", text:verb});
+
+      const parent = dropTargetPiece.parentElement;
+      const marker = dropTargetPiece.nextSibling;
+
+      if(dropTargetPiece.parentElement) dropTargetPiece.parentElement.removeChild(dropTargetPiece);
+      if(dragData.sourceEl && dragData.sourceEl.parentElement){
+        dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+      }
+
+      parent.insertBefore(subjectPiece, marker);
+      parent.insertBefore(verbPiece, marker);
+      rebindPiece(subjectPiece);
+      rebindPiece(verbPiece);
+    }
+  }, true);
+
+  function readSentenceText(){
+    const tokens = [...elSentence.querySelectorAll(".piece")].map(p=>p.textContent.trim());
+    let s = tokens.join(" ");
+    s = s.replace(/\s+\?/g,"?").replace(/\s+\./g,".");
+    s = s.replace(/\s+([?!.,;:])/g,"$1");
+    return normalize(s);
+  }
+
+  function submit(){
+    const user = readSentenceText();
+    const ans  = normalize(exercises[index].text);
+    if(user===ans){
+      elStatus.textContent = "✅ 正确！";
+      elStatus.className = "status ok";
+      elRef.style.display = "none";
+    }else{
+      elStatus.textContent = "❌ 还差一点，再试试！";
+      elStatus.className = "status bad";
+      elRef.style.display = "block";
+      elRef.textContent = "参考答案： " + exercises[index].text;
+    }
+  }
+
+  btnReset.addEventListener("click", ()=>refreshAll());
+  btnSubmit.addEventListener("click", submit);
+  btnNext.addEventListener("click", ()=>{
+    index = (index+1) % exercises.length;
+    refreshAll();
+  });
+
+  btnModeClassical.addEventListener("click", ()=>{
+    mode = "classical";
+    btnModeClassical.classList.add("active");
+    btnModeXiexiu.classList.remove("active");
+    refreshAll();
+  });
+  btnModeXiexiu.addEventListener("click", ()=>{
+    mode = "xiexiu";
+    btnModeXiexiu.classList.add("active");
+    btnModeClassical.classList.remove("active");
+    refreshAll();
+  });
+
+  refreshAll();
+})();
+</script>
+</body>
+</html>
