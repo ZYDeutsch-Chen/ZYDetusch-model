@@ -31,6 +31,8 @@
 
       /* Heights: keep total ~212px; canvas +15% (from 92 -> ~106), bank reduced to keep total constant */
       .sentence { height: 106px; border: 2px dashed #b9c3d1; border-radius: 10px; padding: 10px; background: #fff; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+      .sentence::before { content: "至元德语"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: rgba(26,42,108,0.12); font-weight: 800; letter-spacing: 6px; font-size: 2rem; pointer-events: none; user-select: none; }
+      .sentence { position: relative; }
       .bank { height: 106px; overflow-y: auto; background: #fff; border: 1px dashed #d7deea; border-radius: 8px; padding: 8px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
       /* ISO-like palette */
@@ -192,8 +194,7 @@
             xiexiu: [
               { type: "stem", text: "komm", stem: "komm" },
               { type: "word", text: "Ich" },
-              { type: "word", text: "aus" },
-              { type: "word", text: "China." },
+              { type: "word", text: "aus China." },
               { type: "girdle", label: "[动词] -e", subject: "Ich", suffix: "e", packRight: false },
             ],
           },
@@ -204,10 +205,36 @@
             xiexiu: [
               { type: "stem", text: "komm", stem: "komm" },
               { type: "word", text: "ich" },
-              { type: "word", text: "Aus" },
-              { type: "word", text: "China" },
+              { type: "word", text: "Aus China" },
               { type: "girdle", label: "[动词] -e", subject: "ich", suffix: "e", packRight: true },
               { type: "word", text: "." },
+            ],
+          },
+          {
+            text: "Ich komme aus Shenzhen.",
+            cn: "我来自深圳。",
+            classical: ["Ich", "komme", "aus", "Shenzhen."],
+            xiexiu: [
+              { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "Ich" },
+              { type: "word", text: "aus Shenzhen." },
+              { type: "girdle", label: "[动词] -e", subject: "Ich", suffix: "e", packRight: false },
+            ],
+          },
+          {
+            text: "Du kommst aus Guangzhou.",
+            cn: "你来自广州。",
+            classical: ["Du", "kommst", "aus", "Guangzhou."],
+            xiexiu: [
+              { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "Du" },
+              { type: "word", text: "aus Guangzhou." },
+              { type: "girdle", label: "[动词] -st", subject: "Du", suffix: "st", packRight: false },
+              // decoy girdles
+              { type: "girdle", label: "[动词] -e", subject: "Ich", suffix: "e", packRight: false },
+              { type: "girdle", label: "[动词] -en", subject: "Sie", suffix: "en", packRight: false },
+              { type: "girdle", label: "[动词] -en", subject: "Wir", suffix: "en", packRight: false },
+              { type: "girdle", label: "[动词] -t", subject: "Er", suffix: "t", packRight: false },
             ],
           },
         ];
