@@ -16,6 +16,7 @@
       header { padding: 14px 16px; background: #1a2a6c; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
       h1 { margin: 0; font-size: 1.2rem; letter-spacing: 0.5px; }
       .subtitle { margin-top: 4px; font-size: 0.95rem; opacity: 0.9; }
+      .tool-description { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 8px; font-size: 0.9rem; line-height: 1.4; margin-top: 6px; }
       .container { max-width: 1000px; margin: 0 auto; padding: 14px; }
       .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
       .mode { display: flex; gap: 8px; }
@@ -44,6 +45,7 @@
       .girdle-cell.left { border-right: 0; border-bottom-left-radius: 10px; }
       .girdle-cell.center { background: transparent; border: 0; min-width: 80px; }
       .girdle-cell.right { border-bottom-right-radius: 10px; }
+      .fused-subject { color: #c0392b; font-weight: 700; }
       .piece.ghost { opacity: 0.6; }
       .status { font-weight: 700; }
       .ok { color: #28a745; }
@@ -62,15 +64,17 @@
       .illustration { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: start; }
       .illustration .card { background: #fff; border: 1px solid #e3e6ef; border-radius: 8px; padding: 10px; text-align: center; }
       .illustration img { max-width: 100%; height: auto; border-radius: 6px; border: 1px solid #eee; }
-      footer { margin-top: 16px; padding: 10px 14px; text-align: center; color: #e9ecf5; background: rgba(0,0,0,0.15); font-size: 0.9rem; }
+      .copyright { margin-top: 16px; padding: 10px 14px; text-align: center; color: #e9ecf5; background: rgba(0,0,0,0.15); font-size: 0.9rem; }
 
       @media (max-width: 680px) { .piece.word { padding: 6px 9px; } }
     </style>
   </head>
   <body>
     <header>
-      <h1>至元德语 - 造句练习器</h1>
-      <div class="subtitle">深圳德语⭐陈老师 讲语法： 变位动词都是牛马而已！</div>
+      <div class="header-left">
+        <h1>至元德语 - 造句练习器 A1-2 教学演示</h1>
+        <p class="tool-description">深圳德语⭐陈老师讲德语     -     什么变位动词？都是牛马而已！</p>
+      </div>
     </header>
 
     <div class="container">
@@ -127,7 +131,7 @@
       </div>
     </div>
 
-    <footer>专利声明：本练习器界面与交互方案已申请相关专利与著作权，侵权必究。</footer>
+    <div class="copyright">© 2025 至元德语原创开发，仅供内部学生使用，未经书面许可禁止复制、传播或商用。</div>
 
     <script>
       // Fallback for missing images in illustration cards
@@ -136,12 +140,8 @@
           imgEl.onerror = null;
           imgEl.style.display = 'none';
           const holder = document.createElement('div');
-          holder.style.padding = '12px';
-          holder.style.background = '#fafafa';
-          holder.style.border = '1px dashed #ddd';
-          holder.style.borderRadius = '6px';
-          holder.style.color = '#666';
-          holder.style.fontSize = '0.9rem';
+          holder.style.padding = '12px'; holder.style.background = '#fafafa'; holder.style.border = '1px dashed #ddd';
+          holder.style.borderRadius = '6px'; holder.style.color = '#666'; holder.style.fontSize = '0.9rem';
           holder.textContent = `未找到图片：${label}（将文件放到本页面同目录即可显示）`;
           imgEl.parentNode && imgEl.parentNode.appendChild(holder);
         } catch (_) {}
@@ -155,9 +155,10 @@
             classical: ["Wir", "sprechen", "heute", "Deutsch."],
             xiexiu: [
               { type: "stem", text: "sprech", stem: "sprech" },
+              { type: "word", text: "wir" },
               { type: "word", text: "heute" },
               { type: "word", text: "Deutsch." },
-              { type: "girdle", label: "wir- [动词] -en", subject: "Wir", suffix: "en", packRight: false },
+              { type: "girdle", label: "[动词] -en", subject: "wir", suffix: "en", packRight: false },
             ],
           },
           {
@@ -166,8 +167,9 @@
             classical: ["Woher", "kommst", "du?"],
             xiexiu: [
               { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "du" },
               { type: "word", text: "Woher" },
-              { type: "girdle", label: "du- [动词] -st", subject: "du", suffix: "st", packRight: true },
+              { type: "girdle", label: "[动词] -st", subject: "du", suffix: "st", packRight: true },
               { type: "word", text: "?" },
             ],
           },
@@ -177,9 +179,10 @@
             classical: ["Heute", "sprechen", "wir", "Deutsch."],
             xiexiu: [
               { type: "stem", text: "sprech", stem: "sprech" },
+              { type: "word", text: "wir" },
               { type: "word", text: "Heute" },
               { type: "word", text: "Deutsch." },
-              { type: "girdle", label: "wir- [动词] -en", subject: "wir", suffix: "en", packRight: true },
+              { type: "girdle", label: "[动词] -en", subject: "wir", suffix: "en", packRight: true },
             ],
           },
           {
@@ -188,20 +191,22 @@
             classical: ["Ich", "komme", "aus", "China."],
             xiexiu: [
               { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "Ich" },
               { type: "word", text: "aus" },
               { type: "word", text: "China." },
-              { type: "girdle", label: "Ich- [动词] -e", subject: "Ich", suffix: "e", packRight: false },
+              { type: "girdle", label: "[动词] -e", subject: "Ich", suffix: "e", packRight: false },
             ],
           },
           {
             text: "Aus China komme ich.",
             cn: "我来自中国。",
-            classical: ["Aus", "China", "komme", "ich."],
+            classical: ["Aus", "China", "komme", "我"],
             xiexiu: [
               { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "ich" },
               { type: "word", text: "Aus" },
               { type: "word", text: "China" },
-              { type: "girdle", label: "ich- [动词] -e", subject: "ich", suffix: "e", packRight: true },
+              { type: "girdle", label: "[动词] -e", subject: "ich", suffix: "e", packRight: true },
               { type: "word", text: "." },
             ],
           },
@@ -229,11 +234,11 @@
         function renderTarget() { elTarget.textContent = exercises[index].cn; }
         function clearZone(zone) { while (zone.firstChild) zone.removeChild(zone.firstChild); }
 
-        function makeGirdleDom(subject, suffix, labelText, packRight) {
+        function makeGirdleDom(expectedSubject, suffix, labelText, packRight) {
           const root = document.createElement("div");
           root.className = "piece girdle";
           root.dataset.kind = "girdle";
-          root.dataset.subject = subject;
+          root.dataset.expectedSubject = (expectedSubject || "").toLowerCase();
           root.dataset.suffix = suffix;
           root.dataset.pack = packRight ? 'right' : 'left';
 
@@ -247,20 +252,20 @@
 
           if (packRight) {
             left.textContent = '';
-            right.textContent = `-${suffix} ${subject}`;
+            right.innerHTML = `<span class="suffix">-${suffix}</span>`;
           } else {
-            left.textContent = `${subject}-`;
-            right.textContent = `-${suffix}`;
+            left.innerHTML = '';
+            right.innerHTML = `<span class="suffix">-${suffix}</span>`;
           }
 
           bottom.appendChild(left); bottom.appendChild(center); bottom.appendChild(right);
           inner.appendChild(top); inner.appendChild(bottom); root.appendChild(inner);
-          root.title = labelText || `${subject}- [stem] -${suffix}`;
+          root.title = labelText || `[stem] -${suffix}`;
 
           root.draggable = true;
           root.addEventListener("dragstart", (e) => {
             dragData = { from: root.parentElement?.getAttribute("data-zone") || "", html: root.outerHTML,
-              payload: { kind: "girdle", subject, suffix, stem: "", text: labelText || `${subject}-${suffix}`, packRight: !!packRight }, sourceEl: root };
+              payload: { kind: "girdle", expectedSubject, suffix, stem: "", text: labelText || `[stem] -${suffix}`, packRight: !!packRight }, sourceEl: root };
             setTimeout(() => root.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
           });
           root.addEventListener("dragend", () => { root.classList.remove("ghost"); dragData = null; });
@@ -273,7 +278,7 @@
           else { div.classList.add("word"); div.dataset.kind = "word"; div.textContent = data.text; }
           div.addEventListener("dragstart", (e) => {
             dragData = { from: div.parentElement?.getAttribute("data-zone") || "", html: div.outerHTML,
-              payload: { kind: div.dataset.kind, subject: div.dataset.subject || "", suffix: div.dataset.suffix || "", stem: div.dataset.stem || "", text: div.textContent }, sourceEl: div };
+              payload: { kind: div.dataset.kind, text: div.textContent }, sourceEl: div };
             setTimeout(() => div.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
           });
           div.addEventListener("dragend", () => { div.classList.remove("ghost"); dragData = null; });
@@ -328,29 +333,50 @@
         let insertBefore = null;
         elSentence.addEventListener('dragover', (e) => { e.preventDefault(); const target = e.target.closest('.piece'); insertBefore = (target && target.parentElement === elSentence) ? target : null; });
         elSentence.addEventListener('drop', (e) => { e.preventDefault(); if (!dragData) return;
-          // Handle girdle docking if dropping onto a stem or onto a girdle
           const dropTargetPiece = e.target.closest(".piece");
           if (dropTargetPiece) {
             const dragged = dragData.payload; const targetKind = dropTargetPiece.dataset.kind;
-            // girdle -> stem
+            // girdle -> stem (first fuse step)
             if (dragged.kind === "girdle" && targetKind === "stem") {
-              const subject = dragData.payload.subject; const suffix = dragData.payload.suffix; const stemText = dropTargetPiece.dataset.stem || "";
-              const packRight = !!dragData.payload.packRight;
+              const suffix = dragData.payload.suffix; const stemText = dropTargetPiece.dataset.stem || ""; const packRight = !!dragData.payload.packRight;
               const girdleEl = dragData.sourceEl; const parent = dropTargetPiece.parentElement; const insertBeforeNode = dropTargetPiece;
               if (girdleEl && girdleEl.parentElement) girdleEl.parentElement.removeChild(girdleEl);
               parent.insertBefore(girdleEl, insertBeforeNode);
               const center = girdleEl.querySelector('.girdle-cell.center');
               if (center) { const stemWidth = dropTargetPiece.offsetWidth || 80; center.style.minWidth = stemWidth + 'px'; dropTargetPiece.setAttribute('draggable','false'); dropTargetPiece.classList.add('embedded-stem'); center.appendChild(dropTargetPiece); }
-              girdleEl.dataset.completeVerb = packRight ? `${stemText}${suffix} ${subject}` : `${subject} ${stemText}${suffix}`;
+              girdleEl.dataset.stemEmbedded = 'true';
+              girdleEl.dataset.stemText = stemText;
+              // do not set completeVerb yet; subject must fuse next
               e.stopPropagation(); return;
             }
-            // stem -> girdle
+            // stem -> girdle (first fuse step)
             if (dragged.kind === "stem" && dropTargetPiece.classList.contains('girdle')) {
-              const girdleEl = dropTargetPiece; const subject = girdleEl.dataset.subject || ''; const suffix = girdleEl.dataset.suffix || ''; const packRight = (girdleEl.dataset.pack === 'right');
-              const stemEl = dragData.sourceEl; const stemText = stemEl?.dataset?.stem || '';
+              const girdleEl = dropTargetPiece; const stemEl = dragData.sourceEl; const stemText = stemEl?.dataset?.stem || '';
               if (stemEl && stemEl.parentElement) stemEl.parentElement.removeChild(stemEl);
               const center = girdleEl.querySelector('.girdle-cell.center');
-              if (center && stemEl) { const stemWidth = stemEl.offsetWidth || 80; center.style.minWidth = stemWidth + 'px'; stemEl.setAttribute('draggable','false'); stemEl.classList.add('embedded-stem'); center.appendChild(stemEl); girdleEl.dataset.completeVerb = packRight ? `${stemText}${suffix} ${subject}` : `${subject} ${stemText}${suffix}`; }
+              if (center && stemEl) { const stemWidth = stemEl.offsetWidth || 80; center.style.minWidth = stemWidth + 'px'; stemEl.setAttribute('draggable','false'); stemEl.classList.add('embedded-stem'); center.appendChild(stemEl); girdleEl.dataset.stemEmbedded = 'true'; girdleEl.dataset.stemText = stemText; }
+              e.stopPropagation(); return;
+            }
+            // subject(word) -> girdle (second fuse step)
+            if (dragged.kind === "word" && dropTargetPiece.classList.contains('girdle')) {
+              const girdleEl = dropTargetPiece; if (girdleEl.dataset.stemEmbedded !== 'true') { /* must embed stem first */ return; }
+              if (girdleEl.dataset.subjectFused === 'true') { return; }
+              const expected = (girdleEl.dataset.expectedSubject || '').toLowerCase().trim();
+              const incoming = (dragData.payload.text || '').replace(/[?!.,]$/,'').toLowerCase().trim();
+              if (!expected || incoming !== expected) { return; }
+              // remove subject piece and fuse into girdle
+              const subjEl = dragData.sourceEl; if (subjEl && subjEl.parentElement) subjEl.parentElement.removeChild(subjEl);
+              const packRight = (girdleEl.dataset.pack === 'right'); const suffix = girdleEl.dataset.suffix || '';
+              const stemText = girdleEl.dataset.stemText || '';
+              const left = girdleEl.querySelector('.girdle-cell.left'); const right = girdleEl.querySelector('.girdle-cell.right');
+              if (packRight) {
+                if (right) right.innerHTML = `<span class="suffix">-${suffix}</span> <span class=\"fused-subject\">${incoming}</span>`;
+                girdleEl.dataset.completeVerb = `${stemText}${suffix} ${incoming}`;
+              } else {
+                if (left) left.innerHTML = `<span class=\"fused-subject\">${incoming}</span>-`;
+                girdleEl.dataset.completeVerb = `${incoming} ${stemText}${suffix}`;
+              }
+              girdleEl.dataset.subjectFused = 'true';
               e.stopPropagation(); return;
             }
           }
