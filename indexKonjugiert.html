@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>至元德语 - 造句练习器</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+        min-height: 100vh;
+        background: linear-gradient(135deg, rgba(26, 42, 108, 0.9), rgba(178, 31, 31, 0.9), rgba(26, 42, 108, 0.9));
+        background-repeat: no-repeat; background-size: cover; background-position: center;
+      }
+      header { padding: 14px 16px; background: #1a2a6c; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+      h1 { margin: 0; font-size: 1.2rem; letter-spacing: 0.5px; }
+      .subtitle { margin-top: 4px; font-size: 0.95rem; opacity: 0.9; }
+      .tool-description { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 8px; font-size: 0.9rem; line-height: 1.4; margin-top: 6px; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 14px; }
+      .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
+      .mode { display: flex; gap: 8px; }
+      .btn { cursor: pointer; border: 0; background: #eee; color: #333; padding: 8px 12px; border-radius: 8px; font-weight: 600; }
+      .btn.primary { background: #ffcc00; color: #1a2a6c; }
+      .btn.success { background: #28a745; color: #fff; }
+      .btn.secondary { background: #6c757d; color: #fff; }
+      .btn.active { outline: 2px solid #ffcc00; }
+      .row { display: flex; flex-direction: column; gap: 10px; }
+      .panel { background: #f7f7fb; border: 1px solid #e3e6ef; border-radius: 10px; padding: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+      .title { font-weight: 700; margin-bottom: 6px; color: #1a2a6c; }
+
+      /* Heights: keep total ~212px; canvas +15% (from 92 -> ~106), bank reduced to keep total constant */
+      .sentence { height: 106px; border: 2px dashed #b9c3d1; border-radius: 10px; padding: 10px; background: #fff; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+      .sentence::before { content: "至元德语"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: rgba(26,42,108,0.12); font-weight: 800; letter-spacing: 6px; font-size: 2rem; pointer-events: none; user-select: none; }
+      .sentence { position: relative; }
+      .bank { height: 106px; overflow-y: auto; background: #fff; border: 1px dashed #d7deea; border-radius: 8px; padding: 8px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+      /* ISO-like palette */
+      .piece { border-radius: 10px; font-weight: 700; cursor: move; user-select: none; display: inline-flex; align-items: center; }
+      .piece.word { background: #E6F0FA; color: #0B3C78; border: 1px solid #7DADE8; padding: 8px 12px; }
+      .piece.stem { background: #EEE8F7; color: #3E2A78; border: 1px solid #BFA7E6; padding: 6px 10px; border-radius: 8px; }
+      .piece.girdle { background: transparent; border: 0; color: #7A4F00; }
+      .girdle-inner { display: flex; flex-direction: column; align-items: stretch; min-width: 140px; }
+      .girdle-top { height: 16px; background: #FFF4CC; border: 1px solid #FFD666; border-bottom: 0; border-top-left-radius: 10px; border-top-right-radius: 10px; }
+      .girdle-bottom { display: grid; grid-template-columns: auto 1fr auto; gap: 0; }
+      .girdle-cell { background: #FFF4CC; border: 1px solid #FFD666; padding: 8px 12px; display: flex; align-items: center; justify-content: center; min-height: 40px; white-space: nowrap; }
+      .girdle-cell.left { border-right: 0; border-bottom-left-radius: 10px; }
+      .girdle-cell.center { background: transparent; border: 0; min-width: 80px; }
+      .girdle-cell.right { border-bottom-right-radius: 10px; }
+      .fused-subject { color: #c0392b; font-weight: 700; }
+      .piece.ghost { opacity: 0.6; }
+      .piece.short { padding-top: 3px !important; padding-bottom: 3px !important; }
+      .status { font-weight: 700; }
+      .ok { color: #28a745; }
+      .bad { color: #c0392b; }
+      .ref { background: #fff; border-left: 4px solid #1a2a6c; padding: 8px; border-radius: 8px; }
+
+      /* st-grid conjugation block */
+      .stgrid.piece { background: transparent; border: 0; color: #1a2a6c; }
+      .stgrid-inner { display: flex; flex-direction: column; align-items: stretch; min-width: 180px; }
+      .stgrid-top { height: 16px; background: #E6F0FA; border: 1px solid #7DADE8; border-bottom: 0; border-top-left-radius: 10px; border-top-right-radius: 10px; }
+      .stgrid-bottom { display: grid; grid-template-columns: 10px 1fr auto 1fr 10px; align-items: stretch; }
+      .stgrid-narrow { background: #E6F0FA; border: 1px solid #7DADE8; border-top: 0; }
+      .st-hole-left, .st-hole-right { background: transparent; border: 1px dashed #7DADE8; border-top: 0; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+      .st-middle { background: #E6F0FA; border: 1px solid #7DADE8; border-top: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; padding: 0 10px; }
+      .stgrid-bottom .stgrid-narrow:first-child { border-bottom-left-radius: 10px; }
+      .stgrid-bottom .stgrid-narrow:last-child { border-bottom-right-radius: 10px; }
+      .stgrid .embedded-stem, .stgrid .embedded-subject { pointer-events: none; }
+      .stgrid .embedded-subject { color: #c0392b; font-weight: 700; }
+
+      /* TTS dots */
+      .tts { display: flex; align-items: center; gap: 8px; color: #1a2a6c; font-weight: 700; }
+      .dots { display: inline-flex; gap: 5px; }
+      .dots i { width: 8px; height: 8px; background: #1a2a6c; border-radius: 50%; opacity: 0.3; }
+      .speaking .dots i { animation: blink 1s infinite ease-in-out; opacity: 1; }
+      .speaking .dots i:nth-child(2) { animation-delay: 0.15s; }
+      .speaking .dots i:nth-child(3) { animation-delay: 0.3s; }
+      @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+
+      .illustration { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: start; }
+      .illustration .card { background: #fff; border: 1px solid #e3e6ef; border-radius: 8px; padding: 10px; text-align: center; }
+      .illustration img { max-width: 100%; height: auto; border-radius: 6px; border: 1px solid #eee; }
+      .copyright { margin-top: 16px; padding: 10px 14px; text-align: center; color: #e9ecf5; background: rgba(0,0,0,0.15); font-size: 0.9rem; }
+
+      @media (max-width: 680px) { .piece.word { padding: 6px 9px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <h1>至元德语 - 造句练习器 A1-2 教学演示</h1>
+        <p class="tool-description">深圳德语⭐陈老师讲德语     -     什么变位动词？都是牛马而已！</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="toolbar">
+        <div class="mode">
+          <button id="modeClassical" class="btn active">科班老师模式</button>
+          <button id="modeXiexiu" class="btn">陈老师模式</button>
+        </div>
+        <div style="flex: 1"></div>
+        <div id="ttsUI" class="tts" title="自动朗读">
+          <span>发音</span>
+          <span class="dots" id="ttsDots"><i></i><i></i><i></i></span>
+        </div>
+        <button id="btnReset" class="btn secondary">重新拼图</button>
+        <button id="btnSubmit" class="btn primary">提交答案</button>
+        <button id="btnNext" class="btn success">下一题</button>
+      </div>
+
+      <div class="row">
+        <div class="panel">
+          <div class="title">中文句意</div>
+          <div id="target" style="font-weight: 700"></div>
+        </div>
+
+        <div class="panel">
+          <div class="title">拼图画布</div>
+          <div id="sentence" class="sentence" data-zone="sentence"></div>
+        </div>
+
+        <div class="panel">
+          <div class="title">拼图块</div>
+          <div id="bank" class="bank" data-zone="bank"></div>
+        </div>
+
+        <div class="panel">
+          <div class="title">结果</div>
+          <div id="status" class="status"></div>
+          <div id="ref" class="ref" style="margin-top: 8px; display: none"></div>
+        </div>
+
+        <div class="panel">
+          <div class="title">配图（牛套牛轭 / 马带马鞍）</div>
+          <div class="illustration">
+            <div class="card">
+              <div style="margin-bottom: 6px; font-weight: 700; color:#1a2a6c;">牛轭</div>
+              <img src="ox_yoke.png" alt="示意图：牛套上牛轭（放置 ox_yoke.png 到同目录即可显示）" onerror="imageFallback(this,'牛轭示意图')" />
+            </div>
+            <div class="card">
+              <div style="margin-bottom: 6px; font-weight: 700; color:#1a2a6c;">马鞍</div>
+              <img src="horse_saddle.png" alt="示意图：马带上马鞍（放置 horse_saddle.png 到同目录即可显示）" onerror="imageFallback(this,'马鞍示意图')" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">© 2025 至元德语原创开发，仅供内部学生使用，未经书面许可禁止复制、传播或商用。</div>
+
+    <script>
+      // Fallback for missing images in illustration cards
+      function imageFallback(imgEl, label) {
+        try {
+          imgEl.onerror = null;
+          imgEl.style.display = 'none';
+          const holder = document.createElement('div');
+          holder.style.padding = '12px'; holder.style.background = '#fafafa'; holder.style.border = '1px dashed #ddd';
+          holder.style.borderRadius = '6px'; holder.style.color = '#666'; holder.style.fontSize = '0.9rem';
+          holder.textContent = `未找到图片：${label}（将文件放到本页面同目录即可显示）`;
+          imgEl.parentNode && imgEl.parentNode.appendChild(holder);
+        } catch (_) {}
+      }
+
+      (function () {
+        const exercises = [
+          {
+            text: "Woher kommst du?",
+            cn: "你来自哪里？",
+            classical: ["Woher", "kommst", "du?"],
+            xiexiu: [
+              { type: "word", text: "Woher" },
+              { type: "stem", text: "komm", stem: "komm", short: true },
+              { type: "word", text: "du", short: true },
+              { type: "stgrid", suffix: "st", expectedSubject: "du" },
+              { type: "word", text: "?" },
+            ],
+          },
+          {
+            text: "Wir sprechen heute Deutsch.",
+            cn: "我们今天说德语。",
+            classical: ["Wir", "sprechen", "heute", "Deutsch."],
+            xiexiu: [
+              { type: "stem", text: "sprech", stem: "sprech" },
+              { type: "word", text: "wir" },
+              { type: "word", text: "heute" },
+              { type: "word", text: "Deutsch." },
+              { type: "girdle", label: "[动词] -en", subject: "wir", suffix: "en", packRight: false },
+            ],
+          },
+          {
+            text: "Heute sprechen wir Deutsch.",
+            cn: "今天我们说德语。",
+            classical: ["Heute", "sprechen", "wir", "Deutsch."],
+            xiexiu: [
+              { type: "stem", text: "sprech", stem: "sprech" },
+              { type: "word", text: "wir" },
+              { type: "word", text: "Heute" },
+              { type: "word", text: "Deutsch." },
+              { type: "girdle", label: "[动词] -en", subject: "wir", suffix: "en", packRight: true },
+            ],
+          },
+          {
+            text: "Ich komme aus China.",
+            cn: "我来自中国。",
+            classical: ["Ich", "komme", "aus", "China."],
+            xiexiu: [
+              { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "Ich" },
+              { type: "word", text: "aus China." },
+              { type: "girdle", label: "[动词] -e", subject: "Ich", suffix: "e", packRight: false },
+            ],
+          },
+          {
+            text: "Aus China komme ich.",
+            cn: "我来自中国。",
+            classical: ["Aus", "China", "komme", "我"],
+            xiexiu: [
+              { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "ich" },
+              { type: "word", text: "Aus China" },
+              { type: "girdle", label: "[动词] -e", subject: "ich", suffix: "e", packRight: true },
+              { type: "word", text: "." },
+            ],
+          },
+          {
+            text: "Ich komme aus Shenzhen.",
+            cn: "我来自深圳。",
+            classical: ["Ich", "komme", "aus", "Shenzhen."],
+            xiexiu: [
+              { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "Ich" },
+              { type: "word", text: "aus Shenzhen." },
+              { type: "girdle", label: "[动词] -e", subject: "Ich", suffix: "e", packRight: false },
+            ],
+          },
+          {
+            text: "Du kommst aus Guangzhou.",
+            cn: "你来自广州。",
+            classical: ["Du", "kommst", "aus", "Guangzhou."],
+            xiexiu: [
+              { type: "stem", text: "komm", stem: "komm" },
+              { type: "word", text: "Du" },
+              { type: "word", text: "aus Guangzhou." },
+              { type: "girdle", label: "[动词] -st", subject: "Du", suffix: "st", packRight: false },
+              // decoy girdles
+              { type: "girdle", label: "[动词] -e", subject: "Ich", suffix: "e", packRight: false },
+              { type: "girdle", label: "[动词] -en", subject: "Sie", suffix: "en", packRight: false },
+              { type: "girdle", label: "[动词] -en", subject: "Wir", suffix: "en", packRight: false },
+              { type: "girdle", label: "[动词] -t", subject: "Er", suffix: "t", packRight: false },
+            ],
+          },
+        ];
+
+        let mode = "classical";
+        let index = 0;
+        let dragData = null;
+
+        const elTarget = document.getElementById("target");
+        const elBank = document.getElementById("bank");
+        const elSentence = document.getElementById("sentence");
+        const elStatus = document.getElementById("status");
+        const elRef = document.getElementById("ref");
+        const btnReset = document.getElementById("btnReset");
+        const btnSubmit = document.getElementById("btnSubmit");
+        const btnNext = document.getElementById("btnNext");
+        const btnModeClassical = document.getElementById("modeClassical");
+        const btnModeXiexiu = document.getElementById("modeXiexiu");
+        const ttsUI = document.getElementById("ttsUI");
+
+        function normalize(text) {
+          return text.replace(/\s+/g, " ").replace(/\s+([?.!,:;])/g, "$1").trim();
+        }
+        function renderTarget() { elTarget.textContent = exercises[index].cn; }
+        function clearZone(zone) { while (zone.firstChild) zone.removeChild(zone.firstChild); }
+
+        function makeGirdleDom(expectedSubject, suffix, labelText, packRight) {
+          const root = document.createElement("div");
+          root.className = "piece girdle";
+          root.dataset.kind = "girdle";
+          root.dataset.expectedSubject = (expectedSubject || "").toLowerCase();
+          root.dataset.suffix = suffix;
+          root.dataset.pack = packRight ? 'right' : 'left';
+
+          const inner = document.createElement("div"); inner.className = "girdle-inner";
+          const top = document.createElement("div"); top.className = "girdle-top";
+          const bottom = document.createElement("div"); bottom.className = "girdle-bottom";
+
+          const left = document.createElement("div"); left.className = "girdle-cell left";
+          const center = document.createElement("div"); center.className = "girdle-cell center";
+          const right = document.createElement("div"); right.className = "girdle-cell right";
+
+          if (packRight) {
+            left.textContent = '';
+            right.innerHTML = `<span class="suffix">-${suffix}</span>`;
+          } else {
+            left.innerHTML = '';
+            right.innerHTML = `<span class="suffix">-${suffix}</span>`;
+          }
+
+          bottom.appendChild(left); bottom.appendChild(center); bottom.appendChild(right);
+          inner.appendChild(top); inner.appendChild(bottom); root.appendChild(inner);
+          root.title = labelText || `[stem] -${suffix}`;
+
+          root.draggable = true;
+          root.addEventListener("dragstart", (e) => {
+            dragData = { from: root.parentElement?.getAttribute("data-zone") || "", html: root.outerHTML,
+              payload: { kind: "girdle", expectedSubject, suffix, stem: "", text: labelText || `[stem] -${suffix}`, packRight: !!packRight }, sourceEl: root };
+            setTimeout(() => root.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
+          });
+          root.addEventListener("dragend", () => { root.classList.remove("ghost"); dragData = null; });
+          return root;
+        }
+
+        function makeStGridDom(suffix, expectedSubject) {
+          const root = document.createElement('div');
+          root.className = 'stgrid piece';
+          root.dataset.kind = 'stgrid';
+          root.dataset.suffix = suffix;
+          root.dataset.expectedSubject = (expectedSubject || '').toLowerCase();
+          root.dataset.leftOk = 'false';
+          root.dataset.rightOk = 'false';
+
+          const inner = document.createElement('div'); inner.className = 'stgrid-inner';
+          const top = document.createElement('div'); top.className = 'stgrid-top';
+          const bottom = document.createElement('div'); bottom.className = 'stgrid-bottom';
+
+          const narrowL = document.createElement('div'); narrowL.className = 'stgrid-narrow';
+          const holeL = document.createElement('div'); holeL.className = 'st-hole-left';
+          const middle = document.createElement('div'); middle.className = 'st-middle'; middle.textContent = suffix;
+          const holeR = document.createElement('div'); holeR.className = 'st-hole-right';
+          const narrowR = document.createElement('div'); narrowR.className = 'stgrid-narrow';
+
+          bottom.appendChild(narrowL); bottom.appendChild(holeL); bottom.appendChild(middle); bottom.appendChild(holeR); bottom.appendChild(narrowR);
+          inner.appendChild(top); inner.appendChild(bottom); root.appendChild(inner);
+
+          root.draggable = true;
+          root.addEventListener('dragstart', (e) => {
+            dragData = { from: root.parentElement?.getAttribute('data-zone') || '', html: root.outerHTML, payload: { kind: 'stgrid', suffix, expectedSubject }, sourceEl: root };
+            setTimeout(() => root.classList.add('ghost'), 0); e.dataTransfer.effectAllowed = 'move';
+          });
+          root.addEventListener('dragend', () => { root.classList.remove('ghost'); dragData = null; });
+          return root;
+        }
+        function makePiece(data) {
+          if (data.type === "girdle") return makeGirdleDom(data.subject, data.suffix, data.label, !!data.packRight);
+          if (data.type === "stgrid") return makeStGridDom(data.suffix, data.expectedSubject);
+          const div = document.createElement("div"); div.className = "piece"; div.draggable = true;
+          if (data.type === "stem") { div.classList.add("stem"); if (data.short) div.classList.add('short'); div.dataset.kind = "stem"; div.dataset.stem = data.stem; div.textContent = data.text; }
+          else { div.classList.add("word"); if (data.short) div.classList.add('short'); div.dataset.kind = "word"; div.textContent = data.text; }
+          div.addEventListener("dragstart", (e) => {
+            dragData = { from: div.parentElement?.getAttribute("data-zone") || "", html: div.outerHTML,
+              payload: { kind: div.dataset.kind, text: div.textContent }, sourceEl: div };
+            setTimeout(() => div.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
+          });
+          div.addEventListener("dragend", () => { div.classList.remove("ghost"); dragData = null; });
+          return div;
+        }
+
+        function populateBank() {
+          clearZone(elBank);
+          const ex = exercises[index];
+          const pieces = mode === "classical" ? ex.classical.map((t) => ({ type: "word", text: t })) : ex.xiexiu;
+          pieces.slice().sort(() => Math.random() - 0.5).forEach((p) => elBank.appendChild(makePiece(p)));
+        }
+
+        function refreshAll() {
+          elStatus.textContent = ""; elStatus.className = "status"; elRef.style.display = "none"; elRef.textContent = "";
+          clearZone(elSentence);
+          populateBank(); renderTarget(); speak(exercises[index].cn, 'zh-CN');
+        }
+
+        function insertInto(container, html, beforeEl = null) {
+          const temp = document.createElement("div"); temp.innerHTML = html; let piece = temp.firstElementChild;
+          if (piece && piece.classList.contains("girdle") && piece.dataset && piece.dataset.subject !== undefined) {
+            piece = makeGirdleDom(piece.dataset.subject, piece.dataset.suffix, piece.title, piece.dataset.pack === 'right');
+          }
+          if (beforeEl) container.insertBefore(piece, beforeEl); else container.appendChild(piece);
+          rebindPiece(piece);
+        }
+
+        function rebindPiece(div) {
+          if (div.classList.contains("girdle")) return;
+          div.addEventListener("dragstart", (e) => {
+            dragData = { from: div.parentElement?.getAttribute("data-zone") || "", html: div.outerHTML,
+              payload: { kind: div.dataset.kind, subject: div.dataset.subject || "", suffix: div.dataset.suffix || "", stem: div.dataset.stem || "", text: div.textContent }, sourceEl: div };
+            setTimeout(() => div.classList.add("ghost"), 0); e.dataTransfer.effectAllowed = "move";
+          });
+          div.addEventListener("dragend", () => { div.classList.remove("ghost"); dragData = null; });
+        }
+
+        // Bank DnD
+        elBank.addEventListener("dragover", (e) => e.preventDefault());
+        elBank.addEventListener("drop", (e) => {
+          e.preventDefault(); if (!dragData) return;
+          if (dragData.sourceEl && dragData.sourceEl.parentElement) dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+          const temp = document.createElement("div"); temp.innerHTML = dragData.html; let piece = temp.firstElementChild;
+          if (piece && piece.classList && piece.classList.contains("girdle") && piece.dataset && piece.dataset.subject !== undefined) {
+            piece = makeGirdleDom(piece.dataset.subject, piece.dataset.suffix, piece.title, piece.dataset.pack === 'right');
+          }
+          elBank.appendChild(piece); rebindPiece(piece);
+        });
+
+        // Sentence DnD
+        let insertBefore = null;
+        elSentence.addEventListener('dragover', (e) => { e.preventDefault(); const target = e.target.closest('.piece'); insertBefore = (target && target.parentElement === elSentence) ? target : null; });
+        elSentence.addEventListener('drop', (e) => { e.preventDefault(); if (!dragData) return;
+          // st-grid hole docking
+          const holeL = e.target.closest('.st-hole-left');
+          const holeR = e.target.closest('.st-hole-right');
+          if (holeL && dragData.payload.kind === 'stem') {
+            const stgrid = holeL.closest('.stgrid');
+            const stemEl = dragData.sourceEl; const stemText = stemEl?.dataset?.stem || '';
+            if (stemEl && stemEl.parentElement) stemEl.parentElement.removeChild(stemEl);
+            const width = stemEl.offsetWidth || 80; holeL.style.minWidth = width + 'px';
+            stemEl.setAttribute('draggable','false'); stemEl.classList.add('embedded-stem'); holeL.appendChild(stemEl);
+            stgrid.dataset.leftOk = 'true'; stgrid.dataset.stemText = stemText;
+            // if right already ok, finalize
+            if (stgrid.dataset.rightOk === 'true') {
+              const subjText = stgrid.dataset.subjText || '';
+              const suffix = stgrid.dataset.suffix || 'st';
+              stgrid.dataset.completeVerb = `${stemText}${suffix} ${subjText}`;
+            }
+            e.stopPropagation(); return;
+          }
+          if (holeR && dragData.payload.kind === 'word') {
+            const stgrid = holeR.closest('.stgrid');
+            const expected = (stgrid.dataset.expectedSubject || '').toLowerCase();
+            const incoming = (dragData.payload.text || '').toLowerCase();
+            if (incoming !== expected) { /* ignore wrong subject */ } else {
+              const subjEl = dragData.sourceEl; if (subjEl && subjEl.parentElement) subjEl.parentElement.removeChild(subjEl);
+              subjEl.classList.add('embedded-subject'); subjEl.setAttribute('draggable','false'); holeR.appendChild(subjEl);
+              stgrid.dataset.rightOk = 'true'; stgrid.dataset.subjText = incoming;
+              if (stgrid.dataset.leftOk === 'true') {
+                const stemText = stgrid.dataset.stemText || '';
+                const suffix = stgrid.dataset.suffix || 'st';
+                stgrid.dataset.completeVerb = `${stemText}${suffix} ${incoming}`;
+              }
+              e.stopPropagation(); return;
+            }
+          }
+          const dropTargetPiece = e.target.closest(".piece");
+          if (dropTargetPiece) {
+            const dragged = dragData.payload; const targetKind = dropTargetPiece.dataset.kind;
+            // girdle -> stem (first fuse step)
+            if (dragged.kind === "girdle" && targetKind === "stem") {
+              const suffix = dragData.payload.suffix; const stemText = dropTargetPiece.dataset.stem || ""; const packRight = !!dragData.payload.packRight;
+              const girdleEl = dragData.sourceEl; const parent = dropTargetPiece.parentElement; const insertBeforeNode = dropTargetPiece;
+              if (girdleEl && girdleEl.parentElement) girdleEl.parentElement.removeChild(girdleEl);
+              parent.insertBefore(girdleEl, insertBeforeNode);
+              const center = girdleEl.querySelector('.girdle-cell.center');
+              if (center) { const stemWidth = dropTargetPiece.offsetWidth || 80; center.style.minWidth = stemWidth + 'px'; dropTargetPiece.setAttribute('draggable','false'); dropTargetPiece.classList.add('embedded-stem'); center.appendChild(dropTargetPiece); }
+              girdleEl.dataset.stemEmbedded = 'true';
+              girdleEl.dataset.stemText = stemText;
+              // do not set completeVerb yet; subject must fuse next
+              e.stopPropagation(); return;
+            }
+            // stem -> girdle (first fuse step)
+            if (dragged.kind === "stem" && dropTargetPiece.classList.contains('girdle')) {
+              const girdleEl = dropTargetPiece; const stemEl = dragData.sourceEl; const stemText = stemEl?.dataset?.stem || '';
+              if (stemEl && stemEl.parentElement) stemEl.parentElement.removeChild(stemEl);
+              const center = girdleEl.querySelector('.girdle-cell.center');
+              if (center && stemEl) { const stemWidth = stemEl.offsetWidth || 80; center.style.minWidth = stemWidth + 'px'; stemEl.setAttribute('draggable','false'); stemEl.classList.add('embedded-stem'); center.appendChild(stemEl); girdleEl.dataset.stemEmbedded = 'true'; girdleEl.dataset.stemText = stemText; }
+              e.stopPropagation(); return;
+            }
+            // subject(word) -> girdle (second fuse step)
+            if (dragged.kind === "word" && dropTargetPiece.classList.contains('girdle')) {
+              const girdleEl = dropTargetPiece; if (girdleEl.dataset.stemEmbedded !== 'true') { /* must embed stem first */ return; }
+              if (girdleEl.dataset.subjectFused === 'true') { return; }
+              const expected = (girdleEl.dataset.expectedSubject || '').toLowerCase().trim();
+              const incoming = (dragData.payload.text || '').replace(/[?!.,]$/,'').toLowerCase().trim();
+              if (!expected || incoming !== expected) { return; }
+              // remove subject piece and fuse into girdle
+              const subjEl = dragData.sourceEl; if (subjEl && subjEl.parentElement) subjEl.parentElement.removeChild(subjEl);
+              const packRight = (girdleEl.dataset.pack === 'right'); const suffix = girdleEl.dataset.suffix || '';
+              const stemText = girdleEl.dataset.stemText || '';
+              const left = girdleEl.querySelector('.girdle-cell.left'); const right = girdleEl.querySelector('.girdle-cell.right');
+              if (packRight) {
+                if (right) right.innerHTML = `<span class="suffix">-${suffix}</span> <span class=\"fused-subject\">${incoming}</span>`;
+                girdleEl.dataset.completeVerb = `${stemText}${suffix} ${incoming}`;
+              } else {
+                if (left) left.innerHTML = `<span class=\"fused-subject\">${incoming}</span>-`;
+                girdleEl.dataset.completeVerb = `${incoming} ${stemText}${suffix}`;
+              }
+              girdleEl.dataset.subjectFused = 'true';
+              e.stopPropagation(); return;
+            }
+          }
+          if (dragData.sourceEl && dragData.sourceEl.parentElement) dragData.sourceEl.parentElement.removeChild(dragData.sourceEl);
+          insertInto(elSentence, dragData.html, insertBefore);
+        });
+
+        function readSentenceText() {
+          const tokens = [];
+          const children = Array.from(elSentence.children);
+          for (const node of children) {
+            if (node.classList && node.classList.contains('girdle') && node.dataset.completeVerb) tokens.push(node.dataset.completeVerb.trim());
+            else if (node.classList && node.classList.contains('stgrid') && node.dataset.completeVerb) tokens.push(node.dataset.completeVerb.trim());
+            else if (node.classList && node.classList.contains('piece')) tokens.push(node.textContent.trim());
+          }
+          let s = tokens.join(' '); s = s.replace(/\s+\?/g, "?").replace(/\s+\./g, ".").replace(/\s+([?!.,;:])/g, "$1");
+          return normalize(s);
+        }
+
+        function submit() {
+          const user = readSentenceText(); const ans = normalize(exercises[index].text);
+          if (user === ans) { elStatus.textContent = "✅ 正确！"; elStatus.className = "status ok"; elRef.style.display = "none"; speak(exercises[index].text, 'de-DE'); }
+          else { elStatus.textContent = "❌ 还差一点，再试试！"; elStatus.className = "status bad"; elRef.style.display = "block"; elRef.textContent = "参考答案： " + exercises[index].text; }
+        }
+
+        function setSpeaking(on) { const t = document.getElementById('ttsUI'); if (!t) return; t.classList.toggle('speaking', !!on); }
+        function speak(text, lang) {
+          try { if (!window.speechSynthesis) return; window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = lang; const voices = window.speechSynthesis.getVoices(); const v = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase())) || voices[0]; if (v) u.voice = v; u.rate = 0.95; u.onstart = () => setSpeaking(true); u.onend = () => setSpeaking(false); u.onerror = () => setSpeaking(false); window.speechSynthesis.speak(u); } catch(e) {}
+        }
+
+        btnReset.addEventListener("click", () => refreshAll());
+        btnSubmit.addEventListener("click", submit);
+        btnNext.addEventListener("click", () => { index = (index + 1) % exercises.length; refreshAll(); });
+        btnModeClassical.addEventListener("click", () => { mode = "classical"; btnModeClassical.classList.add("active"); btnModeXiexiu.classList.remove("active"); refreshAll(); });
+        btnModeXiexiu.addEventListener("click", () => { mode = "xiexiu"; btnModeXiexiu.classList.add("active"); btnModeClassical.classList.remove("active"); refreshAll(); });
+
+        // init
+        refreshAll();
+      })();
+    </script>
+  </body>
+</html>
