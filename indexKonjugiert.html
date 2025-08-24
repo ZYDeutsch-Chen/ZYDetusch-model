@@ -49,10 +49,24 @@
       .girdle-cell.right { border-bottom-right-radius: 10px; }
       .fused-subject { color: #c0392b; font-weight: 700; }
       .piece.ghost { opacity: 0.6; }
+      .piece.short { padding-top: 3px !important; padding-bottom: 3px !important; }
       .status { font-weight: 700; }
       .ok { color: #28a745; }
       .bad { color: #c0392b; }
       .ref { background: #fff; border-left: 4px solid #1a2a6c; padding: 8px; border-radius: 8px; }
+
+      /* st-grid conjugation block */
+      .stgrid.piece { background: transparent; border: 0; color: #1a2a6c; }
+      .stgrid-inner { display: flex; flex-direction: column; align-items: stretch; min-width: 180px; }
+      .stgrid-top { height: 16px; background: #E6F0FA; border: 1px solid #7DADE8; border-bottom: 0; border-top-left-radius: 10px; border-top-right-radius: 10px; }
+      .stgrid-bottom { display: grid; grid-template-columns: 10px 1fr auto 1fr 10px; align-items: stretch; }
+      .stgrid-narrow { background: #E6F0FA; border: 1px solid #7DADE8; border-top: 0; }
+      .st-hole-left, .st-hole-right { background: transparent; border: 1px dashed #7DADE8; border-top: 0; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+      .st-middle { background: #E6F0FA; border: 1px solid #7DADE8; border-top: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; padding: 0 10px; }
+      .stgrid-bottom .stgrid-narrow:first-child { border-bottom-left-radius: 10px; }
+      .stgrid-bottom .stgrid-narrow:last-child { border-bottom-right-radius: 10px; }
+      .stgrid .embedded-stem, .stgrid .embedded-subject { pointer-events: none; }
+      .stgrid .embedded-subject { color: #c0392b; font-weight: 700; }
 
       /* TTS dots */
       .tts { display: flex; align-items: center; gap: 8px; color: #1a2a6c; font-weight: 700; }
@@ -152,6 +166,18 @@
       (function () {
         const exercises = [
           {
+            text: "Woher kommst du?",
+            cn: "你来自哪里？",
+            classical: ["Woher", "kommst", "du?"],
+            xiexiu: [
+              { type: "word", text: "Woher" },
+              { type: "stem", text: "komm", stem: "komm", short: true },
+              { type: "word", text: "du", short: true },
+              { type: "stgrid", suffix: "st", expectedSubject: "du" },
+              { type: "word", text: "?" },
+            ],
+          },
+          {
             text: "Wir sprechen heute Deutsch.",
             cn: "我们今天说德语。",
             classical: ["Wir", "sprechen", "heute", "Deutsch."],
@@ -161,18 +187,6 @@
               { type: "word", text: "heute" },
               { type: "word", text: "Deutsch." },
               { type: "girdle", label: "[动词] -en", subject: "wir", suffix: "en", packRight: false },
-            ],
-          },
-          {
-            text: "Woher kommst du?",
-            cn: "你来自哪里？",
-            classical: ["Woher", "kommst", "du?"],
-            xiexiu: [
-              { type: "stem", text: "komm", stem: "komm" },
-              { type: "word", text: "du" },
-              { type: "word", text: "Woher" },
-              { type: "girdle", label: "[动词] -st", subject: "du", suffix: "st", packRight: true },
-              { type: "word", text: "?" },
             ],
           },
           {
@@ -298,11 +312,43 @@
           root.addEventListener("dragend", () => { root.classList.remove("ghost"); dragData = null; });
           return root;
         }
+
+        function makeStGridDom(suffix, expectedSubject) {
+          const root = document.createElement('div');
+          root.className = 'stgrid piece';
+          root.dataset.kind = 'stgrid';
+          root.dataset.suffix = suffix;
+          root.dataset.expectedSubject = (expectedSubject || '').toLowerCase();
+          root.dataset.leftOk = 'false';
+          root.dataset.rightOk = 'false';
+
+          const inner = document.createElement('div'); inner.className = 'stgrid-inner';
+          const top = document.createElement('div'); top.className = 'stgrid-top';
+          const bottom = document.createElement('div'); bottom.className = 'stgrid-bottom';
+
+          const narrowL = document.createElement('div'); narrowL.className = 'stgrid-narrow';
+          const holeL = document.createElement('div'); holeL.className = 'st-hole-left';
+          const middle = document.createElement('div'); middle.className = 'st-middle'; middle.textContent = suffix;
+          const holeR = document.createElement('div'); holeR.className = 'st-hole-right';
+          const narrowR = document.createElement('div'); narrowR.className = 'stgrid-narrow';
+
+          bottom.appendChild(narrowL); bottom.appendChild(holeL); bottom.appendChild(middle); bottom.appendChild(holeR); bottom.appendChild(narrowR);
+          inner.appendChild(top); inner.appendChild(bottom); root.appendChild(inner);
+
+          root.draggable = true;
+          root.addEventListener('dragstart', (e) => {
+            dragData = { from: root.parentElement?.getAttribute('data-zone') || '', html: root.outerHTML, payload: { kind: 'stgrid', suffix, expectedSubject }, sourceEl: root };
+            setTimeout(() => root.classList.add('ghost'), 0); e.dataTransfer.effectAllowed = 'move';
+          });
+          root.addEventListener('dragend', () => { root.classList.remove('ghost'); dragData = null; });
+          return root;
+        }
         function makePiece(data) {
           if (data.type === "girdle") return makeGirdleDom(data.subject, data.suffix, data.label, !!data.packRight);
+          if (data.type === "stgrid") return makeStGridDom(data.suffix, data.expectedSubject);
           const div = document.createElement("div"); div.className = "piece"; div.draggable = true;
-          if (data.type === "stem") { div.classList.add("stem"); div.dataset.kind = "stem"; div.dataset.stem = data.stem; div.textContent = data.text; }
-          else { div.classList.add("word"); div.dataset.kind = "word"; div.textContent = data.text; }
+          if (data.type === "stem") { div.classList.add("stem"); if (data.short) div.classList.add('short'); div.dataset.kind = "stem"; div.dataset.stem = data.stem; div.textContent = data.text; }
+          else { div.classList.add("word"); if (data.short) div.classList.add('short'); div.dataset.kind = "word"; div.textContent = data.text; }
           div.addEventListener("dragstart", (e) => {
             dragData = { from: div.parentElement?.getAttribute("data-zone") || "", html: div.outerHTML,
               payload: { kind: div.dataset.kind, text: div.textContent }, sourceEl: div };
@@ -360,6 +406,40 @@
         let insertBefore = null;
         elSentence.addEventListener('dragover', (e) => { e.preventDefault(); const target = e.target.closest('.piece'); insertBefore = (target && target.parentElement === elSentence) ? target : null; });
         elSentence.addEventListener('drop', (e) => { e.preventDefault(); if (!dragData) return;
+          // st-grid hole docking
+          const holeL = e.target.closest('.st-hole-left');
+          const holeR = e.target.closest('.st-hole-right');
+          if (holeL && dragData.payload.kind === 'stem') {
+            const stgrid = holeL.closest('.stgrid');
+            const stemEl = dragData.sourceEl; const stemText = stemEl?.dataset?.stem || '';
+            if (stemEl && stemEl.parentElement) stemEl.parentElement.removeChild(stemEl);
+            const width = stemEl.offsetWidth || 80; holeL.style.minWidth = width + 'px';
+            stemEl.setAttribute('draggable','false'); stemEl.classList.add('embedded-stem'); holeL.appendChild(stemEl);
+            stgrid.dataset.leftOk = 'true'; stgrid.dataset.stemText = stemText;
+            // if right already ok, finalize
+            if (stgrid.dataset.rightOk === 'true') {
+              const subjText = stgrid.dataset.subjText || '';
+              const suffix = stgrid.dataset.suffix || 'st';
+              stgrid.dataset.completeVerb = `${stemText}${suffix} ${subjText}`;
+            }
+            e.stopPropagation(); return;
+          }
+          if (holeR && dragData.payload.kind === 'word') {
+            const stgrid = holeR.closest('.stgrid');
+            const expected = (stgrid.dataset.expectedSubject || '').toLowerCase();
+            const incoming = (dragData.payload.text || '').toLowerCase();
+            if (incoming !== expected) { /* ignore wrong subject */ } else {
+              const subjEl = dragData.sourceEl; if (subjEl && subjEl.parentElement) subjEl.parentElement.removeChild(subjEl);
+              subjEl.classList.add('embedded-subject'); subjEl.setAttribute('draggable','false'); holeR.appendChild(subjEl);
+              stgrid.dataset.rightOk = 'true'; stgrid.dataset.subjText = incoming;
+              if (stgrid.dataset.leftOk === 'true') {
+                const stemText = stgrid.dataset.stemText || '';
+                const suffix = stgrid.dataset.suffix || 'st';
+                stgrid.dataset.completeVerb = `${stemText}${suffix} ${incoming}`;
+              }
+              e.stopPropagation(); return;
+            }
+          }
           const dropTargetPiece = e.target.closest(".piece");
           if (dropTargetPiece) {
             const dragged = dragData.payload; const targetKind = dropTargetPiece.dataset.kind;
@@ -416,6 +496,7 @@
           const children = Array.from(elSentence.children);
           for (const node of children) {
             if (node.classList && node.classList.contains('girdle') && node.dataset.completeVerb) tokens.push(node.dataset.completeVerb.trim());
+            else if (node.classList && node.classList.contains('stgrid') && node.dataset.completeVerb) tokens.push(node.dataset.completeVerb.trim());
             else if (node.classList && node.classList.contains('piece')) tokens.push(node.textContent.trim());
           }
           let s = tokens.join(' '); s = s.replace(/\s+\?/g, "?").replace(/\s+\./g, ".").replace(/\s+([?!.,;:])/g, "$1");
