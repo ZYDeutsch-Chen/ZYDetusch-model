@@ -1,2 +1,905 @@
 # ZYDetusch-model
 for ZY students only
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>至元德语 - A1德语动词配价表</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --success-color: #27ae60;
+            --info-color: #2980b9;
+            --warning-color: #f39c12;
+            --danger-color: #c0392b;
+            --light-gray: #f8f9fa;
+            --dark-gray: #7f8c8d;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--light-gray);
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin: 20px 0 15px;
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            position: relative;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        /* 快速导航 */
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0 25px;
+            padding: 0 10px;
+        }
+        
+        .nav-btn {
+            padding: 10px 14px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .nav-btn i {
+            font-size: 0.9em;
+        }
+        
+        .category {
+            margin-bottom: 28px;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: white;
+            transition: var(--transition);
+        }
+        
+        .category:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.9), rgba(44, 62, 80, 0.95));
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .category-header:hover {
+            background: linear-gradient(135deg, rgba(41, 128, 185, 0.9), rgba(52, 73, 94, 0.95));
+        }
+        
+        .category-title {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .verb-count {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin-right: 15px;
+            order: 1;
+        }
+        
+        .toggle-icon {
+            order: 2;
+            margin-left: 10px;
+            font-size: 0.9em;
+            transition: var(--transition);
+        }
+        
+        .verb-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        .verb-table th, .verb-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .verb-table th {
+            background-color: var(--light-color);
+            text-align: center;
+            font-weight: 600;
+            color: var(--secondary-color);
+            position: sticky;
+            top: 0;
+        }
+        
+        .col-verb { 
+            width: 12%; 
+            font-size: 1.05em;
+            font-weight: 600;
+        }
+        
+        .col-pres { width: 10%; }
+        .col-pii { width: 11%; }
+        .col-eg { width: 35%; }
+        .col-meaning { width: 10%; }
+        .col-valence { width: 22%; }
+        
+        .akk-bg {
+            background-color: var(--success-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        
+        .dat-bg {
+            background-color: var(--info-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        
+        .reflexive-bg {
+            background-color: var(--warning-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        
+        .valence-pattern {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+        
+        .valence-pattern u {
+            text-decoration: underline;
+            font-style: italic;
+        }
+        
+        .verb {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--dark-gray);
+            font-size: 0.9em;
+            border-top: 1px solid #ddd;
+            background: var(--light-color);
+            border-radius: var(--border-radius);
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+                margin: 10px 0 15px;
+            }
+            
+            .quick-nav {
+                gap: 6px;
+                margin: 15px 0 20px;
+            }
+            
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                flex-basis: calc(50% - 6px);
+                justify-content: center;
+            }
+            
+            .category-header {
+                padding: 12px 15px;
+                font-size: 1.1rem;
+            }
+            
+            .verb-count {
+                font-size: 0.9rem;
+                padding: 4px 8px;
+                margin-right: 10px;
+            }
+            
+            .category-title span {
+                font-size: 1rem;
+            }
+            
+            /* 隐藏桌面端表格 */
+            .desktop-view {
+                display: none;
+            }
+            
+            /* 移动端卡片视图 */
+            .mobile-view {
+                display: block;
+                padding: 12px;
+            }
+            
+            .verb-card {
+                margin-bottom: 12px;
+                padding: 12px;
+                border: 1px solid #eee;
+                border-radius: 8px;
+                background: #fff;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                line-height: 1.4;
+            }
+            
+            .verb-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+                padding-bottom: 6px;
+                border-bottom: 1px dashed #eee;
+            }
+            
+            .verb-name {
+                font-weight: bold;
+                font-size: 1.1em;
+                color: var(--secondary-color);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                flex: 1;
+            }
+            
+            .verb-forms {
+                display: flex;
+                gap: 12px;
+                font-size: 0.9em;
+                color: var(--dark-gray);
+                flex-shrink: 0;
+                margin-left: 8px;
+            }
+            
+            .verb-pres, .verb-pii {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 80px;
+            }
+            
+            .verb-card-main {
+                margin-bottom: 8px;
+            }
+            
+            .verb-eg {
+                line-height: 1.3;
+                font-size: 0.95em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin: 4px 0;
+            }
+            
+            .verb-eg .akk-bg, .verb-eg .dat-bg {
+                font-size: 1em;
+                padding: 1px 4px;
+            }
+            
+            .verb-card-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 6px;
+                border-top: 1px dashed #eee;
+            }
+            
+            .verb-valence {
+                font-family: Arial, sans-serif;
+                font-size: 0.9em;
+                flex: 2;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                letter-spacing: -0.3px;
+            }
+            
+            .verb-meaning {
+                font-style: italic;
+                color: var(--primary-color);
+                font-size: 0.9em;
+                text-align: right;
+                flex: 1;
+                margin-left: 8px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-right: 8px;
+            }
+            
+            /* 针对长文本的调整 */
+            .long-text {
+                font-size: 0.85em;
+            }
+            
+            .very-long-text {
+                font-size: 0.8em;
+            }
+        }
+        
+        /* 桌面端样式 */
+        @media (min-width: 769px) {
+            .mobile-view {
+                display: none;
+            }
+            
+            .desktop-view {
+                display: block;
+            }
+        }
+        
+        /* 滚动到顶部按钮 */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: var(--transition);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-top:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .category-content {
+            transition: var(--transition);
+        }
+        
+        .collapsed .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .collapsed .category-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>至元德语 - A1德语动词配价表</h1>
+
+<!-- 快速导航 -->
+<div class="quick-nav">
+    <button class="nav-btn" onclick="scrollToCategory('category1')"><i class="fas fa-walking"></i> 仅动词</button>
+    <button class="nav-btn" onclick="scrollToCategory('category2')"><i class="fas fa-equals"></i> 系动词</button>
+    <button class="nav-btn" onclick="scrollToCategory('category3')"><i class="fas fa-bullseye"></i> 直宾</button>
+    <button class="nav-btn" onclick="scrollToCategory('category4')"><i class="fas fa-hands-helping"></i> 受益</button>
+    <button class="nav-btn" onclick="scrollToCategory('category5')"><i class="fas fa-gift"></i> 受益+直宾</button>
+    <button class="nav-btn" onclick="scrollToCategory('category6')"><i class="fas fa-brain"></i> 情态</button>
+    <button class="nav-btn" onclick="scrollToCategory('category7')"><i class="fas fa-retweet"></i> 反身</button>
+</div>
+
+<!-- 动词分类容器 -->
+<div id="categories-container"></div>
+
+<div class="footer">
+    <p id="total-count">总计: 176个 | 标注：三格(<span class="dat-bg">Dat</span>) 四格(<span class="akk-bg">Akk</span>) </p>
+    <p>A1德语动词| 至元德语内部资料  |  转载请注明出处</p>
+</div>
+
+<!-- 滚动到顶部按钮 -->
+<div class="scroll-top" id="scrollTop">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+    // 动词数据
+    const verbs = [
+        // 类别1: 主语 + 动作 (45个)
+        {infinitive: "arbeiten", pres3: "", pii: "", example: "Ich arbeite.", meaning: "工作", valence: "jd. arbeitet", category: "category1"},
+        {infinitive: "tanzen", pres3: "", pii: "", example: "Sie tanzt gut.", meaning: "跳舞", valence: "jd. tanzt", category: "category1"},
+        {infinitive: "frühstücken", pres3: "", pii: "", example: "Wir frühstücken um 7 Uhr.", meaning: "吃早餐", valence: "jd. frühstückt", category: "category1"},
+        {infinitive: "rauchen", pres3: "", pii: "", example: "Er raucht nicht.", meaning: "吸烟", valence: "jd. raucht", category: "category1"},
+        {infinitive: "lachen", pres3: "", pii: "", example: "Die Kinder lachen.", meaning: "笑", valence: "jd. lacht", category: "category1"},
+        {infinitive: "leben", pres3: "", pii: "", example: "Er lebt in Köln.", meaning: "生活", valence: "jd. lebt", category: "category1"},
+        {infinitive: "reisen", pres3: "", pii: "gereist*", example: "Wir reisen nach Spanien.", meaning: "旅行", valence: "jd. reist", category: "category1"},
+        {infinitive: "wandern", pres3: "", pii: "", example: "Sie wandern gern.", meaning: "徒步", valence: "jd. wandert", category: "category1"},
+        {infinitive: "dauern", pres3: "", pii: "", example: "Der Film dauert zwei Stunden.", meaning: "持续", valence: "etw. dauert", category: "category1"},
+        {infinitive: "enden", pres3: "", pii: "", example: "Die Party endet um Mitternacht.", meaning: "结束", valence: "etw. endet", category: "category1"},
+        {infinitive: "regnen", pres3: "", pii: "", example: "Es regnet.", meaning: "下雨", valence: "es regnet", category: "category1"},
+        {infinitive: "passieren", pres3: "", pii: "passiert*", example: "Was ist passiert?", meaning: "发生", valence: "etw. passiert", category: "category1"},
+        {infinitive: "schwimmen", pres3: "", pii: "geschwommen*", example: "Schwimmen Sie gern?", meaning: "游泳", valence: "jd. schwimmt", category: "category1"},
+        {infinitive: "kommen", pres3: "", pii: "gekommen*", example: "Wann kommen Sie?", meaning: "来", valence: "jd. kommt", category: "category1"},
+        {infinitive: "gehen", pres3: "", pii: "gegangen*", example: "Wohin gehen Sie?", meaning: "走", valence: "jd. geht", category: "category1"},
+        {infinitive: "fliegen", pres3: "", pii: "geflogen*", example: "Fliegen Sie nach Berlin?", meaning: "飞", valence: "jd./etw. fliegt", category: "category1"},
+        {infinitive: "bleiben", pres3: "", pii: "geblieben*", example: "Bleiben Sie hier!", meaning: "停留", valence: "jd. bleibt", category: "category1"},
+        {infinitive: "ankommen", pres3: "", pii: "angekommen*", example: "Wann kommen Sie an?", meaning: "抵达", valence: "jd. kommt an", category: "category1"},
+        {infinitive: "mitkommen", pres3: "", pii: "mitgekommen*", example: "Kommen Sie mit!", meaning: "一起来", valence: "jd. kommt mit", category: "category1"},
+        {infinitive: "steigen", pres3: "", pii: "gestiegen*", example: "Er ist auf den Berg gestiegen.", meaning: "攀登", valence: "jd. steigt", category: "category1"},
+        {infinitive: "einsteigen", pres3: "", pii: "eingestiegen*", example: "Steigen Sie bitte ein!", meaning: "上车/进入", valence: "jd. steigt ein", category: "category1"},
+        {infinitive: "aussteigen", pres3: "", pii: "ausgestiegen*", example: "Steigen您 an der nächsten Station aus!", meaning: "下车/出来", valence: "jd. steigt aus", category: "category1"},
+        {infinitive: "aufstehen", pres3: "", pii: "aufgestanden*", example: "Stehen Sie um 7 Uhr auf!", meaning: "起床/站起来", valence: "jd. steht auf", category: "category1"},
+        {infinitive: "umziehen", pres3: "", pii: "umgezogen*", example: "Ziehen Sie nächsten Monat um!", meaning: "搬家", valence: "jd. zieht um", category: "category1"},
+        {infinitive: "abfliegen", pres3: "", pii: "abgeflogen*", example: "Wann fliegt das Flugzeug ab?", meaning: "起飞", valence: "etw. fliegt ab", category: "category1"},
+        {infinitive: "abfahren", pres3: "fährt ab", pii: "abgefahren*", example: "Fährt der Zug pünktlich ab?", meaning: "出发", valence: "jd./etw. fährt ab", category: "category1"},
+        {infinitive: "laufen", pres3: "läuft", pii: "gelaufen*", example: "Laufen Sie schnell?", meaning: "跑/运行", valence: "jd. läuft", category: "category1"},
+        {infinitive: "fahren", pres3: "fährt", pii: "gefahren*", example: "Fahren Sie nach Berlin?", meaning: "去/乘坐", valence: "jd. fährt", category: "category1"},
+        {infinitive: "sitzen", pres3: "", pii: "gesessen", example: "Sitzen Sie am Tisch?", meaning: "坐", valence: "jd. sitzt", category: "category1"},
+        {infinitive: "gewinnen", pres3: "", pii: "gewonnen", example: "Gewinnen Sie das Spiel?", meaning: "赢", valence: "jd. gewinnt", category: "category1"},
+        {infinitive: "liegen", pres3: "", pii: "gelegen", example: "Liegt das Buch auf dem Tisch?", meaning: "平放/位于", valence: "etw. liegt", category: "category1"},
+        {infinitive: "riechen", pres3: "", pii: "gerochen", example: "Riecht das gut?", meaning: "闻", valence: "jd./etw. riecht", category: "category1"},
+        {infinitive: "stehen", pres3: "", pii: "gestanden", example: "Steht das Haus am Fluss?", meaning: "站立/位于", valence: "jd./etw. steht", category: "category1"},
+        {infinitive: "scheinen", pres3: "", pii: "geschienen", example: "Scheint die Sonne?", meaning: "照耀", valence: "etw. scheint", category: "category1"},
+        {infinitive: "heißen", pres3: "", pii: "geheißen", example: "Wie heißen Sie?", meaning: "叫/名为", valence: "jd. heißt", category: "category1"},
+        {infinitive: "aussehen", pres3: "sieht aus", pii: "ausgesehen", example: "Sie sehen müde aus.", meaning: "看起来", valence: "jd. sieht aus", category: "category1"},
+        {infinitive: "fernsehen", pres3: "sieht fern", pii: "ferngesehen", example: "Sehen Sie oft fern?", meaning: "看电视", valence: "jd. sieht fern", category: "category1"},
+        {infinitive: "schlafen", pres3: "schläft", pii: "geschlafen", example: "Schlafen Sie gut?", meaning: "睡觉", valence: "jd. schläft", category: "category1"},
+        {infinitive: "sprechen", pres3: "spricht", pii: "gesprochen", example: "Sprechen Sie Deutsch?", meaning: "说话", valence: "jd. spricht", category: "category1"},
+        // 以下三个动词应该放在最后（带介词宾语）
+        {infinitive: "telefonieren", pres3: "", pii: "", example: "Ich telefoniere mit <span class=\"dat-bg\">meiner Mutter</span>.", meaning: "打电话", valence: "jd. telefoniert [mit <span class=\"dat-bg\">Dat</span>]", category: "category1"},
+        {infinitive: "aufhören", pres3: "", pii: "", example: "Hören Sie mit <span class=\"dat-bg\">dem Rauchen</span> auf!", meaning: "停止", valence: "jd. hört [mit <span class=\"dat-bg\">Dat</span>] auf", category: "category1"},
+        {infinitive: "warten", pres3: "", pii: "", example: "Ich warte auf <span class=\"akk-bg\">den Bus</span>.", meaning: "等待", valence: "jd. wartet [auf <span class=\"akk-bg\">Akk</span>]", category: "category1"},
+        
+        // 类别2: 主语 + 系动词 + 表语 (15个)
+        {infinitive: "bekannt sein", pres3: "", pii: "", example: "Er ist hier bekannt.", meaning: "熟悉的", valence: "jd. ist bekannt", category: "category2"},
+        {infinitive: "besetzt sein", pres3: "", pii: "", example: "Der Platz ist besetzt.", meaning: "被占用的", valence: "etw. ist besetzt", category: "category2"},
+        {infinitive: "verboten sein", pres3: "", pii: "", example: "Das ist hier verboten.", meaning: "被禁止的", valence: "etw. ist verboten", category: "category2"},
+        {infinitive: "geöffnet sein", pres3: "", pii: "", example: "Das Geschäft ist geöffnet.", meaning: "打开着的", valence: "etw. ist geöffnet", category: "category2"},
+        {infinitive: "geschlossen sein", pres3: "", pii: "", example: "Die Bank ist geschlossen.", meaning: "关闭的", valence: "etw. ist geschlossen", category: "category2"},
+        {infinitive: "geboren sein", pres3: "", pii: "", example: "Ich bin in Berlin geboren.", meaning: "出生的", valence: "jd. ist geboren", category: "category2"},
+        {infinitive: "verheiratet sein", pres3: "", pii: "", example: "Sie ist verheiratet.", meaning: "结婚的", valence: "jd. ist verheiratet", category: "category2"},
+        {infinitive: "gestorben sein", pres3: "", pii: "", example: "Sein Großvater ist gestorben.", meaning: "去世的", valence: "jd. ist gestorben", category: "category2"},
+        {infinitive: "weg sein", pres3: "", pii: "", example: "Mein Schlüssel ist weg.", meaning: "离开/不见了", valence: "jd./etw. ist weg", category: "category2"},
+        {infinitive: "an sein", pres3: "", pii: "", example: "Das Licht ist an.", meaning: "开着(电器)", valence: "etw. ist an", category: "category2"},
+        {infinitive: "aus sein", pres3: "", pii: "", example: "Der Computer ist aus.", meaning: "关闭(电器)", valence: "etw. ist aus", category: "category2"},
+        {infinitive: "auf sein", pres3: "", pii: "", example: "Das Fenster ist auf.", meaning: "向上开着", valence: "etw. ist auf", category: "category2"},
+        {infinitive: "zu sein", pres3: "", pii: "", example: "Die Tür ist zu.", meaning: "闭合的", valence: "etw. ist zu", category: "category2"},
+        {infinitive: "sein", pres3: "", pii: "gewesen*", example: "Er ist Lehrer.", meaning: "是", valence: "jd./etw. ist", category: "category2"},
+        {infinitive: "werden", pres3: "wird", pii: "geworden*", example: "Er wird Arzt.", meaning: "成为", valence: "jd. wird", category: "category2"},
+        
+        // 类别3: 主语 + 动作 + [Akk]直接宾语 (88个)
+        {infinitive: "tanzen", pres3: "", pii: "", example: "Sie tanzt <span class=\"akk-bg\">Tango</span>.", meaning: "跳(某种舞)", valence: "jd. tanzt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "frühstücken", pres3: "", pii: "", example: "Ich frühstücke <span class=\"akk-bg\">Brot</span>.", meaning: "吃(早餐食物)", valence: "jd. frühstückt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "rauchen", pres3: "", pii: "", example: "Er raucht <span class=\"akk-bg\">Zigaretten</span>.", meaning: "抽(烟)", valence: "jd. raucht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "kosten", pres3: "", pii: "", example: "Das kostet <span class=\"akk-bg\">viel Geld</span>.", meaning: "花费", valence: "etw.kostet <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "reparieren", pres3: "", pii: "", example: "Er repariert <span class=\"akk-bg\">das Auto</span>.", meaning: "修理", valence: "jd. repariert <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "buchstabieren", pres3: "", pii: "", example: "Buchstabieren Sie <span class=\"akk-bg\">Ihren Namen</span>!", meaning: "拼写", valence: "jd. buchstabiert <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "studieren", pres3: "", pii: "", example: "Sie studiert <span class=\"akk-bg\">Musik</span>.", meaning: "学(大学专业)", valence: "jd. studiert <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "brauchen", pres3: "", pii: "", example: "Ich brauche <span class=\"akk-bg\">Hilfe</span>.", meaning: "需要", valence: "jd. braucht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "drucken", pres3: "", pii: "", example: "Er druckt <span class=\"akk-bg\">ein Dokument</span>.", meaning: "打印", valence: "jd. druckt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "drücken", pres3: "", pii: "", example: "Sie drückt <span class=\"akk-bg\">den Knopf</span>.", meaning: "按", valence: "jd. drückt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "grillen", pres3: "", pii: "", example: "Wir grillen <span class=\"akk-bg\">Fleisch</span>.", meaning: "烧烤", valence: "jd. grillt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "fragen", pres3: "", pii: "", example: "Ich frage <span class=\"akk-bg\">dich</span>.", meaning: "问(某人)", valence: "jd. fragt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "heiraten", pres3: "", pii: "", example: "Sie heiratet <span class=\"akk-bg\">ihn</span>.", meaning: "结婚", valence: "jd. heiratet <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "holen", pres3: "", pii: "", example: "Ich hole <span class=\"akk-bg\">die Post</span>.", meaning: "取", valence: "jd. holt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "hören", pres3: "", pii: "", example: "Wir hören <span class=\"akk-bg\">Musik</span>.", meaning: "听", valence: "jd. hört <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "kaufen", pres3: "", pii: "", example: "Sie kauft <span class=\"akk-bg\">Brot</span>.", meaning: "买", valence: "jd. kauft <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "kochen", pres3: "", pii: "", example: "Er kocht <span class=\"akk-bg\">Nudeln</span>.", meaning: "煮", valence: "jd. kocht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "legen", pres3: "", pii: "", example: "Legen Sie <span class=\"akk-bg\">das Buch</span> auf den Tisch!", meaning: "平放", valence: "jd. legt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "lieben", pres3: "", pii: "", example: "Ich liebe <span class=\"akk-bg\">dich</span>.", meaning: "爱", valence: "jd. liebt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "machen", pres3: "", pii: "", example: "<span class=\"akk-bg\">Was</span> machen Sie?", meaning: "做", valence: "jd. macht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "mieten", pres3: "", pii: "", example: "Wir mieten <span class=\"akk-bg\">eine Wohnung</span>.", meaning: "租", valence: "jd. mietet <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "öffnen", pres3: "", pii: "", example: "Öffnen Sie <span class=\"akk-bg\">das Fenster</span>!", meaning: "打开", valence: "jd. öffnet <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "sagen", pres3: "", pii: "", example: "Sagen Sie <span class=\"akk-bg\">etwas</span>!", meaning: "说", valence: "jd. sagt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "spielen", pres3: "", pii: "", example: "Die Kinder spielen <span class=\"akk-bg\">Fußball</span>.", meaning: "玩", valence: "jd. spielt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "feiern", pres3: "", pii: "", example: "Wir feiern <span class=\"akk-bg\">Geburtstag</span>.", meaning: "庆祝", valence: "jd. feiert <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "glauben", pres3: "", pii: "", example: "Ich glaube <span class=\"akk-bg\">das nicht</span>.", meaning: "相信(某事)", valence: "jd. glaubt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "zahlen", pres3: "", pii: "", example: "Wir zahlen <span class=\"akk-bg\">die Rechnung</span>.", meaning: "支付", valence: "jd. zahlt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "bezahlen", pres3: "", pii: "", example: "Bezahlen Sie <span class=\"akk-bg\">die Rechnung</span>!", meaning: "支付", valence: "jd. bezahlt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "stellen", pres3: "", pii: "", example: "Stellen Sie <span class=\"akk-bg\">den Computer</span> auf den Tisch!", meaning: "竖放", valence: "jd. stellt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "bestellen", pres3: "", pii: "", example: "Ich bestelle <span class=\"akk-bg\">Pizza</span>.", meaning: "订购", valence: "jd. bestellt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "suchen", pres3: "", pii: "", example: "Ich suche <span class=\"akk-bg\">meinen Schlüssel</span>.", meaning: "寻找", valence: "jd. sucht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "besuchen", pres3: "", pii: "", example: "Wir besuchen <span class=\"akk-bg\">unsere Freunde</span>.", meaning: "拜访", valence: "jd. besucht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "besichtigen", pres3: "", pii: "", example: "Wir besichtigen <span class=\"akk-bg\">das Museum</span>.", meaning: "参观", valence: "jd. besichtigt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "bedeuten", pres3: "", pii: "", example: "Was bedeutet <span class=\"akk-bg\">das Wort</span>?", meaning: "意思是", valence: "etw. bedeutet <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "benutzen", pres3: "", pii: "", example: "Ich benutze <span class=\"akk-bg\">den Computer</span>.", meaning: "使用", valence: "jd. benutzt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "verkaufen", pres3: "", pii: "", example: "Wir verkaufen <span class=\"akk-bg\">unser Auto</span>.", meaning: "卖出", valence: "jd. verkauft <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "vermieten", pres3: "", pii: "", example: "Er vermietet <span class=\"akk-bg\">seine Wohnung</span>.", meaning: "出租", valence: "jd. vermietet <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "verdienen", pres3: "", pii: "", example: "Sie verdient <span class=\"akk-bg\">viel Geld</span>.", meaning: "赚得", valence: "jd. verdient <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "anklicken", pres3: "", pii: "", example: "Klicken Sie <span class=\"akk-bg\">den Button</span> an!", meaning: "点击", valence: "jd. klickt <span class=\"akk-bg\">Akk</span> an", category: "category3"},
+        {infinitive: "ankreuzen", pres3: "", pii: "", example: "Kreuzen Sie <span class=\"akk-bg\">die Antwort</span> an!", meaning: "打勾", valence: "jd. kreuzt <span class=\"akk-bg\">Akk</span> an", category: "category3"},
+        {infinitive: "einkaufen", pres3: "", pii: "", example: "Ich kauffe <span class=\"akk-bg\">Lebensmittel</span> ein.", meaning: "采购", valence: "jd. kauft <span class=\"akk-bg\">Akk</span> ein", category: "category3"},
+        {infinitive: "abholen", pres3: "", pii: "", example: "Holen Sie <span class=\"akk-bg\">mich</span> ab!", meaning: "接", valence: "jd. holt <span class=\"akk-bg\">Akk</span> ab", category: "category3"},
+        {infinitive: "ausfüllen", pres3: "", pii: "", example: "Füllen Sie <span class=\"akk-bg\">das Formular</span> aus!", meaning: "填写", valence: "jd. füllt <span class=\"akk-bg\">Akk</span> aus", category: "category3"},
+        {infinitive: "ausmachen", pres3: "", pii: "", example: "Machen Sie <span class=\"akk-bg\">das Licht</span> aus!", meaning: "关闭(电器)", valence: "jd. macht <span class=\"akk-bg\">Akk</span> aus", category: "category3"},
+        {infinitive: "anmachen", pres3: "", pii: "", example: "Machen Sie <span class=\"akk-bg\">das Licht</span> an!", meaning: "打开(电器)", valence: "jd. macht <span class=\"akk-bg\">Akk</span> an", category: "category3"},
+        {infinitive: "mitmachen", pres3: "", pii: "", example: "Machen Sie <span class=\"akk-bg\">das Spiel</span> mit?", meaning: "参加", valence: "jd. macht <span class=\"akk-bg\">Akk</span> mit", category: "category3"},
+        {infinitive: "lernen", pres3: "", pii: "", example: "Ich lerne <span class=\"akk-bg\">Deutsch</span>.", meaning: "学习", valence: "jd. lernt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "kennen lernen", pres3: "", pii: "", example: "Ich lerne <span class=\"akk-bg\">dich</span> kennen.", meaning: "结识", valence: "jd. lernt <span class=\"akk-bg\">Akk</span> kennen", category: "category3"},
+        {infinitive: "kennen", pres3: "", pii: "gekannt", example: "Kennst du <span class=\"akk-bg\">den Film</span>?", meaning: "认识", valence: "jd. kennt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "finden", pres3: "", pii: "gefunden", example: "Ich finde <span class=\"akk-bg\">das gut</span>.", meaning: "找到/认为", valence: "jd. findet <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "bitten", pres3: "", pii: "gebeten", example: "Ich bitte <span class=\"akk-bg\">dich</span> um <span class=\"akk-bg\">Hilfe</span>.", meaning: "请求", valence: "jd. bittet <span class=\"akk-bg\">Akk</span> [um <span class=\"akk-bg\">Akk</span>]", category: "category3"},
+        {infinitive: "bringen", pres3: "", pii: "gebracht", example: "Bringen Sie <span class=\"dat-bg\">mir</span> <span class=\"akk-bg\">das Buch</span>!", meaning: "带来", valence: "jd. bringt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        {infinitive: "trinken", pres3: "", pii: "getrunken", example: "Ich trinke <span class=\"akk-bg\">Wasser</span>.", meaning: "喝", valence: "jd. trinkt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "schreiben", pres3: "", pii: "geschrieben", example: "Er schreibt <span class=\"akk-bg\">einen Brief</span>.", meaning: "写", valence: "jd. schreibt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "unterschreiben", pres3: "", pii: "unterschrieben", example: "Unterschreiben Sie <span class=\"akk-bg\">das Dokument</span>!", meaning: "签名", valence: "jd. unterschreibt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "beginnen", pres3: "", pii: "begonnen", example: "Wir beginnen <span class=\"akk-bg\">den Unterricht</span>.", meaning: "开始", valence: "jd. beginnt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "bekommen", pres3: "", pii: "bekommen", example: "Ich bekomme <span class=\"akk-bg\">einen Brief</span>.", meaning: "收到", valence: "jd. bekommt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "verstehen", pres3: "", pii: "verstanden", example: "Verstehen Sie <span class=\"akk-bg\">die Frage</span>?", meaning: "理解", valence: "jd. versteht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "schließen", pres3: "", pii: "geschlossen", example: "Schließen Sie <span class=\"akk-bg\">die Tür</span>!", meaning: "关闭", valence: "jd. schließt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "überweisen", pres3: "", pii: "überwiesen", example: "Ich überweise <span class=\"akk-bg\">Geld</span>.", meaning: "汇款", valence: "jd. überweist <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "tun", pres3: "", pii: "getan", example: "<span class=\"akk-bg\">Was</span> tun Sie?", meaning: "做", valence: "jd. tut <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "anrufen", pres3: "", pii: "angerufen", example: "Rufen Sie <span class=\"akk-bg\">mich</span> an!", meaning: "打电话", valence: "jd. ruft <span class=\"akk-bg\">Akk</span> an", category: "category3"},
+        {infinitive: "anbieten", pres3: "", pii: "angeboten", example: "Ich biete <span class=\"akk-bg\">Hilfe</span> an.", meaning: "提供", valence: "jd. bietet <span class=\"akk-bg\">Akk</span> an", category: "category3"},
+        {infinitive: "mitbringen", pres3: "", pii: "mitgebracht", example: "Bringen Sie <span class=\"akk-bg\">etwas</span> mit!", meaning: "携带", valence: "jd. bringt <span class=\"akk-bg\">Akk</span> mit", category: "category3"},
+        {infinitive: "gewinnen", pres3: "", pii: "gewonnen", example: "Wir gewinnen <span class=\"akk-bg\">das Spiel</span>.", meaning: "赢得", valence: "jd. gewinnt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "backen", pres3: "bäckt", pii: "gebacken", example: "Ich backe <span class=\"akk-bg\">einen Kuchen</span>.", meaning: "烘焙", valence: "jd. bäckt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "vergessen", pres3: "vergisst", pii: "vergessen", example: "Ich vergesse immer <span class=\"akk-bg\">die Hausaufgaben</span>.", meaning: "忘记", valence: "jd. vergisst <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "fahren", pres3: "fährt", pii: "gefahren", example: "Er fährt <span class=\"akk-bg\">ein Auto</span>.", meaning: "驾驶", valence: "jd. fährt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "sprechen", pres3: "spricht", pii: "gesprochen", example: "Wir sprechen <span class=\"akk-bg\">Deutsch</span>.", meaning: "说(语言)", valence: "jd. spricht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "Rad fahren", pres3: "fährt Rad", pii: "Rad gefahren", example: "Ich fahre <span class=\"akk-bg\">Fahrrad</span>.", meaning: "骑自行车", valence: "jd. fährt Rad", category: "category3"},
+        {infinitive: "halten", pres3: "hält", pii: "gehalten", example: "Halten Sie <span class=\"akk-bg\">meine Hand</span>?", meaning: "持握", valence: "jd. hält <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "waschen", pres3: "wäscht", pii: "gewaschen", example: "Ich wasche <span class=\"akk-bg\">das Auto</span>.", meaning: "洗", valence: "jd. wäscht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "lesen", pres3: "liest", pii: "gelesen", example: "Ich lese <span class=\"akk-bg\">ein Buch</span>.", meaning: "阅读", valence: "jd. liest <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "sehen", pres3: "sieht", pii: "gesehen", example: "Sehen Sie <span class=\"akk-bg\">den Film</span>?", meaning: "看见", valence: "jd. sieht <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "nehmen", pres3: "nimmt", pii: "genommen", example: "Nehmen Sie <span class=\"akk-bg\">ein Taxi</span>!", meaning: "拿取", valence: "jd. nimmt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "essen", pres3: "isst", pii: "gegessen", example: "Ich esse <span class=\"akk-bg\">einen Apfel</span>.", meaning: "吃", valence: "jd. isst <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "treffen", pres3: "trifft", pii: "getroffen", example: "Wir treffen <span class=\"akk-bg\">unsere Freunde</span>.", meaning: "遇见", valence: "jd. trifft <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "es gibt", pres3: "es gibt", pii: "es gegeben", example: "Hier gibt es <span class=\"akk-bg\">viele Restaurants</span>.", meaning: "有/存在", valence: "es gibt <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "haben", pres3: "hat", pii: "gehabt", example: "Ich habe <span class=\"akk-bg\">ein Auto</span>.", meaning: "有", valence: "jd. hat <span class=\"akk-bg\">Akk</span>", category: "category3"},
+        {infinitive: "anfangen", pres3: "fängt an", pii: "angefangen", example: "Fangen Sie <span class=\"akk-bg\">die Arbeit</span> an?", meaning: "开始", valence: "jd. fängt <span class=\"akk-bg\">Akk</span> an", category: "category3"},
+        {infinitive: "abgeben", pres3: "gibt ab", pii: "abgegeben", example: "Geben Sie <span class=\"akk-bg\">die Hausaufgaben</span> ab!", meaning: "递交", valence: "jd. gibt <span class=\"akk-bg\">Akk</span> ab", category: "category3"},
+        {infinitive: "einladen", pres3: "lädt ein", pii: "eingeladen", example: "Ich lade <span class=\"akk-bg\">dich</span> ein.", meaning: "邀请", valence: "jd. lädt <span class=\"akk-bg\">Akk</span> ein", category: "category3"},
+        {infinitive: "mitnehmen", pres3: "nimmt mit", pii: "mitgenommen", example: "Nehmen Sie <span class=\"akk-bg\">den Regenschirm</span> mit!", meaning: "带走", valence: "jd. nimmt <span class=\"akk-bg\">Akk</span> mit", category: "category3"},
+        
+        // 类别4: 主语 + 动作 + (Dat)受益者 (9个)
+        {infinitive: "antworten", pres3: "", pii: "", example: "Ich antworte <span class=\"dat-bg\">dir</span>.", meaning: "回答", valence: "jd. antwortet <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "danken", pres3: "", pii: "", example: "Ich danke <span class=\"dat-bg\">Ihnen</span>.", meaning: "感谢", valence: "jd. dankt <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "schmecken", pres3: "", pii: "", example: "Das schmeckt <span class=\"dat-bg\">mir</span>.", meaning: "尝起来", valence: "etw. schmeckt <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "glauben", pres3: "", pii: "", example: "Ich glaube <span class=\"dat-bg\">dir</span>.", meaning: "信任", valence: "jd. glaubt <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "gratulieren", pres3: "", pii: "", example: "Ich gratuliere <span class=\"dat-bg\">dir</span>.", meaning: "祝贺", valence: "jd. gratuliert <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "fehlen", pres3: "", pii: "", example: "Du fehlst <span class=\"dat-bg\">mir</span>.", meaning: "缺少/想念", valence: "jd. fehlt <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "gehören", pres3: "", pii: "", example: "Das gehört <span class=\"dat-bg\">mir</span>.", meaning: "属于", valence: "etw. gehört <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "helfen", pres3: "hilft", pii: "geholfen", example: "Ich helfe <span class=\"dat-bg\">dir</span>.", meaning: "帮助", valence: "jd. hilft <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        {infinitive: "gefallen", pres3: "gefällt", pii: "gefallen", example: "Das gefällt <span class=\"dat-bg\">mir</span>.", meaning: "使喜欢", valence: "etw. gefällt <span class=\"dat-bg\">Dat</span>", category: "category4"},
+        
+        // 类别5: 主语 + 动作 + (Dat)受益者 + [Akk]直接宾语 (7个)
+        {infinitive: "erklären", pres3: "", pii: "", example: "Ich erkläre <span class=\"dat-bg\">dir</span> <span class=\"akk-bg\">die Regel</span>.", meaning: "解释", valence: "jd. erklärt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        {infinitive: "erlauben", pres3: "", pii: "", example: "Er erlaubt <span class=\"dat-bg\">mir</span> <span class=\"akk-bg\">das</span>.", meaning: "允许", valence: "jd. erlaubt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        {infinitive: "erzählen", pres3: "", pii: "", example: "Erzählen Sie <span class=\"dat-bg\">mir</span> <span class=\"akk-bg\">eine Geschichte</span>!", meaning: "讲述", valence: "jd. erzählt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        {infinitive: "schenken", pres3: "", pii: "", example: "Ich schenke <span class=\"dat-bg\">dir</span> <span class=\"akk-bg\">ein Buch</span>.", meaning: "赠送", valence: "jd. schenkt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        {infinitive: "schicken", pres3: "", pii: "", example: "Ich schicke <span class=\"dat-bg\">dir</span> <span class=\"akk-bg\">eine E-Mail</span>.", meaning: "发送", valence: "jd. schickt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        {infinitive: "geben", pres3: "gibt", pii: "gegeben", example: "Ich gebe <span class=\"dat-bg\">dir</span> <span class=\"akk-bg\">das Buch</span>.", meaning: "给", valence: "jd. gibt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        {infinitive: "empfehlen", pres3: "empfiehlt", pii: "empfohlen", example: "Ich empfehle <span class=\"dat-bg\">dir</span> <span class=\"akk-bg\">das Restaurant</span>.", meaning: "推荐", valence: "jd. empfiehlt <span class=\"dat-bg\">Dat</span> <span class=\"akk-bg\">Akk</span>", category: "category5"},
+        
+        // 类别6: 情态动词 (+ 动词原形) (6个)
+        {infinitive: "können", pres3: "kann", pii: "", example: "Ich kann gut schwimmen.", meaning: "能够", valence: "jd. kann <u>Verb</u>", category: "category6"},
+        {infinitive: "müssen", pres3: "muss", pii: "", example: "Ich muss lernen.", meaning: "必须", valence: "jd. muss <u>Verb</u>", category: "category6"},
+        {infinitive: "möchten", pres3: "möchte", pii: "", example: "Ich möchte essen.", meaning: "想要", valence: "jd. möchte <u>Verb</u>", category: "category6"},
+        {infinitive: "wollen", pres3: "will", pii: "", example: "Ich will kommen.", meaning: "想要，计划", valence: "jd. will <u>Verb</u>", category: "category6"},
+        {infinitive: "sollen", pres3: "soll", pii: "", example: "Ich soll arbeiten.", meaning: "应该", valence: "jd. soll <u>Verb</u>", category: "category6"},
+        {infinitive: "dürfen", pres3: "darf", pii: "", example: "Ich darf gehen.", meaning: "被允许", valence: "jd. darf <u>Verb</u>", category: "category6"},
+        
+        // 类别7: 反身动词 (主语 + 动作 + sich) (6个)
+        {infinitive: "sich duschen", pres3: "", pii: "", example: "Ich dusche <span class=\"akk-bg\">mich</span>.", meaning: "淋浴", valence: "jd. duscht sich", category: "category7"},
+        {infinitive: "sich baden", pres3: "", pii: "", example: "Ich bade <span class=\"akk-bg\">mich</span>.", meaning: "泡澡", valence: "jd. badet sich", category: "category7"},
+        {infinitive: "sich kümmern", pres3: "", pii: "", example: "Ich kümmere <span class=\"akk-bg\">mich</span> um <span class=\"akk-bg\">das Kind</span>.", meaning: "照顾", valence: "jd. kümmert sich [um <span class=\"akk-bg\">Akk</span>]", category: "category7"},
+        {infinitive: "sich entschuldigen", pres3: "", pii: "", example: "Ich entschuldige <span class=\"akk-bg\">mich</span>.", meaning: "道歉", valence: "jd. entschuldigt sich", category: "category7"},
+        {infinitive: "sich anziehen", pres3: "", pii: "sich angezogen", example: "Du musst <span class=\"akk-bg\">dich</span> warm anziehen.", meaning: "穿上", valence: "jd. zieht sich an", category: "category7"},
+        // sich freuen 放在最后（带介词宾语）
+        {infinitive: "sich freuen", pres3: "", pii: "", example: "Ich freue <span class=\"akk-bg\">mich</span> auf <span class=\"akk-bg\">Ihre Antwort</span>.", meaning: "期待/高兴", valence: "jd. freut sich [auf/über <span class=\"akk-bg\">Akk</span>]", category: "category7"}
+    ];
+
+    // 类别元数据
+    const categoryMeta = {
+        category1: { id: "category1", title: "1. 仅动词", desktopTitle: "1. 主语 + 动词", count: 45 },
+        category2: { id: "category2", title: "2. 系动词", desktopTitle: "2. 主语 + 系动词 + 表语", count: 15 },
+        category3: { id: "category3", title: "3. <span class=\"akk-bg\">直接宾语</span>", desktopTitle: "3. 主语 + 动作 + <span class=\"akk-bg\">直接宾语</span>", count: 88 },
+        category4: { id: "category4", title: "4. <span class=\"dat-bg\">受益者</span>", desktopTitle: "4. 主语 + 动作 + <span class=\"dat-bg\">受益者</span>", count: 9 },
+        category5: { id: "category5", title: "5. <span class=\"dat-bg\">受益者</span>+<span class=\"akk-bg\">宾语</span>", desktopTitle: "5. 主语 + 动作 + <span class=\"dat-bg\">受益者</span> + <span class=\"akk-bg\">直接宾语</span>", count: 7 },
+        category6: { id: "category6", title: "6. 情态动词", desktopTitle: "6. 主语 + 情态动词 + 动词原形", count: 6 },
+        category7: { id: "category7", title: "7. 反身动词", desktopTitle: "7. 主语 + 反身动词 + sich", count: 6 }
+    };
+
+    // 排序函数
+    function sortVerbs(verbs) {
+        return verbs.sort((a, b) => {
+            // 1. 单三和PII都为空 -> 排在最前面
+            const aBothEmpty = (!a.pres3 || a.pres3 === "") && (!a.pii || a.pii === "");
+            const bBothEmpty = (!b.pres3 || b.pres3 === "") && (!b.pii || b.pii === "");
+            
+            if (aBothEmpty && !bBothEmpty) return -1;
+            if (!aBothEmpty && bBothEmpty) return 1;
+            
+            // 2. 单三为空，PII不为空 -> 排在中间
+            const aPresEmptyPiiNotEmpty = (!a.pres3 || a.pres3 === "") && (a.pii && a.pii !== "");
+            const bPresEmptyPiiNotEmpty = (!b.pres3 || b.pres3 === "") && (b.pii && b.pii !== "");
+            
+            if (aPresEmptyPiiNotEmpty && !bPresEmptyPiiNotEmpty) return -1;
+            if (!aPresEmptyPiiNotEmpty && bPresEmptyPiiNotEmpty) return 1;
+            
+            // 3. 单三和PII都不为空 -> 排在最后
+            const aBothNotEmpty = (a.pres3 && a.pres3 !== "") && (a.pii && a.pii !== "");
+            const bBothNotEmpty = (b.pres3 && b.pres3 !== "") && (b.pii && b.pii !== "");
+            
+            if (aBothNotEmpty && !bBothNotEmpty) return 1;
+            if (!aBothNotEmpty && bBothNotEmpty) return -1;
+            
+            // 4. 在单三和PII都不为空的情况下，PII带*的排在后面
+            if (aBothNotEmpty && bBothNotEmpty) {
+                const aHasStar = a.pii.includes('*');
+                const bHasStar = b.pii.includes('*');
+                
+                if (aHasStar && !bHasStar) return 1;
+                if (!aHasStar && bHasStar) return -1;
+            }
+            
+            // 5. 配价带介词宾语的动词排在最后
+            const aHasPreposition = a.valence.includes('[');
+            const bHasPreposition = b.valence.includes('[');
+            
+            if (aHasPreposition && !bHasPreposition) return 1;
+            if (!aHasPreposition && bHasPreposition) return -1;
+            
+            // 6. 相同词干的动词靠近排列
+            const aStem = a.infinitive.replace(/^(sich|ab|an|auf|aus|ein|mit|um|vor|zu)/, '');
+            const bStem = b.infinitive.replace(/^(sich|ab|an|auf|aus|ein|mit|um|vor|zu)/, '');
+            
+            return aStem.localeCompare(bStem);
+        });
+    }
+
+    // 渲染函数
+    function renderCategories() {
+        const container = document.getElementById('categories-container');
+        container.innerHTML = '';
+        
+        let totalCount = 0;
+        
+        Object.values(categoryMeta).forEach(category => {
+            const categoryVerbs = verbs.filter(v => v.category === category.id);
+            totalCount += categoryVerbs.length;
+            
+            const sortedVerbs = sortVerbs(categoryVerbs);
+            
+            const categoryElement = document.createElement('div');
+            categoryElement.className = 'category';
+            categoryElement.id = category.id;
+            
+            const header = document.createElement('div');
+            header.className = 'category-header';
+            
+            const titleContainer = document.createElement('div');
+            titleContainer.className = 'category-title';
+            
+            // 添加数量统计
+            const countSpan = document.createElement('span');
+            countSpan.className = 'verb-count';
+            countSpan.textContent = `${categoryVerbs.length}个`;
+            titleContainer.appendChild(countSpan);
+            
+            // 添加标题
+            const titleSpan = document.createElement('span');
+            
+            // 根据屏幕宽度选择标题
+            if (window.innerWidth <= 768) {
+                titleSpan.innerHTML = category.title;
+            } else {
+                titleSpan.innerHTML = category.desktopTitle;
+            }
+            
+            titleContainer.appendChild(titleSpan);
+            
+            // 添加折叠图标
+            const toggleIcon = document.createElement('i');
+            toggleIcon.className = 'fas fa-chevron-down toggle-icon';
+            titleContainer.appendChild(toggleIcon);
+            
+            header.appendChild(titleContainer);
+            
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    this.classList.remove('collapsed');
+                } else {
+                    content.style.display = 'none';
+                    this.classList.add('collapsed');
+                }
+            });
+            
+            const content = document.createElement('div');
+            content.className = 'category-content';
+            
+            // 桌面视图
+            const desktopView = document.createElement('div');
+            desktopView.className = 'desktop-view';
+            
+            const table = document.createElement('table');
+            table.className = 'verb-table';
+            
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th class="col-verb">动词</th>
+                    <th class="col-pres">单三</th>
+                    <th class="col-pii">PII</th>
+                    <th class="col-eg">例句</th>
+                    <th class="col-meaning">释义</th>
+                    <th class="col-valence">配价格式</th>
+                </tr>
+            `;
+            
+            const tbody = document.createElement('tbody');
+            sortedVerbs.forEach(verb => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="col-verb verb">${verb.infinitive}</td>
+                    <td class="col-pres">${verb.pres3 || ''}</td>
+                    <td class="col-pii">${verb.pii || ''}</td>
+                    <td class="col-eg">${verb.example}</td>
+                    <td class="col-meaning">${verb.meaning}</td>
+                    <td class="col-valence valence-pattern">${verb.valence}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            desktopView.appendChild(table);
+            
+            // 移动视图
+            const mobileView = document.createElement('div');
+            mobileView.className = 'mobile-view';
+            
+            sortedVerbs.forEach(verb => {
+                const card = document.createElement('div');
+                card.className = 'verb-card';
+                
+                // 检查文本长度并应用适当的类
+                const formsLength = (verb.pres3 || '').length + (verb.pii || '').length;
+                const exampleLength = verb.example.length;
+                const valenceLength = verb.valence.length;
+                
+                const formsClass = formsLength > 20 ? 'long-text' : formsLength > 30 ? 'very-long-text' : '';
+                const exampleClass = exampleLength > 40 ? 'long-text' : exampleLength > 60 ? 'very-long-text' : '';
+                const valenceClass = valenceLength > 30 ? 'long-text' : valenceLength > 50 ? 'very-long-text' : '';
+                
+                card.innerHTML = `
+                    <div class="verb-card-header">
+                        <span class="verb-name">${verb.infinitive}</span>
+                        <div class="verb-forms ${formsClass}">
+                            ${verb.pres3 ? `<span class="verb-pres">${verb.pres3}</span>` : ''}
+                            ${verb.pii ? `<span class="verb-pii">${verb.pii}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="verb-card-main">
+                        <div class="verb-eg ${exampleClass}">${verb.example}</div>
+                    </div>
+                    <div class="verb-card-footer">
+                        <div class="verb-valence ${valenceClass}">${verb.valence}</div>
+                        <div class="verb-meaning">${verb.meaning}</div>
+                    </div>
+                `;
+                
+                mobileView.appendChild(card);
+            });
+            
+            content.appendChild(desktopView);
+            content.appendChild(mobileView);
+            
+            categoryElement.appendChild(header);
+            categoryElement.appendChild(content);
+            
+            container.appendChild(categoryElement);
+        });
+        
+        document.getElementById('total-count').innerHTML = `总计: ${totalCount}个 | 标注：三格(<span class="dat-bg">Dat</span>) 四格(<span class="akk-bg">Akk</span>)`;
+    }
+
+    // 滚动到指定类别
+    function scrollToCategory(categoryId) {
+        const element = document.getElementById(categoryId);
+        if (element) {
+            element.scrollIntoView({behavior: "smooth"});
+        }
+    }
+    
+    // 显示/隐藏滚动到顶部按钮
+    window.addEventListener('scroll', function() {
+        const scrollTopButton = document.getElementById('scrollTop');
+        if (window.pageYOffset > 300) {
+            scrollTopButton.classList.add('show');
+        } else {
+            scrollTopButton.classList.remove('show');
+        }
+    });
+    
+    // 滚动到顶部
+    document.getElementById('scrollTop').addEventListener('click', function() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        renderCategories();
+        
+        // 窗口大小变化时重新渲染以更新标题
+        window.addEventListener('resize', renderCategories);
+    });
+</script>
+</body>
+</html>
