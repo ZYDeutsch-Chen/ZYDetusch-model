@@ -1,5 +1,3 @@
-# ZYDetusch-model
-for ZY students only
 <!DOCTYPE html>
 <html lang="de">
 <head>
